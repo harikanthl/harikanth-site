@@ -1,0 +1,20 @@
+---
+type Props = {
+  src: string;
+  alt: string;
+  caption?: string;
+};
+
+const { src, alt, caption } = Astro.props;
+---
+
+<figure class="my-10">
+  <div class="overflow-hidden rounded-xl border border-[var(--color-border)] p-1">
+    <img src={src} alt={alt} class="w-full rounded-lg" loading="lazy" />
+  </div>
+  {caption && (
+    <figcaption class="mt-3 text-center text-sm text-[var(--color-muted)]">
+      {caption}
+    </figcaption>
+  )}
+</figure>

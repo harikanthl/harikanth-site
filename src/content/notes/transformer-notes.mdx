@@ -1,0 +1,35 @@
+---
+title: Transformer Architecture Notes
+date: 2025-03-01
+description: Evergreen reference on transformer blocks, attention, and positional encoding.
+tags:
+  - Deep Learning
+  - Transformers
+---
+
+A compact reference for the transformer architecture as used in modern LLMs.
+
+## Core block
+
+```text
+Input → LayerNorm → Multi-Head Attention → Residual
+     → LayerNorm → FFN → Residual → Output
+```
+
+## Multi-head attention
+
+For each head $h$:
+
+$$
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
+$$
+
+## Positional encoding
+
+Modern models use **RoPE** (Rotary Position Embedding) rather than absolute sinusoidal encodings.
+
+## Key variants
+
+- **Encoder-only**: BERT-style
+- **Decoder-only**: GPT, Llama
+- **Encoder-decoder**: T5, original Transformer

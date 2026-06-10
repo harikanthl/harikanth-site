@@ -1,0 +1,112 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { formatDateShort } from '../../lib/format';
+import TagPill from './TagPill.astro';
+
+type Props = {
+  post: CollectionEntry<'blog'>;
+  showThumbnail?: boolean;
+  compact?: boolean;
+};
+
+const { post, showThumbnail = true, compact = false } = Astro.props;
+const { title, description, date, tags, theme } = post.data;
+const href = `/blog/${post.id}`;
+const hero = theme?.illustration?.hero;
+const transitionName = `post-title-${post.id}`;
+---
+
+<article class="post-card group border-b border-[var(--color-border)] last:border-b-0">
+  <div
+    class:list={[
+      'flex py-7',
+      showThumbnail ? 'flex-col gap-5 sm:flex-row sm:items-stretch sm:gap-6' : 'flex-col',
+    ]}
+  >
+    {
+      showThumbnail && (
+        <a
+          href={href}
+          class="post-card-thumb block shrink-0 overflow-hidden rounded-xl ring-1 ring-[var(--color-border)] transition-opacity group-hover:opacity-90"
+          tabindex="-1"
+          aria-hidden="true"
+        >
+          {
+            hero ? (
+              <img
+                src={hero}
+                alt=""
+                class="h-44 w-full object-cover sm:h-full sm:w-44"
+                loading="lazy"
+              />
+            ) : (
+              <div
+                class="h-44 w-full sm:h-full sm:w-44"
+                style={{
+                  background: `linear-gradient(135deg, ${theme?.accent ?? '#1d4ed8'}50, ${theme?.paper ?? '#f7f3eb'})`,
+                }}
+              />
+            )
+          }
+        </a>
+      )
+    }
+
+    <div class="flex min-w-0 flex-1 flex-col text-left">
+      <time
+        datetime={date.toISOString()}
+        class="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]"
+      >
+        {formatDateShort(date)}
+      </time>
+
+      <h3
+        class:list={[
+          'mt-2 font-semibold leading-snug tracking-tight',
+          compact ? 'text-base' : 'text-xl sm:text-2xl',
+        ]}
+      >
+        <a
+          href={href}
+          class="text-[var(--color-ink)] no-underline transition-opacity hover:opacity-70"
+          style={{ viewTransitionName: transitionName }}
+        >
+          {title}
+        </a>
+      </h3>
+
+      <p
+        class:list={[
+          'mt-2 text-left leading-relaxed text-[var(--color-muted)]',
+          compact ? 'line-clamp-2 text-sm' : 'text-sm sm:text-base',
+        ]}
+      >
+        {description}
+      </p>
+
+      {
+        tags.length > 0 && !compact && (
+          <div class="mt-4 flex flex-wrap gap-2">
+            {tags.slice(0, 3).map((tag) => (
+              <TagPill tag={tag} />
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </div>
+</article>
+
+<style>
+  .post-card-thumb {
+    aspect-ratio: 4 / 3;
+  }
+
+  @media (min-width: 640px) {
+    .post-card-thumb {
+      aspect-ratio: auto;
+      min-height: 7.5rem;
+      max-height: 8.5rem;
+    }
+  }
+</style>

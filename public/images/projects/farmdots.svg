@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#ecfdf5"/>
+  <circle cx="400" cy="250" r="150" fill="#a7f3d0" opacity="0.4"/>
+  <circle cx="350" cy="220" r="8" fill="#059669"/>
+  <circle cx="420" cy="200" r="8" fill="#059669"/>
+  <circle cx="480" cy="280" r="8" fill="#059669"/>
+  <circle cx="380" cy="300" r="8" fill="#059669"/>
+  <path d="M350 220 L420 200 L480 280 L380 300 Z" stroke="#10b981" stroke-width="2" fill="none" opacity="0.5"/>
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="20" fill="#047857">FarmDots</text>
+</svg>

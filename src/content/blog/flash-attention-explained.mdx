@@ -1,0 +1,72 @@
+---
+title: Flash Attention Explained
+date: 2025-05-12
+description: A practical walkthrough of how Flash Attention reduces memory traffic and speeds up transformer training.
+tags:
+  - Deep Learning
+  - CUDA
+  - GPU Kernels
+featured: true
+theme:
+  accent: "#3d5a40"
+  paper: "#f7f3eb"
+  ink: "#1c1917"
+  mood: warm
+  headingStyle: serif
+  illustration:
+    hero: /images/blog/flash-attention-explained/hero-scene.png
+    heroAlt: Hand-drawn jungle scene with soft green tones
+    decor:
+      - src: /images/blog/flash-attention-explained/insect.png
+        alt: Small hand-drawn insect illustration
+        position: top-right
+        width: 100
+---
+
+Standard attention materializes the full $N \times N$ attention matrix in HBM, which becomes the bottleneck for long sequences. Flash Attention reformulates attention as a tiled, IO-aware algorithm that keeps partial results in SRAM.
+
+## The memory wall
+
+GPU compute has outpaced memory bandwidth for years. Attention is particularly brutal:
+
+$$
+\text{Memory} = O(N^2) \quad \text{for sequence length } N
+$$
+
+<Callout type="tip">
+The key insight is not a new mathematical formulation — it is an implementation that respects the GPU memory hierarchy.
+</Callout>
+
+## Tiling strategy
+
+Flash Attention divides Q, K, and V into blocks and fuses the softmax with the matrix multiply:
+
+```python
+# Simplified conceptual loop
+for block in range(num_blocks):
+    q_block = load_q(block)
+    for kv_block in range(num_kv_blocks):
+        k_block, v_block = load_kv(kv_block)
+        scores = q_block @ k_block.T
+        attn = softmax(scores)
+        output += attn @ v_block
+```
+
+<Mermaid chart={`flowchart TD
+  Q[Query blocks] --> Tile[SRAM tiles]
+  K[Key blocks] --> Tile
+  V[Value blocks] --> Tile
+  Tile --> Softmax[Fused softmax]
+  Softmax --> Out[Output accumulation]
+`} />
+
+## Why it matters
+
+- **Training**: fit longer contexts without proportional HBM growth
+- **Inference**: lower latency for serving workloads
+- **Downstream**: enables PagedAttention and modern LLM serving stacks
+
+## Further reading
+
+- [FlashAttention paper](https://arxiv.org/abs/2205.14135)
+- [Tri Dao's blog posts](https://tridao.me/)

@@ -1,0 +1,70 @@
+---
+type Props = {
+  labels?: string;
+};
+
+const { labels = '' } = Astro.props;
+const tabs = labels.split(',').map((l) => l.trim()).filter(Boolean);
+---
+
+<div class="code-group my-8 overflow-hidden rounded-xl border border-[var(--color-border)]" data-code-group>
+  {
+    tabs.length > 0 && (
+      <div class="flex gap-1 border-b border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-ink)_3%,transparent)] px-2 py-2">
+        {tabs.map((tab, i) => (
+          <button
+            type="button"
+            class="code-group-tab rounded px-3 py-1 text-xs text-[var(--color-muted)] transition-colors hover:text-[var(--color-ink)]"
+            data-tab={i}
+            data-active={i === 0 ? '' : undefined}
+          >
+            {tab}
+          </button>
+        ))}
+      </div>
+    )
+  }
+  <div class="code-group-panels">
+    <slot />
+  </div>
+</div>
+
+<script>
+  function initCodeGroups() {
+    document.querySelectorAll('[data-code-group]').forEach((group) => {
+      const tabs = group.querySelectorAll('.code-group-tab');
+      const panels = group.querySelectorAll('.code-group-panels > pre, .code-group-panels > :not(style)');
+      if (tabs.length === 0) return;
+
+      panels.forEach((panel, i) => {
+        (panel as HTMLElement).style.display = i === 0 ? 'block' : 'none';
+      });
+
+      tabs.forEach((tab, i) => {
+        tab.addEventListener('click', () => {
+          tabs.forEach((t) => t.removeAttribute('data-active'));
+          tab.setAttribute('data-active', '');
+          panels.forEach((panel, j) => {
+            (panel as HTMLElement).style.display = j === i ? 'block' : 'none';
+          });
+        });
+      });
+    });
+  }
+
+  initCodeGroups();
+  document.addEventListener('astro:page-load', initCodeGroups);
+</script>
+
+<style>
+  .code-group-tab[data-active] {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    color: var(--color-ink);
+  }
+
+  .code-group-panels > :not(style) {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+  }
+</style>

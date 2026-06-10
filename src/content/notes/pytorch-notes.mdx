@@ -1,0 +1,38 @@
+---
+title: PyTorch Internals — Quick Reference
+date: 2025-03-15
+description: Notes on autograd, tensors, and the PyTorch execution model.
+tags:
+  - PyTorch
+  - Deep Learning
+---
+
+## Tensor basics
+
+```python
+import torch
+
+x = torch.randn(3, 4, requires_grad=True)
+y = (x ** 2).sum()
+y.backward()
+print(x.grad)
+```
+
+## Autograd
+
+- Operations build a **computational graph** dynamically
+- `.backward()` traverses the graph in reverse
+- `torch.no_grad()` disables gradient tracking for inference
+
+## Device placement
+
+```python
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+model = model.to(device)
+```
+
+## Common pitfalls
+
+- Forgetting `.zero_grad()` between steps (use `optimizer.zero_grad()`)
+- Mixing CPU and GPU tensors
+- Not calling `model.eval()` during inference (affects BatchNorm, Dropout)

@@ -1,0 +1,62 @@
+---
+import { SITE } from '../../lib/seo';
+---
+
+<aside class="bio-aside">
+  <div class="media-frame media-frame--avatar" aria-hidden="true">
+    <img src="/images/hari.png" alt="" width="88" height="88" loading="eager" />
+  </div>
+
+  <p class="mt-5 text-base font-semibold tracking-tight text-[var(--color-ink)]">
+    {SITE.name}
+  </p>
+  <p class="mt-1 text-sm text-[var(--color-muted)]">
+    AI/ML engineer · veteran · builder
+  </p>
+  <p class="mt-4 text-sm leading-relaxed text-[var(--color-muted)]">
+    Learning and writing about PyTorch, CUDA, and practical software.
+    Still early — mostly notes as I figure things out.
+  </p>
+  <ul class="mt-6 space-y-2 text-sm">
+    <li>
+      <a href="/about" class="text-[var(--color-muted)] no-underline hover:text-[var(--color-accent)]">
+        About
+      </a>
+    </li>
+    <li>
+      <a href="/resume" class="text-[var(--color-muted)] no-underline hover:text-[var(--color-accent)]">
+        Resume
+      </a>
+    </li>
+    <li>
+      <a
+        href={SITE.github}
+        class="text-[var(--color-muted)] no-underline hover:text-[var(--color-accent)]"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        GitHub
+      </a>
+    </li>
+    <li>
+      <a
+        href={SITE.linkedin}
+        class="text-[var(--color-muted)] no-underline hover:text-[var(--color-accent)]"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn
+      </a>
+    </li>
+  </ul>
+</aside>
+
+<style>
+  @media (min-width: 1024px) {
+    .bio-aside {
+      position: sticky;
+      top: 5.5rem;
+      align-self: start;
+    }
+  }
+</style>

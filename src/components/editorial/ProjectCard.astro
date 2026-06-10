@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+  project: CollectionEntry<'projects'>;
+};
+
+const { project } = Astro.props;
+const { title, description, tech, github, demo, image } = project.data;
+const href = `/projects/${project.id}`;
+---
+
+<article class="group overflow-hidden rounded-2xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-ink)_2%,transparent)] transition-shadow hover:shadow-lg">
+  <a href={href} class="block no-underline">
+    <div class="aspect-[16/10] overflow-hidden bg-[color-mix(in_srgb,var(--color-ink)_4%,transparent)]">
+      {
+        image ? (
+          <img
+            src={image}
+            alt=""
+            class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            loading="lazy"
+          />
+        ) : (
+          <div class="flex h-full items-center justify-center text-sm text-[var(--color-muted)]">
+            {title}
+          </div>
+        )
+      }
+    </div>
+    <div class="p-6">
+      <h3 class="text-xl font-semibold tracking-tight">{title}</h3>
+      <p class="mt-2 text-[var(--color-muted)]">{description}</p>
+      {
+        tech.length > 0 && (
+          <ul class="mt-4 flex flex-wrap gap-2">
+            {tech.map((t) => (
+              <li class="rounded-full bg-[color-mix(in_srgb,var(--color-ink)_6%,transparent)] px-2.5 py-0.5 text-xs text-[var(--color-muted)]">
+                {t}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+      <div class="mt-4 flex gap-4 text-sm">
+        {github && <span class="text-[var(--color-accent)]">GitHub →</span>}
+        {demo && <span class="text-[var(--color-muted)]">Demo</span>}
+      </div>
+    </div>
+  </a>
+</article>

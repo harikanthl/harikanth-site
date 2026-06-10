@@ -1,0 +1,42 @@
+---
+type Props = {
+  chart: string;
+};
+
+const { chart } = Astro.props;
+const id = `mermaid-${Math.random().toString(36).slice(2, 9)}`;
+---
+
+<div class="my-10 overflow-x-auto rounded-xl border border-[var(--color-border)] p-6" data-mermaid={id}>
+  <pre class="mermaid-source hidden">{chart}</pre>
+</div>
+
+<script>
+  import mermaid from 'mermaid';
+
+  function initMermaid() {
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'default',
+      securityLevel: 'strict',
+    });
+
+    document.querySelectorAll('[data-mermaid]').forEach(async (el) => {
+      if (el.getAttribute('data-rendered') === 'true') return;
+      const source = el.querySelector('.mermaid-source')?.textContent?.trim();
+      if (!source) return;
+
+      const id = el.getAttribute('data-mermaid')!;
+      try {
+        const { svg } = await mermaid.render(id, source);
+        el.innerHTML = svg;
+        el.setAttribute('data-rendered', 'true');
+      } catch {
+        el.innerHTML = '<p class="text-sm text-[var(--color-muted)]">Diagram could not be rendered.</p>';
+      }
+    });
+  }
+
+  initMermaid();
+  document.addEventListener('astro:page-load', initMermaid);
+</script>

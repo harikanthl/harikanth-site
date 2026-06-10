@@ -1,0 +1,99 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { render } from 'astro:content';
+import { components as mdxComponents } from '../mdx-components';
+import BaseLayout from './BaseLayout.astro';
+import { formatDate } from '../lib/format';
+import { canonicalUrl, jsonLdSoftware } from '../lib/seo';
+
+type Props = {
+  project: CollectionEntry<'projects'>;
+};
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const { title, description, date, tech, github, demo, image, imageFit } = project.data;
+const isLogo = imageFit === 'contain';
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  jsonLd={jsonLdSoftware({
+    title,
+    description,
+    url: canonicalUrl(`/projects/${project.id}`),
+    tech,
+  })}
+>
+  <article class="page-container py-16">
+    <header class="max-w-3xl">
+      <p class="text-sm text-[var(--color-muted)]">{formatDate(date)}</p>
+      <h1 class="mt-3 text-4xl md:text-5xl">{title}</h1>
+      <p class="mt-4 text-lg text-[var(--color-muted)]">{description}</p>
+
+      {
+        tech.length > 0 && (
+          <ul class="mt-6 flex flex-wrap gap-2">
+            {tech.map((t) => (
+              <li class="rounded-full border border-[var(--color-border)] px-3 py-1 text-sm">
+                {t}
+              </li>
+            ))}
+          </ul>
+        )
+      }
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        {
+          github && (
+            <a
+              href={github}
+              class="btn-primary rounded-full px-5 py-2.5 text-sm font-medium"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              View on GitHub
+            </a>
+          )
+        }
+        {
+          demo && (
+            <a
+              href={demo}
+              class="rounded-full border border-[var(--color-border)] px-5 py-2.5 text-sm no-underline"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Live Demo
+            </a>
+          )
+        }
+      </div>
+    </header>
+
+    {
+      image && (
+        <div
+          class:list={[
+            'media-frame mt-12 max-w-xl',
+            isLogo ? 'media-frame--logo p-4' : 'overflow-hidden rounded-2xl',
+          ]}
+          style={isLogo ? 'border-radius: 1.25rem;' : ''}
+        >
+          <img
+            src={image}
+            alt=""
+            class:list={[isLogo ? 'max-h-48 w-full object-contain' : 'w-full object-cover']}
+            loading="eager"
+          />
+        </div>
+      )
+    }
+
+    <div class="prose mt-12" data-pagefind-body data-pagefind-meta={`title:${title}`}>
+      <Content components={mdxComponents} />
+    </div>
+  </article>
+</BaseLayout>

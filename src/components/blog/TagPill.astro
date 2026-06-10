@@ -1,0 +1,38 @@
+---
+type Props = {
+  tag: string;
+  href?: string;
+};
+
+const { tag, href = `/blog?tag=${encodeURIComponent(tag)}` } = Astro.props;
+---
+
+<a href={href} class="tag-pill">
+  {tag}
+</a>
+
+<style>
+  .tag-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;
+    border: 1px solid var(--color-border);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    line-height: 1.25rem;
+    font-weight: 500;
+    white-space: nowrap;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+
+  .tag-pill:hover {
+    border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+</style>

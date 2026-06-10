@@ -1,0 +1,8 @@
+name = "harikanth-site"
+compatibility_date = "2025-01-01"
+pages_build_output_dir = "dist"
+
+# Optional: bind R2 for image assets when ready
+# [[r2_buckets]]
+# binding = "IMAGES"
+# bucket_name = "harikanth-site-images"

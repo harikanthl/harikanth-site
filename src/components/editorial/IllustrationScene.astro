@@ -1,0 +1,74 @@
+---
+type DecorItem = {
+  src: string;
+  alt: string;
+  position: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'inline';
+  width?: number;
+};
+
+type Props = {
+  hero?: string;
+  heroAlt?: string;
+  decor?: DecorItem[];
+  accent?: string;
+  paper?: string;
+};
+
+const { hero, heroAlt = '', decor = [], accent = '#1d4ed8', paper = '#f7f3eb' } = Astro.props;
+
+const positionClasses: Record<DecorItem['position'], string> = {
+  'top-left': 'top-4 left-4 md:top-8 md:left-8',
+  'top-right': 'top-4 right-4 md:top-8 md:right-8',
+  'bottom-left': 'bottom-4 left-4 md:bottom-8 md:left-8',
+  'bottom-right': 'bottom-4 right-4 md:bottom-8 md:right-8',
+  inline: 'relative mx-auto my-8',
+};
+---
+
+<section
+  class="relative overflow-hidden"
+  style={`background: linear-gradient(180deg, ${paper} 0%, color-mix(in srgb, ${paper} 88%, white) 100%)`}
+  aria-hidden={!hero && decor.length === 0}
+>
+  <div class="page-container relative min-h-[clamp(12rem,28vw,22rem)] py-10 md:py-14">
+    {
+      hero && (
+        <img
+          src={hero}
+          alt={heroAlt}
+          class="pointer-events-none absolute right-[5%] bottom-0 h-auto max-h-[85%] w-[min(55%,28rem)] object-contain object-bottom drop-shadow-sm md:right-[8%]"
+          loading="eager"
+          fetchpriority="high"
+        />
+      )
+    }
+
+    {
+      !hero && (
+        <div
+          class="pointer-events-none absolute right-[10%] bottom-0 h-48 w-48 rounded-full opacity-30 blur-3xl md:h-64 md:w-64"
+          style={`background: ${accent}`}
+        />
+      )
+    }
+
+    <slot />
+
+    {
+      decor.map((item) => (
+        <img
+          src={item.src}
+          alt={item.alt}
+          width={item.width ?? 140}
+          class:list={[
+            'pointer-events-none h-auto opacity-90',
+            item.position === 'inline'
+              ? 'block max-w-xs'
+              : `absolute hidden md:block ${positionClasses[item.position]}`,
+          ]}
+          loading="lazy"
+        />
+      ))
+    }
+  </div>
+</section>

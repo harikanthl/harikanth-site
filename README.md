@@ -1,43 +1,44 @@
-# Astro Starter Kit: Minimal
+# harikanth.site
 
-```sh
-npm create astro@latest -- --template minimal
+Personal site and blog — Astro, MDX, Tailwind v4, deployed on Cloudflare Pages.
+
+## Development
+
+```bash
+npm install
+npm run dev
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Open [http://localhost:4321](http://localhost:4321).
 
-## 🚀 Project Structure
+## Build
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm run build   # astro build + pagefind index
+npm run preview
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+## Adding a blog post
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+1. Create `src/content/blog/your-slug.mdx`
+2. Add illustrations to `public/images/blog/your-slug/`
+3. Set `theme` in frontmatter (accent, paper, illustration paths)
+4. See `.cursor/rules/design.md` for the full theme schema
 
-Any static assets, like images, can be placed in the `public/` directory.
+## Deployment (Cloudflare Pages)
 
-## 🧞 Commands
+1. Push to GitHub
+2. Connect repo in Cloudflare Pages
+3. Build command: `npm run build`
+4. Output directory: `dist`
+5. Add custom domain `harikanth.site`
+6. Enable Cloudflare Web Analytics and paste token in `BaseLayout.astro`
 
-All commands are run from the root of the project, from a terminal:
+## Stack
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Astro 6 + TypeScript
+- MDX content collections
+- Tailwind CSS v4
+- Shiki, KaTeX, Mermaid
+- Pagefind search
+- View Transitions

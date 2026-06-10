@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Search" description="Search articles, projects, and notes on harikanth.site.">
+  <div class="page-container py-16">
+    <header class="max-w-2xl">
+      <h1 class="text-4xl">Search</h1>
+      <p class="mt-4 text-[var(--color-muted)]">Find articles, projects, and notes.</p>
+    </header>
+
+    <div id="search" class="mt-8 max-w-xl"></div>
+    <div id="search-results" class="mt-8"></div>
+  </div>
+</BaseLayout>
+
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js" is:inline></script>
+<script is:inline>
+  function initPagefind() {
+    if (typeof PagefindUI === 'undefined') return;
+    new PagefindUI({
+      element: '#search',
+      showSubResults: true,
+      resetStyles: false,
+    });
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPagefind);
+  } else {
+    initPagefind();
+  }
+  document.addEventListener('astro:page-load', initPagefind);
+</script>

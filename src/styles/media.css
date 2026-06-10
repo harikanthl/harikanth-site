@@ -1,0 +1,82 @@
+/* Apple-style continuous corners for photos & app assets */
+
+.media-frame {
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-ink) 3%, var(--color-surface));
+  box-shadow: 0 1px 2px color-mix(in srgb, var(--color-ink) 6%, transparent);
+}
+
+.media-frame img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Profile avatar — home bio */
+.media-frame--avatar {
+  width: 5.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+}
+
+.media-frame--avatar img {
+  object-fit: cover;
+  object-position: center top;
+}
+
+/* Resume headshot */
+.media-frame--portrait {
+  width: 7rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.media-frame--portrait img {
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+/* Project / app logo tile */
+.media-frame--logo {
+  border-radius: 1.125rem;
+}
+
+.media-frame--logo img {
+  object-fit: contain;
+  padding: 0.625rem;
+}
+
+/* Project row thumbnail */
+.media-frame--thumb {
+  width: 100%;
+  border-radius: 1.125rem;
+}
+
+.media-frame--thumb img {
+  object-fit: cover;
+}
+
+@media (min-width: 640px) {
+  .media-frame--thumb {
+    width: 9rem;
+    height: 6.75rem;
+  }
+}
+
+/* Cover flow card */
+.media-frame--cover {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  border-radius: 0.875rem;
+}
+
+.media-frame--cover img {
+  object-fit: cover;
+}
+
+.media-frame--cover.media-frame--logo img {
+  object-fit: contain;
+  padding: 0.5rem;
+}

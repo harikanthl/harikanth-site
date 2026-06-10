@@ -1,0 +1,266 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+type Props = {
+  projects: CollectionEntry<'projects'>[];
+};
+
+const { projects } = Astro.props;
+---
+
+<div class="cover-flow">
+  <p class="cover-flow-hint text-xs text-[var(--color-muted)]">Scroll to browse</p>
+  <div class="cover-flow-viewport">
+    <ul class="cover-flow-track" role="list">
+      {
+        projects.map((project) => {
+          const { title, description, image, imageFit } = project.data;
+          const href = `/projects/${project.id}`;
+          const isLogo = imageFit === 'contain';
+          return (
+            <li class="cover-flow-item">
+              <a href={href} class="cover-flow-link no-underline">
+                <div class="cover-flow-card">
+                  {
+                    image ? (
+                      <div
+                        class:list={[
+                          'media-frame media-frame--cover cover-flow-image-wrap',
+                          isLogo && 'media-frame--logo',
+                        ]}
+                      >
+                        <img
+                          src={image}
+                          alt=""
+                          class="cover-flow-image"
+                          draggable="false"
+                          loading="lazy"
+                        />
+                      </div>
+                    ) : (
+                      <div class="cover-flow-image cover-flow-fallback">{title}</div>
+                    )
+                  }
+                </div>
+                <span class="cover-flow-title">{title}</span>
+                <span class="cover-flow-desc">{description}</span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</div>
+
+<style>
+  .cover-flow {
+    --cover-size: 10.5rem;
+    --cover-gap: 1.25rem;
+    margin-top: 1.5rem;
+  }
+
+  .cover-flow-hint {
+    margin-bottom: 0.75rem;
+  }
+
+  .cover-flow-viewport {
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      black 8%,
+      black 92%,
+      transparent
+    );
+  }
+
+  .cover-flow-track {
+    display: flex;
+    gap: var(--cover-gap);
+    list-style: none;
+    margin: 0;
+    padding: 1.5rem calc(50% - var(--cover-size) / 2) 2.5rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .cover-flow-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cover-flow-item {
+    flex: 0 0 var(--cover-size);
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+    view-timeline-name: --cover-in-view;
+    view-timeline-axis: inline;
+    perspective: 36em;
+    animation: cover-z-index linear both;
+    animation-timeline: --cover-in-view;
+  }
+
+  .cover-flow-link {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: inherit;
+  }
+
+  .cover-flow-card {
+    width: var(--cover-size);
+    aspect-ratio: 4 / 3;
+    transform-style: preserve-3d;
+  }
+
+  .cover-flow-image-wrap {
+    width: 100%;
+    height: 100%;
+    border: none;
+    box-shadow: 0 4px 24px color-mix(in srgb, var(--color-ink) 8%, transparent);
+    animation: cover-rotate linear both;
+    animation-timeline: --cover-in-view;
+    -webkit-box-reflect: below 6px
+      linear-gradient(transparent 55%, color-mix(in srgb, var(--color-ink) 12%, transparent));
+  }
+
+  .cover-flow-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .cover-flow-image-wrap.media-frame--logo .cover-flow-image {
+    object-fit: contain;
+    padding: 0.5rem;
+  }
+
+  .cover-flow-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+    padding: 0.5rem;
+    text-align: center;
+  }
+
+  .cover-flow-title {
+    display: block;
+    margin-top: 1.75rem;
+    max-width: var(--cover-size);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--color-ink);
+    opacity: 0.55;
+    transition: opacity 0.2s ease;
+  }
+
+  .cover-flow-desc {
+    display: none;
+  }
+
+  .cover-flow-link:hover .cover-flow-title,
+  .cover-flow-link:focus-visible .cover-flow-title {
+    opacity: 1;
+  }
+
+  @supports (animation-timeline: view()) {
+    .cover-flow-title {
+      animation: cover-title-fade linear both;
+      animation-timeline: --cover-in-view;
+    }
+
+    @keyframes cover-title-fade {
+      0%,
+      100% {
+        opacity: 0.45;
+      }
+      50% {
+        opacity: 1;
+      }
+    }
+  }
+
+  @keyframes cover-z-index {
+    0%,
+    100% {
+      z-index: 1;
+    }
+    50% {
+      z-index: 10;
+    }
+  }
+
+  @keyframes cover-rotate {
+    0% {
+      transform: translateX(-40%) rotateY(-38deg) scale(0.88);
+      opacity: 0.45;
+    }
+    40% {
+      transform: translateX(0) rotateY(-38deg) scale(0.92);
+      opacity: 0.7;
+    }
+    50% {
+      transform: rotateY(0deg) translateZ(0.5em) scale(1);
+      opacity: 1;
+    }
+    60% {
+      transform: translateX(0) rotateY(38deg) scale(0.92);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateX(40%) rotateY(38deg) scale(0.88);
+      opacity: 0.45;
+    }
+  }
+
+  /* Browsers without scroll-driven animations */
+  @supports not (animation-timeline: view()) {
+    .cover-flow-item {
+      animation: none;
+    }
+
+    .cover-flow-image {
+      animation: none;
+      transform: none;
+      opacity: 1;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cover-flow-track {
+      scroll-behavior: auto;
+    }
+
+    .cover-flow-item,
+    .cover-flow-image {
+      animation: none !important;
+      transform: none !important;
+      opacity: 1 !important;
+    }
+
+    .cover-flow-image {
+      -webkit-box-reflect: none;
+    }
+
+    .cover-flow-title {
+      opacity: 1;
+    }
+
+    .cover-flow-desc {
+      display: block;
+      margin-top: 0.25rem;
+      max-width: var(--cover-size);
+      font-size: 0.6875rem;
+      line-height: 1.4;
+      color: var(--color-muted);
+    }
+  }
+</style>

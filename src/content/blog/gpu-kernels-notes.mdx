@@ -1,0 +1,55 @@
+---
+title: GPU Kernels — First Notes
+date: 2025-04-28
+description: Notes from learning CUDA memory hierarchy, occupancy, and writing my first custom kernels.
+tags:
+  - CUDA
+  - GPU Kernels
+  - PyTorch
+featured: true
+theme:
+  accent: "#4f46e5"
+  paper: "#eef2ff"
+  ink: "#1e1b4b"
+  mood: cool
+  headingStyle: serif
+  illustration:
+    hero: /images/blog/gpu-kernels-notes/hero-scene.png
+    heroAlt: Abstract GPU grid illustration in indigo tones
+---
+
+Moving from PyTorch high-level APIs to CUDA kernels is like switching from driving to rebuilding the engine. These are my first structured notes.
+
+## Memory hierarchy
+
+| Level | Latency | Capacity |
+|-------|---------|----------|
+| Registers | ~1 cycle | tiny |
+| Shared memory | ~20 cycles | 48–228 KB/SM |
+| L2 | ~200 cycles | MB scale |
+| HBM | ~400+ cycles | GB scale |
+
+<Callout type="note">
+Coalesced global memory access is the first thing to get right. Everything else is optimization on top.
+</Callout>
+
+## A minimal vector add
+
+```cpp
+__global__ void vector_add(const float* a, const float* b, float* c, int n) {
+    int idx = blockIdx.x * blockDim.x + threadIdx.x;
+    if (idx < n) {
+        c[idx] = a[idx] + b[idx];
+    }
+}
+```
+
+## Occupancy tradeoffs
+
+More threads per block is not always better. Shared memory and register usage per block directly limits how many blocks can run concurrently on an SM.
+
+## Next steps
+
+- Triton for higher-level kernel authoring
+- Roofline analysis for kernel bottlenecks
+- Integrating custom ops with PyTorch

@@ -1,0 +1,38 @@
+---
+title: MandiLedger
+date: 2024-11-01
+description: Offline-first farm accounting app for mandi and field operations.
+tags:
+  - Agriculture
+  - Mobile
+featured: true
+tech:
+  - Expo
+  - SQLite
+  - Cloudflare D1
+github: https://github.com/harikanthl
+image: /images/mandilogo.png
+imageFit: contain
+---
+
+MandiLedger is an offline-first accounting application built for farmers and mandi traders who cannot rely on constant connectivity.
+
+## Problem
+
+Rural markets run on paper ledgers, WhatsApp messages, and memory. Existing accounting software assumes always-on internet and desktop workflows.
+
+## Solution
+
+- **Offline-first**: SQLite on device, sync when connected
+- **Simple UX**: designed for users who are not accountants
+- **Edge sync**: Cloudflare D1 for lightweight cloud backup
+
+## Architecture
+
+```text
+Expo App → SQLite (local) → Sync Worker → Cloudflare D1
+```
+
+## Status
+
+Active development. Building toward production deployment with real farm partners.

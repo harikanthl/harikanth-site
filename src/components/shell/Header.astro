@@ -1,0 +1,145 @@
+---
+import { SITE } from '../../lib/seo';
+
+const nav = [
+  { href: '/', label: 'Home' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/notes', label: 'Notes' },
+  { href: '/about', label: 'About' },
+  { href: '/resume', label: 'Resume' },
+];
+
+const currentPath = Astro.url.pathname;
+---
+
+<header class="site-header">
+  <div class="page-container flex items-center justify-between gap-6 py-3.5">
+    <a href="/" class="site-logo no-underline">
+      {SITE.name.split(' ')[0]}
+    </a>
+    <nav aria-label="Main" class="hidden items-center gap-1 md:flex">
+      {
+        nav.map(({ href, label }) => {
+          const active =
+            href === '/'
+              ? currentPath === '/'
+              : currentPath.startsWith(href);
+          return (
+            <a
+              href={href}
+              class:list={['nav-link', active && 'nav-link-active']}
+            >
+              {label}
+            </a>
+          );
+        })
+      }
+    </nav>
+    <details class="relative md:hidden">
+      <summary class="nav-menu-trigger cursor-pointer list-none">Menu</summary>
+      <div class="nav-menu-panel absolute right-0 mt-2 min-w-44 rounded-xl p-1.5 shadow-lg">
+        {
+          nav.map(({ href, label }) => {
+            const active =
+              href === '/'
+                ? currentPath === '/'
+                : currentPath.startsWith(href);
+            return (
+              <a
+                href={href}
+                class:list={['nav-menu-item', active && 'nav-menu-item-active']}
+              >
+                {label}
+              </a>
+            );
+          })
+        }
+      </div>
+    </details>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    border-bottom: 1px solid color-mix(in srgb, var(--color-border) 65%, transparent);
+    background: var(--color-nav-bg);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+  }
+
+  .site-logo {
+    font-size: 1.0625rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--color-ink);
+    transition: color 0.15s ease;
+  }
+
+  .site-logo:hover {
+    color: var(--color-accent);
+  }
+
+  .nav-link {
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-muted);
+    text-decoration: none;
+    transition:
+      color 0.15s ease,
+      background-color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--color-ink);
+    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+  }
+
+  .nav-link-active {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .nav-link-active:hover {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .nav-menu-trigger {
+    padding: 0.375rem 0.625rem;
+    border-radius: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--color-muted);
+  }
+
+  .nav-menu-panel {
+    border: 1px solid var(--color-border);
+    background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+    backdrop-filter: blur(16px);
+  }
+
+  .nav-menu-item {
+    display: block;
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+    color: var(--color-muted);
+    text-decoration: none;
+  }
+
+  .nav-menu-item:hover {
+    background: color-mix(in srgb, var(--color-ink) 5%, transparent);
+    color: var(--color-ink);
+  }
+
+  .nav-menu-item-active {
+    color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+</style>

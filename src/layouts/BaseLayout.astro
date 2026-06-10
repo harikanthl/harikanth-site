@@ -1,0 +1,42 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import Header from '../components/shell/Header.astro';
+import Footer from '../components/shell/Footer.astro';
+import Seo from '../components/shell/Seo.astro';
+import '../styles/global.css';
+
+type Props = {
+  title?: string;
+  description?: string;
+  image?: string;
+  type?: 'website' | 'article';
+  publishedTime?: string;
+  noindex?: boolean;
+  jsonLd?: Record<string, unknown> | Record<string, unknown>[];
+};
+
+const props = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <Seo {...props} />
+    <ClientRouter />
+    <!-- Cloudflare Web Analytics: replace token after enabling in dashboard -->
+    <!-- <script defer src='https://static.cloudflareinsights.com/beacon.min.js' data-cf-beacon='{"token": "YOUR_TOKEN"}'></script> -->
+  </head>
+  <body class="min-h-screen flex flex-col">
+    <Header />
+    <main class="flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>
+
+<style is:global>
+  @view-transition {
+    navigation: auto;
+  }
+</style>

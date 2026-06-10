@@ -1,0 +1,22 @@
+---
+import { SITE } from '../../lib/seo';
+const year = new Date().getFullYear();
+---
+
+<footer class="mt-24 border-t border-[var(--color-border)]">
+  <div class="page-container flex flex-col gap-6 py-12 md:flex-row md:items-center md:justify-between">
+    <div>
+      <p class="text-lg font-semibold">{SITE.name}</p>
+      <p class="mt-1 text-sm text-[var(--color-muted)]">AI/ML Engineer · Veteran · Builder</p>
+    </div>
+    <div class="flex flex-wrap gap-4 text-sm">
+      <a href={SITE.github} class="no-underline opacity-70 hover:opacity-100">GitHub</a>
+      <a href={SITE.linkedin} class="no-underline opacity-70 hover:opacity-100">LinkedIn</a>
+      <a href={`mailto:${SITE.email}`} class="no-underline opacity-70 hover:opacity-100">Email</a>
+      <a href="/rss.xml" class="no-underline opacity-70 hover:opacity-100">RSS</a>
+    </div>
+  </div>
+  <div class="page-container border-t border-[var(--color-border)] py-6 text-xs text-[var(--color-muted)]">
+    © {year} {SITE.name}. Built with care.
+  </div>
+</footer>

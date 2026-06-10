@@ -1,0 +1,70 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PostCard from '../../components/blog/PostCard.astro';
+import TagPill from '../../components/blog/TagPill.astro';
+
+const tagFilter = Astro.url.searchParams.get('tag');
+const allPosts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+const allTags = [...new Set(allPosts.flatMap((p) => p.data.tags))].sort();
+const posts = tagFilter
+  ? allPosts.filter((p) => p.data.tags.includes(tagFilter))
+  : allPosts;
+---
+
+<BaseLayout
+  title="Blog"
+  description="Writing about deep learning, CUDA, PyTorch, GPU kernels, and building AI systems."
+>
+  <div class="page-container py-16">
+    <header class="max-w-2xl">
+      <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">Blog</h1>
+      <p class="mt-4 text-lg text-[var(--color-muted)]">
+        Essays and notes on AI, GPUs, and software I am building.
+      </p>
+    </header>
+
+    {
+      allTags.length > 0 && (
+        <div class="mt-8 flex flex-wrap gap-2">
+          <a
+            href="/blog"
+            class:list={[
+              'rounded-full border px-3 py-1 text-xs no-underline',
+              !tagFilter
+                ? 'border-[var(--color-ink)] text-[var(--color-ink)]'
+                : 'border-[var(--color-border)] text-[var(--color-muted)]',
+            ]}
+          >
+            All
+          </a>
+          {allTags.map((tag) => (
+            <TagPill tag={tag} />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      tagFilter && (
+        <p class="mt-6 text-sm text-[var(--color-muted)]">
+          Showing posts tagged <strong>{tagFilter}</strong>
+          {' · '}
+          <a href="/blog" class="underline">Clear filter</a>
+        </p>
+      )
+    }
+
+    <div class="mt-12" data-pagefind-body>
+      {posts.map((post) => <PostCard post={post} />)}
+      {
+        posts.length === 0 && (
+          <p class="text-[var(--color-muted)]">No posts found.</p>
+        )
+      }
+    </div>
+  </div>
+</BaseLayout>

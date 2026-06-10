@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#faf5ff"/>
+  <rect x="120" y="60" width="560" height="380" rx="20" fill="#fff" stroke="#9333ea" stroke-width="2"/>
+  <circle cx="400" cy="200" r="60" fill="#e9d5ff"/>
+  <rect x="200" y="300" width="400" height="80" rx="8" fill="#f3e8ff"/>
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="20" fill="#6b21a8">Vireeel</text>
+</svg>

@@ -1,17 +1,58 @@
 ---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import BioAside from '../components/shell/BioAside.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import ProjectCoverFlow from '../components/editorial/ProjectCoverFlow.astro';
+import { jsonLdPerson } from '../lib/seo';
 
+const posts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5);
+
+const projects = (await getCollection('projects'))
+  .filter((p) => p.data.featured)
+  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro</title>
-	</head>
-	<body>
-		<h1>Astro</h1>
-	</body>
-</html>
+<BaseLayout jsonLd={jsonLdPerson()}>
+  <div class="page-container py-10 sm:py-14">
+    <div class="grid gap-12 lg:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:gap-16">
+      <BioAside />
+
+      <div class="min-w-0">
+        <section>
+          <div class="flex items-baseline justify-between gap-4">
+            <h1 class="text-lg font-semibold tracking-tight">Writing</h1>
+            <a
+              href="/blog"
+              class="text-sm text-[var(--color-muted)] no-underline hover:text-[var(--color-ink)]"
+            >
+              All posts →
+            </a>
+          </div>
+          <div class="mt-6">
+            {posts.map((post) => <PostCard post={post} />)}
+          </div>
+        </section>
+
+        {
+          projects.length > 0 && (
+            <section class="mt-16 border-t border-[var(--color-border)] pt-12">
+              <div class="flex items-baseline justify-between gap-4">
+                <h2 class="text-lg font-semibold tracking-tight">Projects</h2>
+                <a
+                  href="/projects"
+                  class="text-sm text-[var(--color-muted)] no-underline hover:text-[var(--color-ink)]"
+                >
+                  All projects →
+                </a>
+              </div>
+              <ProjectCoverFlow projects={projects} />
+            </section>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</BaseLayout>

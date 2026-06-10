@@ -1,0 +1,152 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { getCollection, render } from 'astro:content';
+import { components as mdxComponents } from '../mdx-components';
+import BaseLayout from './BaseLayout.astro';
+import IllustrationScene from '../components/editorial/IllustrationScene.astro';
+import ReadingProgress from '../components/blog/ReadingProgress.astro';
+import TableOfContents from '../components/blog/TableOfContents.astro';
+import TagPill from '../components/blog/TagPill.astro';
+import PostCard from '../components/blog/PostCard.astro';
+import { formatDate } from '../lib/format';
+import { readingTime } from '../lib/reading-time';
+import { relatedPosts } from '../lib/related-posts';
+import { resolvePostTheme, heroTextStyle } from '../lib/theme';
+import { SITE, canonicalUrl, jsonLdBlogPosting } from '../lib/seo';
+
+type Props = {
+  post: CollectionEntry<'blog'>;
+};
+
+const { post } = Astro.props;
+const theme = resolvePostTheme(post.data.theme);
+const heroText = heroTextStyle(theme.ink);
+const { Content, headings } = await render(post);
+const { title, description, date, tags } = post.data;
+const allPosts = await getCollection('blog', ({ data }) => !data.draft);
+const related = relatedPosts(post, allPosts);
+const bodyText = 'body' in post && typeof post.body === 'string' ? post.body : description;
+const { label: readLabel } = readingTime(bodyText);
+const postUrl = canonicalUrl(`/blog/${post.id}`);
+const transitionName = `post-title-${post.id}`;
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  type="article"
+  publishedTime={date.toISOString()}
+  image={theme.illustration?.hero}
+  jsonLd={jsonLdBlogPosting({
+    title,
+    description,
+    url: postUrl,
+    date,
+    tags,
+    image: theme.illustration?.hero
+      ? new URL(theme.illustration.hero, SITE.url).href
+      : undefined,
+  })}
+>
+  <ReadingProgress accent={theme.accent} />
+
+  <article
+    class="post-skin"
+    data-reading-article
+    style={{
+      '--post-accent': theme.accent,
+      '--post-paper': theme.paper,
+    }}
+  >
+    <IllustrationScene
+      hero={theme.illustration?.hero}
+      heroAlt={theme.illustration?.heroAlt}
+      decor={theme.illustration?.decor}
+      accent={theme.accent}
+      paper={theme.paper}
+    >
+      <header class="relative z-10 max-w-2xl">
+        <div
+          class="mb-4 flex flex-wrap items-center gap-3 text-sm"
+          style={{ color: heroText.meta }}
+        >
+          <time datetime={date.toISOString()}>{formatDate(date)}</time>
+          <span aria-hidden="true">·</span>
+          <span>{readLabel}</span>
+        </div>
+        <h1
+          class="text-3xl font-semibold leading-tight tracking-tight sm:text-4xl md:text-5xl"
+          style={{
+            color: heroText.title,
+            viewTransitionName: transitionName,
+          }}
+        >
+          {title}
+        </h1>
+        <div
+          class="mt-5 h-1 w-14 rounded-full"
+          style={{ background: theme.accent }}
+        />
+        <p
+          class="mt-5 max-w-xl text-base leading-relaxed sm:text-lg"
+          style={{ color: heroText.description }}
+        >
+          {description}
+        </p>
+      </header>
+    </IllustrationScene>
+
+    <div class="page-container py-12">
+      <div class="grid gap-12 lg:grid-cols-[1fr_16rem]">
+        <div
+          class="prose min-w-0 text-[var(--color-ink)]"
+          data-pagefind-body
+          data-pagefind-meta={`title:${title}`}
+        >
+          <Content components={mdxComponents} />
+        </div>
+        <aside class="hidden lg:block">
+          <div class="sticky top-24 space-y-6">
+            <TableOfContents headings={headings} />
+          </div>
+        </aside>
+      </div>
+
+      <footer class="mt-16 border-t border-[var(--color-border)] pt-10">
+        {
+          tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+              {tags.map((tag) => (
+                <TagPill tag={tag} />
+              ))}
+            </div>
+          )
+        }
+
+        <div class="mt-8 flex flex-wrap gap-4">
+          <a
+            href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(postUrl)}`}
+            class="inline-flex items-center rounded-full border border-[var(--color-border)] px-4 py-2 text-sm no-underline transition-colors hover:border-[var(--post-accent)]"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Discuss on LinkedIn →
+          </a>
+        </div>
+
+        {
+          related.length > 0 && (
+            <section class="mt-16">
+              <h2 class="mb-6 text-xl font-semibold">Related</h2>
+              <div>
+                {related.map((p) => (
+                  <PostCard post={p} showThumbnail={false} compact />
+                ))}
+              </div>
+            </section>
+          )
+        }
+      </footer>
+    </div>
+  </article>
+</BaseLayout>

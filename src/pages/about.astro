@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE } from '../lib/seo';
+
+const timeline = [
+  { period: 'Education', title: 'MSEE', detail: 'Graduate studies in electrical and systems engineering.' },
+  { period: 'Career', title: 'SAP Consultant', detail: 'Enterprise systems implementation and integration.' },
+  { period: 'Service', title: 'US Army Veteran', detail: 'Leadership, discipline, and mission-focused execution.' },
+  { period: 'Family', title: 'Returned to Family Farming', detail: 'Hands-on agriculture and rural operations.' },
+  { period: 'Building', title: 'Software for Agriculture', detail: 'MandiLedger, FarmDots, and tools for farmers.' },
+  { period: 'Now', title: 'Learning AI & GPU Systems', detail: 'PyTorch, CUDA, Triton, and practical AI products.' },
+  { period: 'Next', title: 'Seeking AI/ML Opportunities', detail: 'Open to roles building real-world intelligent systems.' },
+];
+---
+
+<BaseLayout
+  title="About"
+  description="My path from engineering and military service to farming, software, and AI."
+>
+  <div class="page-container py-16">
+    <header class="max-w-2xl">
+      <h1 class="text-4xl md:text-5xl">About</h1>
+      <p class="mt-6 text-xl text-[var(--color-muted)]">
+        I am an engineer who builds where theory meets dirt-under-the-fingernails reality —
+        from GPU kernels to farm accounting apps.
+      </p>
+    </header>
+
+    <div class="mt-16 max-w-2xl">
+      <ol class="relative border-l border-[var(--color-border)] pl-8">
+        {
+          timeline.map((item) => (
+            <li class="mb-12 last:mb-0">
+              <span
+                class="absolute -left-1.5 mt-1.5 h-3 w-3 rounded-full border-2 border-[var(--color-surface)] bg-[var(--color-accent)]"
+                aria-hidden="true"
+              />
+              <p class="text-xs font-medium uppercase tracking-wider text-[var(--color-muted)]">
+                {item.period}
+              </p>
+              <h2 class="mt-1 text-2xl">{item.title}</h2>
+              <p class="mt-2 text-[var(--color-muted)]">{item.detail}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+
+    <div class="mt-16 flex flex-wrap gap-4">
+      <a
+        href={SITE.linkedin}
+        class="btn-primary rounded-full px-5 py-2.5 text-sm font-medium"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        Connect on LinkedIn
+      </a>
+      <a href={`mailto:${SITE.email}`} class="rounded-full border border-[var(--color-border)] px-5 py-2.5 text-sm no-underline">
+        Email me
+      </a>
+    </div>
+  </div>
+</BaseLayout>

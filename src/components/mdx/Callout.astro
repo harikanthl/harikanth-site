@@ -1,0 +1,28 @@
+---
+type Props = {
+  type?: 'note' | 'tip' | 'warn';
+};
+
+const { type = 'note' } = Astro.props;
+
+const labels = { note: 'Note', tip: 'Tip', warn: 'Warning' };
+const colors = {
+  note: 'border-[var(--color-accent)]',
+  tip: 'border-emerald-500',
+  warn: 'border-amber-500',
+};
+---
+
+<aside
+  class:list={[
+    'my-8 rounded-xl border-l-[3px] bg-[color-mix(in_srgb,var(--color-ink)_4%,transparent)] px-5 py-4',
+    colors[type],
+  ]}
+>
+  <p class="mb-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-muted)]">
+    {labels[type]}
+  </p>
+  <div class="text-[var(--color-ink)]">
+    <slot />
+  </div>
+</aside>
