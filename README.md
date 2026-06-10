@@ -27,12 +27,31 @@ npm run preview
 
 ## Deployment (Cloudflare Pages)
 
-1. Push to GitHub
-2. Connect repo in Cloudflare Pages
-3. Build command: `npm run build`
-4. Output directory: `dist`
-5. Add custom domain `harikanth.site`
-6. Enable Cloudflare Web Analytics and paste token in `BaseLayout.astro`
+**Repo:** [github.com/harikanthl/harikanth-site](https://github.com/harikanthl/harikanth-site)  
+**Pages project:** `harikanth-site` → [harikanth-site.pages.dev](https://harikanth-site.pages.dev)
+
+### Connect GitHub (auto-deploy on push)
+
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **harikanth-site**
+2. **Settings** → **Builds** → **Connect to Git**
+3. Select **harikanthl/harikanth-site**, branch **main**
+4. Build settings:
+   - Build command: `npm run build`
+   - Build output directory: `dist`
+   - Environment variable: `NODE_VERSION` = `22`
+
+### Custom domain
+
+1. Same project → **Custom domains** → **Set up a custom domain**
+2. Enter `harikanth.site` (DNS is auto-configured if the zone is on Cloudflare)
+3. Optionally add `www.harikanth.site`
+
+### Manual deploy (optional)
+
+```bash
+npm run build
+npx wrangler pages deploy dist --project-name=harikanth-site --branch=main
+```
 
 ## Stack
 

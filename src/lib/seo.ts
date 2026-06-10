@@ -1,6 +1,6 @@
 export const SITE = {
   name: 'Harikanth Lingutla',
-  title: 'Harikanth Lingutla — AI/ML Engineer',
+  title: 'Harikanth Lingutla',
   description:
     'I build practical AI systems, GPU projects, and software tools. Writing about PyTorch, CUDA, Triton, and building AI products.',
   url: 'https://harikanth.site',
@@ -33,7 +33,6 @@ export function jsonLdPerson() {
     name: SITE.name,
     url: SITE.url,
     sameAs: [SITE.github, SITE.linkedin],
-    jobTitle: 'AI/ML Engineer',
   };
 }
 
