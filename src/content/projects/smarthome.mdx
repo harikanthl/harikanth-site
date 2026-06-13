@@ -1,0 +1,50 @@
+---
+title: Smart Home IoT
+date: 2023-06-15
+description: ESP32-based home automation — 12 relay control, Firebase sync, and a React Native companion app.
+tags:
+  - IoT
+  - Hardware
+  - Embedded
+featured: false
+tech:
+  - ESP32
+  - Firebase
+  - React Native
+  - Expo
+  - BLE
+image: /images/projects/smarthome.svg
+---
+
+A comprehensive smart home automation system built around an ESP32 — WiFi provisioning, Firebase Realtime Database sync, and a React Native mobile app for remote control.
+
+## Hardware
+
+- ESP32 development board driving a 12-channel relay module
+- GPIO pins mapped across 12 relays for appliances and lighting
+- BOOT button hold (5 seconds) resets WiFi credentials
+
+## Features
+
+- **WiFi provisioning** — configure credentials via BLE (Espressif's ESP BLE Provisioning app), QR code, or SoftAP fallback
+- **12 relay control** — turn devices on/off from the mobile app in real time
+- **Firebase sync** — relay state, device metadata, automation schedules, and energy usage tracked in Realtime Database
+- **Automation scheduling** — time-based rules with custom on/off times and day-of-week selection
+- **Energy tracking** — per-device wattage and usage statistics (total hours, units, monthly rollups)
+
+## Mobile app
+
+Built with Expo and React Native. Provides real-time device control, automation scheduling, energy monitoring, and an analytics dashboard.
+
+## Firebase structure
+
+```text
+/relays/{id}       — ON/OFF state
+/metadata/{id}     — device name and wattage
+/automation/{id}   — schedule rules
+/usage/{id}        — consumption data
+```
+
+## Why I built it
+
+I wanted a self-hosted alternative to commercial smart plugs — full control over relay mapping, scheduling logic, and the mobile UI, without subscription fees.

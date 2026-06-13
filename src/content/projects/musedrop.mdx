@@ -1,0 +1,42 @@
+---
+title: MuseDrop
+date: 2025-09-01
+description: macOS media downloader and player — yt-dlp, ffmpeg, local library, external drive sync, and AI summaries.
+tags:
+  - macOS
+  - Media
+  - SwiftUI
+featured: true
+tech:
+  - SwiftUI
+  - yt-dlp
+  - ffmpeg
+  - AVFoundation
+  - Apple Intelligence
+image: /images/projects/musedrop.svg
+---
+
+MuseDrop is a desktop-grade macOS app for downloading, converting, organizing, and playing media from any link — YouTube, TikTok, Instagram, Twitter/X, Vimeo, SoundCloud, and 1000+ sites supported by yt-dlp.
+
+## Core features
+
+- **Download anything** — audio and video from any supported URL
+- **Convert and process** — merge A/V streams, export to MP3, AAC, WAV, MP4, MKV, MOV via bundled ffmpeg
+- **Local library** — thumbnails, metadata, and search across downloaded media
+- **Built-in player** — audio and video playback with AVPlayer
+- **External drives** — download directly to SD cards, USB drives, and external SSDs; sync files across volumes
+- **AI summaries** — on-device summary generation for long videos and podcasts
+
+## Architecture
+
+SwiftUI + MVVM. yt-dlp and ffmpeg ship as bundled binaries under `Resources/bin/`. A `DownloadEngine` manages concurrent downloads with progress tracking; `LibraryManager` indexes metadata; `ExternalDriveManager` handles removable media.
+
+```text
+SwiftUI views → ViewModels → Services (Download, Library, BinaryUpdate, SummaryAI)
+                                    ↓
+                          yt-dlp + ffmpeg (bundled binaries)
+```
+
+## Why I built it
+
+Existing downloaders are either web-based (privacy concerns) or CLI-only (not approachable). MuseDrop wraps yt-dlp's power in a native macOS library with playback, drive sync, and AI summaries built in.

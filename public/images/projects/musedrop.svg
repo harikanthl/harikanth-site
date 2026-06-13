@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#f0fdf4"/>
+  <circle cx="400" cy="230" r="100" fill="#86efac" opacity="0.3"/>
+  <polygon points="400,150 430,220 510,220 445,270 465,350 400,305 335,350 355,270 290,220 370,220" fill="#22c55e" opacity="0.6"/>
+  <path d="M320 320 L400 280 L480 320" stroke="#16a34a" stroke-width="4" fill="none"/>
+  <circle cx="400" cy="280" r="8" fill="#15803d"/>
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="20" fill="#166534">MuseDrop</text>
+</svg>

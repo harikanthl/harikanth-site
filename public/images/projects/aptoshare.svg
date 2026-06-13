@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#eff6ff"/>
+  <rect x="280" y="120" width="240" height="280" rx="12" fill="#bfdbfe" opacity="0.5"/>
+  <rect x="310" y="160" width="50" height="50" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="380" y="160" width="50" height="50" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="450" y="160" width="50" height="50" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="310" y="230" width="50" height="50" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="380" y="230" width="50" height="50" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="450" y="230" width="50" height="50" rx="4" fill="#3b82f6" opacity="0.6"/>
+  <rect x="365" y="80" width="70" height="50" rx="6" fill="#1d4ed8" opacity="0.3"/>
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="20" fill="#1e40af">Aptoshare</text>
+</svg>

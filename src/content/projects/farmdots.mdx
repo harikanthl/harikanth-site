@@ -1,27 +1,51 @@
 ---
 title: FarmDots
 date: 2024-08-20
-description: Digital twin for farms — spatial data, field boundaries, and operational overlays.
+description: Offline-first farm operating system — map boundaries, lay out rows and plants, log operations, and sync to the cloud.
 tags:
   - Agriculture
   - Maps
+  - PWA
 featured: true
 tech:
+  - React
+  - RxDB
   - MapLibre
-  - PMTiles
+  - Konva
   - Cloudflare Workers
-github: https://github.com/harikanthl
+  - D1
+github: https://github.com/harikanthl/FarmCraft
 image: /images/projects/farmdots.svg
 ---
 
-FarmDots visualizes farm operations on interactive maps — field boundaries, sensor points, and operational history in one view.
+FarmDots is an offline-first, map-based farm operating system built for orchard and permanent-crop farms — mango, citrus, berries, vineyards, drip blocks.
 
-## Technical approach
+Draw farm boundaries on a satellite map, auto-generate rows and plants from spacing settings, manage drip irrigation by valve, log disease and irrigation events, export operational spreadsheets, and sync everything to the cloud when you are back online.
 
-- **MapLibre GL** for performant vector rendering
-- **PMTiles** for cheap, static tile hosting
-- **Cloudflare Workers** for edge API and auth
+## What it does
 
-## Vision
+- **Global map** — draw and edit farm polygons, satellite and topo layers, plant and valve markers, area metrics
+- **Farm workspace** — Konva canvas for pan/zoom, placing and dragging plants and valves, marquee selection, row guides
+- **Grid wizard** — auto-generate parallel rows and plants from spacing and bearing inside a boundary
+- **Operations** — per-plant health, yield, and issues; irrigation and disease event logs
+- **Calendar** — farm events with recurrence for irrigation, harvest, scouting, and more
+- **Export** — `plants.xlsx`, `rows.csv`, `irrigation.csv`, `disease.csv`
+- **Offline-first** — RxDB + IndexedDB, PWA installable, works without network
+- **Cloud sync** — push/pull to Cloudflare D1 via Workers API with geometry conflict resolution
+- **AI (optional)** — Gemini farm context, chat, and multilingual voice intent via Sarvam
 
-A digital twin that helps farmers see patterns across seasons — not just dots on a map, but actionable spatial intelligence.
+## Architecture
+
+```text
+React PWA (Vite + RxDB + MapLibre/Konva)
+        ↓ /api
+Cloudflare Worker (Hono + D1 + R2 + cron)
+        ↓ optional
+R Plumber analytics sidecar
+```
+
+Shared Zod entities and GeoJSON helpers live in workspace packages. Crop spacing templates ship as a separate package for mango, citrus, and other profiles.
+
+## Why I built it
+
+Most farm software assumes desktop workflows and always-on internet. FarmDots is designed for people working in the field on a phone — draw a boundary, fill it with a grid, log what happened today, and sync when you get back to Wi‑Fi.

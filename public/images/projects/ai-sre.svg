@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" fill="none">
+  <rect width="800" height="500" fill="#0f172a"/>
+  <rect x="200" y="100" width="400" height="260" rx="16" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <path d="M240 280 L300 200 L360 240 L420 160 L480 220 L520 180 L560 280" stroke="#22d3ee" stroke-width="3" fill="none"/>
+  <circle cx="420" cy="160" r="8" fill="#ef4444"/>
+  <rect x="240" y="130" width="120" height="8" rx="4" fill="#475569"/>
+  <rect x="240" y="150" width="80" height="6" rx="3" fill="#334155"/>
+  <circle cx="540" cy="140" r="16" fill="#22d3ee" opacity="0.3"/>
+  <text x="400" y="440" text-anchor="middle" font-family="system-ui" font-size="20" fill="#94a3b8">AI-SRE</text>
+</svg>

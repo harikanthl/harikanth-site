@@ -1,28 +1,59 @@
 ---
 title: Vireeel
-date: 2025-02-15
-description: AI UGC ad generator for short-form video marketing.
+date: 2024-03-01
+description: GIF creation, search, and sharing platform — client-side FFmpeg, progressive caching, and infinite scroll.
 tags:
-  - AI
-  - Product
+  - Web
+  - Media
+  - GIF
 featured: true
 tech:
   - Next.js
-  - FastAPI
-  - Gemini
-github: https://github.com/harikanthl
+  - FFmpeg.wasm
+  - Prisma
+  - PostgreSQL
+  - Zustand
+  - Tenor
+  - GIPHY
+github: https://github.com/harikanthlingutla/Gifwala-mob
 image: /images/vireeel.png
 imageFit: contain
 ---
 
-Vireeel generates user-generated-content style advertisements using multimodal AI — scripts, visuals, and assembly pipelines for short-form platforms.
+Vireeel is a modern GIF platform for creating, searching, browsing, and sharing GIFs — with client-side video processing so user content never leaves the browser.
+
+## Create
+
+- Import YouTube videos and trim segments
+- Add text overlays with custom fonts, colors, and positions
+- Adjust quality, duration, and compression
+- Process entirely in-browser via FFmpeg compiled to WebAssembly
+- Optional watermarking on exported GIFs
+
+## Browse and search
+
+- Search across Tenor and GIPHY providers (switchable in settings)
+- Trending GIFs, category browsing, likes and personal collections
+- Infinite scrolling with seamless pagination
+- Light and dark mode, fully responsive
+
+## Progressive GIF database
+
+The database grows organically as users interact:
+
+1. Requests check the local cache first — return immediately if enough GIFs exist
+2. API fallbacks fetch from Tenor/GIPHY when the cache is thin
+3. New GIFs are stored with metadata, categories, and tags; duplicates filtered
+4. Over time the system becomes less reliant on external APIs — faster loads, lower cost, resilience when providers are down
 
 ## Stack
 
-- **Frontend**: Next.js for the creator dashboard
-- **Backend**: FastAPI for orchestration and asset pipelines
-- **Models**: Gemini for script and creative generation
+- **Frontend** — Next.js, React, Tailwind CSS, shadcn/ui
+- **State** — Zustand with persisted preferences
+- **Processing** — `@ffmpeg/ffmpeg` WebAssembly pipeline
+- **Backend** — Next.js API routes, PostgreSQL with Prisma ORM
+- **Storage** — AWS S3 in production, local files in development
 
-## What I learned
+## Why I built it
 
-Building a product around generative AI means designing for failure modes: hallucinated claims, inconsistent brand voice, and latency spikes during peak generation.
+GIF creation tools either upload your video to a server or limit customization. Vireeel keeps processing local, builds a smart cache over time, and supports multiple providers without locking you into one API.
