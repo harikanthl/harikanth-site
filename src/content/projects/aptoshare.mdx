@@ -1,7 +1,7 @@
 ---
 title: Aptoshare
 date: 2025-01-10
-description: Apartment management app for owners and tenants — rent, maintenance, and notifications on the edge.
+description: Apartment management app for owners and tenants, with rent, maintenance, and notifications on the edge.
 tags:
   - Mobile
   - Property
@@ -18,13 +18,13 @@ image: /images/projects/aptoshare.png
 imageFit: contain
 ---
 
-Aptoshare is a simple apartment management monorepo — an Expo mobile app for owners and tenants, backed by a Cloudflare Workers API.
+Aptoshare is a simple apartment management monorepo: an Expo mobile app for owners and tenants, backed by a Cloudflare Workers API.
 
 ## Structure
 
-- **Mobile** — Expo React Native with owner and tenant roles
-- **API** — Hono on Cloudflare Workers with Drizzle ORM, D1, and R2
-- **Shared** — Zod schemas and types across both apps
+- **Mobile**: Expo React Native with owner and tenant roles
+- **API**: Hono on Cloudflare Workers with Drizzle ORM, D1, and R2
+- **Shared**: Zod schemas and types across both apps
 
 ## Features
 
@@ -40,4 +40,4 @@ The API runs on Cloudflare Workers with a D1 database and R2 bucket. Migrations 
 
 ## Why I built it
 
-Managing a small apartment block should not require spreadsheets and WhatsApp threads. Aptoshare keeps rent schedules, tenant communication, and file storage in one place — cheap to run on Cloudflare's edge.
+Managing a small apartment block should not require spreadsheets and WhatsApp threads. Aptoshare keeps rent schedules, tenant communication, and file storage in one place, and it is cheap to run on Cloudflare's edge.

@@ -1,5 +1,5 @@
 ---
-title: GPU Kernels — First Notes
+title: "GPU Kernels: First Notes"
 date: 2025-04-28
 description: Notes from learning CUDA memory hierarchy, occupancy, and writing my first custom kernels.
 tags:
@@ -25,7 +25,7 @@ Moving from PyTorch high-level APIs to CUDA kernels is like switching from drivi
 | Level | Latency | Capacity |
 |-------|---------|----------|
 | Registers | ~1 cycle | tiny |
-| Shared memory | ~20 cycles | 48–228 KB/SM |
+| Shared memory | ~20 cycles | 48 to 228 KB/SM |
 | L2 | ~200 cycles | MB scale |
 | HBM | ~400+ cycles | GB scale |
 

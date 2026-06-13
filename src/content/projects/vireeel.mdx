@@ -1,7 +1,7 @@
 ---
 title: Vireeel
 date: 2024-03-01
-description: GIF creation, search, and sharing platform — client-side FFmpeg, progressive caching, and infinite scroll.
+description: GIF creation, search, and sharing platform with client-side FFmpeg, progressive caching, and infinite scroll.
 tags:
   - Web
   - Media
@@ -20,7 +20,7 @@ image: /images/vireeel.png
 imageFit: contain
 ---
 
-Vireeel is a modern GIF platform for creating, searching, browsing, and sharing GIFs — with client-side video processing so user content never leaves the browser.
+Vireeel is a modern GIF platform for creating, searching, browsing, and sharing GIFs, with client-side video processing so user content never leaves the browser.
 
 ## Create
 
@@ -41,18 +41,18 @@ Vireeel is a modern GIF platform for creating, searching, browsing, and sharing 
 
 The database grows organically as users interact:
 
-1. Requests check the local cache first — return immediately if enough GIFs exist
+1. Requests check the local cache first and return immediately if enough GIFs exist
 2. API fallbacks fetch from Tenor/GIPHY when the cache is thin
 3. New GIFs are stored with metadata, categories, and tags; duplicates filtered
-4. Over time the system becomes less reliant on external APIs — faster loads, lower cost, resilience when providers are down
+4. Over time the system becomes less reliant on external APIs, which means faster loads, lower cost, and resilience when providers are down
 
 ## Stack
 
-- **Frontend** — Next.js, React, Tailwind CSS, shadcn/ui
-- **State** — Zustand with persisted preferences
-- **Processing** — `@ffmpeg/ffmpeg` WebAssembly pipeline
-- **Backend** — Next.js API routes, PostgreSQL with Prisma ORM
-- **Storage** — AWS S3 in production, local files in development
+- **Frontend**: Next.js, React, Tailwind CSS, shadcn/ui
+- **State**: Zustand with persisted preferences
+- **Processing**: `@ffmpeg/ffmpeg` WebAssembly pipeline
+- **Backend**: Next.js API routes, PostgreSQL with Prisma ORM
+- **Storage**: AWS S3 in production, local files in development
 
 ## Why I built it
 

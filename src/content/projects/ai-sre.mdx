@@ -1,7 +1,7 @@
 ---
 title: AI-SRE
 date: 2025-10-01
-description: AI-powered site reliability platform — continuous monitoring, anomaly detection, and Claude-generated root cause analysis.
+description: AI-powered site reliability platform with continuous monitoring, anomaly detection, and Claude-generated root cause analysis.
 tags:
   - SRE
   - AI
@@ -24,18 +24,18 @@ What takes an SRE 30 minutes of digging through dashboards, logs, and traces now
 
 ## How it works
 
-1. **Continuous monitoring** — metrics, logs, and traces collected across your stack
-2. **Anomaly detection** — statistical analysis flags deviations from baseline
-3. **Automatic correlation** — related logs, metrics, and traces grouped into a single incident view
-4. **Root cause analysis** — Claude generates an RCA with what broke, why, how to fix it, and confidence scores
+1. **Continuous monitoring**: metrics, logs, and traces collected across your stack
+2. **Anomaly detection**: statistical analysis flags deviations from baseline
+3. **Automatic correlation**: related logs, metrics, and traces grouped into a single incident view
+4. **Root cause analysis**: Claude generates an RCA with what broke, why, how to fix it, and confidence scores
 
 ## Stack
 
-- **API** — FastAPI with Celery workers for background scanning
-- **Web UI** — Next.js dashboard with `@xyflow/react` for flow visualization, glassmorphism design
-- **Observability** — Grafana, Mimir, Loki, Tempo, Flower
-- **Data** — PostgreSQL, Redis
-- **Integrations** — Stripe billing, Slack notifications, Kubernetes client
+- **API**: FastAPI with Celery workers for background scanning
+- **Web UI**: Next.js dashboard with `@xyflow/react` for flow visualization, glassmorphism design
+- **Observability**: Grafana, Mimir, Loki, Tempo, Flower
+- **Data**: PostgreSQL, Redis
+- **Integrations**: Stripe billing, Slack notifications, Kubernetes client
 
 ## Architecture
 
@@ -53,4 +53,4 @@ All 11 services run via Docker Compose for local development. The platform inclu
 
 ## Why I built it
 
-I got tired of waking up at 3 AM to debug production issues. Traditional monitoring drowns you in dashboards — AI-SRE correlates the signal and writes the diagnosis.
+I got tired of waking up at 3 AM to debug production issues. Traditional monitoring drowns you in dashboards. AI-SRE correlates the signal and writes the diagnosis.

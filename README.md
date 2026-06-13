@@ -1,6 +1,6 @@
 # harikanth.site
 
-Personal site and blog — Astro, MDX, Tailwind v4, deployed on Cloudflare Pages.
+Personal site and blog built with Astro, MDX, and Tailwind v4, deployed on Cloudflare Pages.
 
 ## Development
 

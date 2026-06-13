@@ -60,11 +60,11 @@ Education
 Gannon University logo
 Gannon University
 Master's degree, Electrical and Electronics Engineering
-2010 – 2011
+2010 to 2011
 Jawaharlal Nehru Technological University logo
 Jawaharlal Nehru Technological University
 Bachelor of Technology - BTech, Electrical, Electronics and Communications Engineering
-2005 – 2009
+2005 to 2009
 Grade: 3.00 GPA
 Activities and societies: Electronics Lab & Cricket
 Paid attention to Math and Applied physics.

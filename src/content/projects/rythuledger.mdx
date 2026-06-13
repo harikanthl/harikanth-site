@@ -1,7 +1,7 @@
 ---
 title: RythuLedger
 date: 2025-06-01
-description: Offline-first farm ledger for Indian plot operators — field expenses, labour, harvest cuttings, and partner balances.
+description: Offline-first farm ledger for Indian plot operators, covering field expenses, labour, harvest cuttings, and partner balances.
 tags:
   - Agriculture
   - Mobile
@@ -15,33 +15,33 @@ image: /images/projects/rythuledger.png
 imageFit: contain
 ---
 
-RythuLedger is a separate app from MandiLedger — built for **farmers and managing partners** who run their own plots. Field expenses, labour, harvest, and partner accounts — not mandi trip/settlement workflows.
+RythuLedger is a separate app from MandiLedger, built for **farmers and managing partners** who run their own plots. Field expenses, labour, harvest, and partner accounts, not mandi trip/settlement workflows.
 
 The product direction came from real spreadsheets: multi-plot expense ledgers with partner splits, crop yield records, cutting/harvest sales, and balance sheets. The goal is to digitize that mental model in a **neat, Telugu-friendly, offline-first** mobile app.
 
 ## What it does today
 
-- **Labour books** — laborers, daily work logs, advances and deductions, wage settlements
-- **Farm books** — plots, seasons, field expenses with owner/joint/partner splits, partner balances, harvest cuttings, cross-crop transfers
-- **Plot map** — boundaries, plant grids, irrigation assets (valve, motor, drip), health filters
-- **Reports** — filtered SQL exports for labour and farm data to CSV and XLSX
-- **CSV import** — Pulivendula-style field expense and cutting spreadsheets
-- **i18n** — English, Telugu, Hindi, Tamil, Marathi, Odia, Malayalam, Kannada
+- **Labour books**: laborers, daily work logs, advances and deductions, wage settlements
+- **Farm books**: plots, seasons, field expenses with owner/joint/partner splits, partner balances, harvest cuttings, cross-crop transfers
+- **Plot map**: boundaries, plant grids, irrigation assets (valve, motor, drip), health filters
+- **Reports**: filtered SQL exports for labour and farm data to CSV and XLSX
+- **CSV import**: Pulivendula-style field expense and cutting spreadsheets
+- **i18n**: English, Telugu, Hindi, Tamil, Marathi, Odia, Malayalam, Kannada
 
 ## Architecture
 
 ```text
 Expo app (expo-router + SQLite)
         ↓ local queue
-Cloud sync API (planned — /rythu/farm/*, /rythu/labor/*)
+Cloud sync API (planned: /rythu/farm/*, /rythu/labor/*)
 ```
 
 Ported UI patterns and shared types from MandiLedger, but a **separate app** with its own package id (`com.rythuledger.app`) and product scope. MandiLedger handles mandi/distributor workflows; RythuLedger handles on-farm accounting.
 
 ## Roadmap
 
-Still early — labour module works offline; farm books are actively expanding. Next priorities: plots and seasons CRUD, field expense entry, harvest/cutting P&L, partner ledger settlement math, Firebase auth, and cloud backup.
+Still early. The labour module works offline; farm books are actively expanding. Next priorities: plots and seasons CRUD, field expense entry, harvest/cutting P&L, partner ledger settlement math, Firebase auth, and cloud backup.
 
 ## Why I built it
 
-My uncle runs decades of farm accounting in Excel. RythuLedger is the path from those sheets to something he can use in the field on spotty connectivity — one thumb, under a minute to log today's tractor hire.
+My uncle runs decades of farm accounting in Excel. RythuLedger is the path from those sheets to something he can use in the field on spotty connectivity: one thumb, under a minute to log today's tractor hire.
