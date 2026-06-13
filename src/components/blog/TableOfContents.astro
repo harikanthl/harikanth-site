@@ -11,16 +11,19 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
 
 {
   items.length > 0 && (
-    <nav aria-label="Table of contents" class="rounded-xl border border-[var(--color-border)] p-5">
-      <p class="mb-3 text-xs font-medium uppercase tracking-wider text-[var(--color-muted)]">
+    <nav
+      aria-label="Table of contents"
+      class="toc-panel rounded-2xl border border-[var(--color-border)] bg-[color-mix(in_srgb,var(--color-surface)_96%,var(--color-ink)_4%)] p-5"
+    >
+      <p class="mb-3 text-[0.6875rem] font-semibold uppercase tracking-[0.08em] text-[var(--color-muted)]">
         On this page
       </p>
-      <ol class="space-y-2 text-sm">
+      <ol class="space-y-2.5 text-sm leading-snug">
         {items.map((heading) => (
-          <li class:list={[heading.depth === 3 && 'ml-4']}>
+          <li class:list={[heading.depth === 3 && 'ml-3 border-l border-[var(--color-border)] pl-3']}>
             <a
               href={`#${heading.slug}`}
-              class="text-[var(--color-muted)] no-underline hover:text-[var(--color-ink)]"
+              class="text-[var(--color-muted)] no-underline transition-colors duration-200 hover:text-[var(--color-ink)]"
             >
               {heading.text}
             </a>
@@ -30,3 +33,11 @@ const items = headings.filter((h) => h.depth >= 2 && h.depth <= 3);
     </nav>
   )
 }
+
+<style>
+  .toc-panel {
+    box-shadow:
+      0 0 0 0.5px color-mix(in srgb, var(--color-border) 40%, transparent),
+      0 1px 2px color-mix(in srgb, var(--color-ink) 4%, transparent);
+  }
+</style>

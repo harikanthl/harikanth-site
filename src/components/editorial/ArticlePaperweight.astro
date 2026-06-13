@@ -1,0 +1,343 @@
+---
+type Props = {
+  src: string;
+  alt: string;
+  title: string;
+  funFact: string;
+  width?: number;
+};
+
+const { src, alt, title, funFact, width = 64 } = Astro.props;
+const uid = `pw-${src.split('/').pop()?.replace(/\.[^.]+$/, '') ?? 'img'}`;
+---
+
+<div
+  class="article-paperweight hidden lg:block"
+  data-paperweight
+  data-expand-label={`Expand ${title}`}
+  data-collapse-label={`Collapse ${title}`}
+>
+  <button
+    type="button"
+    class="article-paperweight__chip"
+    aria-expanded="false"
+    aria-controls={`${uid}-preview`}
+    aria-label={`Expand ${title}`}
+  >
+    <img
+      src={src}
+      alt=""
+      width={width}
+      height={width}
+      class="article-paperweight__thumb"
+      loading="lazy"
+      decoding="async"
+    />
+  </button>
+
+  <div
+    id={`${uid}-preview`}
+    class="article-paperweight__preview"
+    hidden
+    role="dialog"
+    aria-modal="true"
+    aria-label={title}
+  >
+    <button type="button" class="article-paperweight__backdrop" aria-label="Close expanded image">
+    </button>
+    <figure class="article-paperweight__figure">
+      <button type="button" class="article-paperweight__close" aria-label="Close expanded image">
+        <span aria-hidden="true">×</span>
+      </button>
+      <img src={src} alt={alt} class="article-paperweight__full" width={640} height={640} />
+      <figcaption class="article-paperweight__caption">
+        <p class="article-paperweight__title">{title}</p>
+        <p class="article-paperweight__fact">{funFact}</p>
+      </figcaption>
+    </figure>
+  </div>
+</div>
+
+<script>
+  function initPaperweights() {
+    document.querySelectorAll('[data-paperweight]').forEach((root) => {
+      if (root instanceof HTMLElement && root.dataset.paperweightReady === 'true') return;
+      if (!(root instanceof HTMLElement)) return;
+
+      const chip = root.querySelector('.article-paperweight__chip');
+      const preview = root.querySelector('.article-paperweight__preview');
+      const backdrop = root.querySelector('.article-paperweight__backdrop');
+      const closeBtn = root.querySelector('.article-paperweight__close');
+
+      if (
+        !(chip instanceof HTMLButtonElement) ||
+        !(preview instanceof HTMLElement) ||
+        !(backdrop instanceof HTMLButtonElement) ||
+        !(closeBtn instanceof HTMLButtonElement)
+      ) {
+        return;
+      }
+
+      root.dataset.paperweightReady = 'true';
+
+      const open = () => {
+        preview.hidden = false;
+        requestAnimationFrame(() => root.classList.add('is-expanded'));
+        chip.setAttribute('aria-expanded', 'true');
+        chip.setAttribute('aria-label', root.dataset.collapseLabel ?? 'Collapse image');
+        document.body.classList.add('paperweight-open');
+      };
+
+      const close = () => {
+        root.classList.remove('is-expanded');
+        chip.setAttribute('aria-expanded', 'false');
+        chip.setAttribute('aria-label', root.dataset.expandLabel ?? 'Expand image');
+        document.body.classList.remove('paperweight-open');
+
+        const onTransitionEnd = (event: TransitionEvent) => {
+          if (event.target !== preview) return;
+          preview.hidden = true;
+          preview.removeEventListener('transitionend', onTransitionEnd);
+        };
+
+        preview.addEventListener('transitionend', onTransitionEnd);
+        window.setTimeout(() => {
+          if (!root.classList.contains('is-expanded')) preview.hidden = true;
+        }, 350);
+      };
+
+      const toggle = () => {
+        if (root.classList.contains('is-expanded')) close();
+        else open();
+      };
+
+      chip.addEventListener('click', toggle);
+      backdrop.addEventListener('click', close);
+      closeBtn.addEventListener('click', close);
+
+      root.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape' && root.classList.contains('is-expanded')) {
+          event.preventDefault();
+          close();
+          chip.focus();
+        }
+      });
+    });
+  }
+
+  initPaperweights();
+  document.addEventListener('astro:page-load', initPaperweights);
+</script>
+
+<style>
+  .article-paperweight {
+    position: sticky;
+    top: clamp(14rem, 38vh, 22rem);
+    z-index: 2;
+    float: right;
+    clear: right;
+    width: 0;
+    height: 0;
+    margin-right: -0.5rem;
+  }
+
+  .article-paperweight__chip {
+    pointer-events: auto;
+    position: absolute;
+    right: 0;
+    top: 0;
+    translate: 42% 0;
+    padding: 0.625rem;
+    border: 0.5px solid color-mix(in srgb, var(--color-border) 70%, transparent);
+    border-radius: 1rem;
+    background: color-mix(in srgb, var(--color-surface) 78%, transparent);
+    box-shadow:
+      0 0 0 0.5px color-mix(in srgb, var(--color-border) 35%, transparent),
+      0 8px 24px color-mix(in srgb, var(--color-ink) 8%, transparent),
+      0 2px 6px color-mix(in srgb, var(--color-ink) 4%, transparent);
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+    rotate: 4deg;
+    cursor: zoom-in;
+    transition:
+      rotate 0.35s cubic-bezier(0.25, 0.1, 0.25, 1),
+      translate 0.35s cubic-bezier(0.25, 0.1, 0.25, 1),
+      box-shadow 0.35s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .article-paperweight__chip:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-accent) 65%, transparent);
+    outline-offset: 3px;
+  }
+
+  .article-paperweight__thumb {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 4rem;
+    opacity: 0.9;
+    filter: saturate(0.94);
+    user-select: none;
+    pointer-events: none;
+  }
+
+  .article-paperweight__preview {
+    position: fixed;
+    inset: 0;
+    z-index: 80;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(1rem, 4vw, 2.5rem);
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 0.32s cubic-bezier(0.25, 0.1, 0.25, 1),
+      visibility 0.32s cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  .article-paperweight__preview[hidden] {
+    display: none;
+  }
+
+  .article-paperweight.is-expanded .article-paperweight__preview {
+    display: flex;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .article-paperweight__backdrop {
+    position: absolute;
+    inset: 0;
+    border: none;
+    background: color-mix(in srgb, var(--color-ink) 24%, transparent);
+    backdrop-filter: blur(14px) saturate(1.15);
+    -webkit-backdrop-filter: blur(14px) saturate(1.15);
+    cursor: zoom-out;
+  }
+
+  .article-paperweight__figure {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    max-width: min(92vw, 24rem);
+    padding: 0.75rem;
+    border: 0.5px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+    border-radius: 1.25rem;
+    background: color-mix(in srgb, var(--color-surface) 92%, transparent);
+    box-shadow:
+      0 0 0 0.5px color-mix(in srgb, var(--color-border) 35%, transparent),
+      0 24px 64px color-mix(in srgb, var(--color-ink) 18%, transparent);
+    transform: scale(0.88);
+    transition: transform 0.36s cubic-bezier(0.25, 0.1, 0.25, 1);
+    cursor: default;
+  }
+
+  .article-paperweight.is-expanded .article-paperweight__figure {
+    transform: scale(1);
+  }
+
+  .article-paperweight__full {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: min(70vh, 28rem);
+    object-fit: contain;
+    border-radius: 0.75rem;
+    user-select: none;
+  }
+
+  .article-paperweight__caption {
+    margin-top: 0.875rem;
+    padding-top: 0.875rem;
+    border-top: 0.5px solid color-mix(in srgb, var(--color-border) 65%, transparent);
+    text-align: left;
+  }
+
+  .article-paperweight__title {
+    margin: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--color-ink);
+  }
+
+  .article-paperweight__fact {
+    margin: 0.5rem 0 0;
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--color-muted);
+  }
+
+  .article-paperweight__fact::before {
+    content: 'Fun fact';
+    display: block;
+    margin-bottom: 0.35rem;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: color-mix(in srgb, var(--color-muted) 85%, var(--color-accent));
+  }
+
+  .article-paperweight__close {
+    position: absolute;
+    top: 0.35rem;
+    right: 0.35rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: none;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-surface) 80%, transparent);
+    color: var(--color-muted);
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+  }
+
+  .article-paperweight__close:hover {
+    background: color-mix(in srgb, var(--color-ink) 8%, transparent);
+    color: var(--color-ink);
+  }
+
+  .article-paperweight__close:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-accent) 65%, transparent);
+    outline-offset: 2px;
+  }
+
+  :global(body.paperweight-open) {
+    overflow: hidden;
+  }
+
+  @media (hover: hover) {
+    .article-paperweight__chip:hover {
+      rotate: 0deg;
+      translate: 38% -2px;
+      box-shadow:
+        0 0 0 0.5px color-mix(in srgb, var(--color-border) 35%, transparent),
+        0 12px 32px color-mix(in srgb, var(--color-ink) 10%, transparent),
+        0 4px 10px color-mix(in srgb, var(--color-ink) 5%, transparent);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .article-paperweight__chip,
+    .article-paperweight__preview,
+    .article-paperweight__figure {
+      transition: none;
+    }
+
+    .article-paperweight__chip:hover {
+      rotate: 4deg;
+      translate: 42% 0;
+    }
+
+    .article-paperweight__figure {
+      transform: none;
+    }
+  }
+</style>

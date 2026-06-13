@@ -16,11 +16,6 @@ theme:
   illustration:
     hero: /images/blog/flash-attention-explained/hero-scene.png
     heroAlt: Hand-drawn jungle scene with soft green tones
-    decor:
-      - src: /images/blog/flash-attention-explained/insect.png
-        alt: Small hand-drawn insect illustration
-        position: top-right
-        width: 100
 ---
 
 Standard attention materializes the full $N \times N$ attention matrix in HBM, which becomes the bottleneck for long sequences. Flash Attention reformulates attention as a tiled, IO-aware algorithm that keeps partial results in SRAM.
