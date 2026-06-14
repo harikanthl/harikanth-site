@@ -1,132 +1,218 @@
 ---
+import type { PaperweightImage } from '../../lib/paperweight';
+
 type Props = {
-  src: string;
-  alt: string;
-  title: string;
-  funFact: string;
+  items: PaperweightImage[];
+  startIndex: number;
   width?: number;
 };
 
-const { src, alt, title, funFact, width = 64 } = Astro.props;
-const uid = `pw-${src.split('/').pop()?.replace(/\.[^.]+$/, '') ?? 'img'}`;
+const { items, startIndex, width = 64 } = Astro.props;
+const uid = `pw-${startIndex}-${items.length}`;
+const safeStartIndex = items.length > 0 ? ((startIndex % items.length) + items.length) % items.length : 0;
+const initial = items[safeStartIndex] ?? items[0];
 ---
 
-<div
-  class="article-paperweight hidden lg:block"
-  data-paperweight
-  data-expand-label={`Expand ${title}`}
-  data-collapse-label={`Collapse ${title}`}
->
-  <button
-    type="button"
-    class="article-paperweight__chip"
-    aria-expanded="false"
-    aria-controls={`${uid}-preview`}
-    aria-label={`Expand ${title}`}
-  >
-    <img
-      src={src}
-      alt=""
-      width={width}
-      height={width}
-      class="article-paperweight__thumb"
-      loading="lazy"
-      decoding="async"
-    />
-  </button>
-
-  <div
-    id={`${uid}-preview`}
-    class="article-paperweight__preview"
-    hidden
-    role="dialog"
-    aria-modal="true"
-    aria-label={title}
-  >
-    <button type="button" class="article-paperweight__backdrop" aria-label="Close expanded image">
-    </button>
-    <figure class="article-paperweight__figure">
-      <button type="button" class="article-paperweight__close" aria-label="Close expanded image">
-        <span aria-hidden="true">×</span>
+{
+  initial && items.length > 0 && (
+    <div
+      class="article-paperweight hidden lg:block"
+      data-paperweight
+      data-start-index={safeStartIndex}
+      data-items={JSON.stringify(items)}
+      data-expand-label="Expand paperweight"
+      data-collapse-label="Collapse paperweight"
+    >
+      <button
+        type="button"
+        class="article-paperweight__chip"
+        aria-expanded="false"
+        aria-controls={`${uid}-preview`}
+        aria-label={`Expand ${initial.title}`}
+      >
+        <img
+          src={initial.src}
+          alt=""
+          width={width}
+          height={width}
+          class="article-paperweight__thumb"
+          loading="lazy"
+          decoding="async"
+          data-paperweight-thumb
+        />
       </button>
-      <img src={src} alt={alt} class="article-paperweight__full" width={640} height={640} />
-      <figcaption class="article-paperweight__caption">
-        <p class="article-paperweight__title">{title}</p>
-        <p class="article-paperweight__fact">{funFact}</p>
-      </figcaption>
-    </figure>
-  </div>
-</div>
+
+      <div
+        id={`${uid}-preview`}
+        class="article-paperweight__preview"
+        hidden
+        role="dialog"
+        aria-modal="true"
+        aria-label={initial.title}
+      >
+        <button type="button" class="article-paperweight__backdrop" aria-label="Close expanded image">
+        </button>
+        <figure class="article-paperweight__figure">
+          <button type="button" class="article-paperweight__close" aria-label="Close expanded image">
+            <span aria-hidden="true">×</span>
+          </button>
+          <img
+            src={initial.src}
+            alt={initial.alt}
+            class="article-paperweight__full"
+            width={640}
+            height={640}
+            data-paperweight-full
+          />
+          <figcaption class="article-paperweight__caption">
+            <p class="article-paperweight__title" data-paperweight-title>{initial.title}</p>
+            <p class="article-paperweight__fact" data-paperweight-fact>{initial.funFact}</p>
+            {
+              items.length > 1 && (
+                <button type="button" class="article-paperweight__next" data-paperweight-next>
+                  Next paperweight
+                </button>
+              )
+            }
+          </figcaption>
+        </figure>
+      </div>
+    </div>
+  )
+}
 
 <script>
-  function initPaperweights() {
-    document.querySelectorAll('[data-paperweight]').forEach((root) => {
-      if (root instanceof HTMLElement && root.dataset.paperweightReady === 'true') return;
-      if (!(root instanceof HTMLElement)) return;
+  type PaperweightItem = {
+    src: string;
+    title: string;
+    alt: string;
+    funFact: string;
+  };
 
-      const chip = root.querySelector('.article-paperweight__chip');
-      const preview = root.querySelector('.article-paperweight__preview');
-      const backdrop = root.querySelector('.article-paperweight__backdrop');
-      const closeBtn = root.querySelector('.article-paperweight__close');
+  function parseItems(root: HTMLElement): PaperweightItem[] {
+    try {
+      const parsed = JSON.parse(root.dataset.items ?? '[]');
+      return Array.isArray(parsed) ? parsed : [];
+    } catch {
+      return [];
+    }
+  }
 
-      if (
-        !(chip instanceof HTMLButtonElement) ||
-        !(preview instanceof HTMLElement) ||
-        !(backdrop instanceof HTMLButtonElement) ||
-        !(closeBtn instanceof HTMLButtonElement)
-      ) {
-        return;
+  function bindPaperweight(root: HTMLElement) {
+    const items = parseItems(root);
+    if (items.length === 0) return;
+
+    const chip = root.querySelector('.article-paperweight__chip');
+    const preview = root.querySelector('.article-paperweight__preview');
+    const backdrop = root.querySelector('.article-paperweight__backdrop');
+    const closeBtn = root.querySelector('.article-paperweight__close');
+    const nextBtn = root.querySelector('[data-paperweight-next]');
+    const thumb = root.querySelector('[data-paperweight-thumb]');
+    const full = root.querySelector('[data-paperweight-full]');
+    const title = root.querySelector('[data-paperweight-title]');
+    const fact = root.querySelector('[data-paperweight-fact]');
+
+    if (
+      !(chip instanceof HTMLButtonElement) ||
+      !(preview instanceof HTMLElement) ||
+      !(backdrop instanceof HTMLButtonElement) ||
+      !(closeBtn instanceof HTMLButtonElement) ||
+      !(thumb instanceof HTMLImageElement) ||
+      !(full instanceof HTMLImageElement) ||
+      !(title instanceof HTMLElement) ||
+      !(fact instanceof HTMLElement)
+    ) {
+      return;
+    }
+
+    let index = Number.parseInt(root.dataset.startIndex ?? '0', 10);
+    if (Number.isNaN(index)) index = 0;
+    index = ((index % items.length) + items.length) % items.length;
+
+    const render = () => {
+      const item = items[index];
+      thumb.src = item.src;
+      full.src = item.src;
+      full.alt = item.alt;
+      title.textContent = item.title;
+      fact.textContent = item.funFact;
+      preview.setAttribute('aria-label', item.title);
+      chip.setAttribute('aria-label', root.classList.contains('is-expanded')
+        ? `Collapse ${item.title}`
+        : `Expand ${item.title}`);
+    };
+
+    const open = () => {
+      preview.hidden = false;
+      requestAnimationFrame(() => root.classList.add('is-expanded'));
+      chip.setAttribute('aria-expanded', 'true');
+      chip.setAttribute('aria-label', `Collapse ${items[index].title}`);
+      document.body.classList.add('paperweight-open');
+    };
+
+    const close = () => {
+      root.classList.remove('is-expanded');
+      chip.setAttribute('aria-expanded', 'false');
+      chip.setAttribute('aria-label', `Expand ${items[index].title}`);
+      document.body.classList.remove('paperweight-open');
+
+      window.setTimeout(() => {
+        if (!root.classList.contains('is-expanded')) preview.hidden = true;
+      }, 350);
+    };
+
+    const toggle = () => {
+      if (root.classList.contains('is-expanded')) close();
+      else open();
+    };
+
+    const next = () => {
+      index = (index + 1) % items.length;
+      render();
+    };
+
+    render();
+
+    chip.addEventListener('click', toggle);
+    backdrop.addEventListener('click', close);
+    closeBtn.addEventListener('click', close);
+    nextBtn?.addEventListener('click', (event) => {
+      event.stopPropagation();
+      next();
+    });
+
+    root.addEventListener('keydown', (event) => {
+      if (!root.classList.contains('is-expanded')) return;
+
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        close();
+        chip.focus();
       }
 
-      root.dataset.paperweightReady = 'true';
+      if (event.key === 'ArrowRight' && items.length > 1) {
+        event.preventDefault();
+        next();
+      }
+    });
+  }
 
-      const open = () => {
-        preview.hidden = false;
-        requestAnimationFrame(() => root.classList.add('is-expanded'));
-        chip.setAttribute('aria-expanded', 'true');
-        chip.setAttribute('aria-label', root.dataset.collapseLabel ?? 'Collapse image');
-        document.body.classList.add('paperweight-open');
-      };
-
-      const close = () => {
-        root.classList.remove('is-expanded');
-        chip.setAttribute('aria-expanded', 'false');
-        chip.setAttribute('aria-label', root.dataset.expandLabel ?? 'Expand image');
-        document.body.classList.remove('paperweight-open');
-
-        const onTransitionEnd = (event: TransitionEvent) => {
-          if (event.target !== preview) return;
-          preview.hidden = true;
-          preview.removeEventListener('transitionend', onTransitionEnd);
-        };
-
-        preview.addEventListener('transitionend', onTransitionEnd);
-        window.setTimeout(() => {
-          if (!root.classList.contains('is-expanded')) preview.hidden = true;
-        }, 350);
-      };
-
-      const toggle = () => {
-        if (root.classList.contains('is-expanded')) close();
-        else open();
-      };
-
-      chip.addEventListener('click', toggle);
-      backdrop.addEventListener('click', close);
-      closeBtn.addEventListener('click', close);
-
-      root.addEventListener('keydown', (event) => {
-        if (event.key === 'Escape' && root.classList.contains('is-expanded')) {
-          event.preventDefault();
-          close();
-          chip.focus();
-        }
-      });
+  function initPaperweights() {
+    document.querySelectorAll('[data-paperweight]').forEach((root) => {
+      if (!(root instanceof HTMLElement)) return;
+      if (root.dataset.paperweightBound === 'true') return;
+      root.dataset.paperweightBound = 'true';
+      bindPaperweight(root);
     });
   }
 
   initPaperweights();
   document.addEventListener('astro:page-load', initPaperweights);
+  document.addEventListener('astro:before-swap', () => {
+    document.querySelectorAll('[data-paperweight-bound]').forEach((root) => {
+      root.removeAttribute('data-paperweight-bound');
+    });
+  });
 </script>
 
 <style>
@@ -278,6 +364,31 @@ const uid = `pw-${src.split('/').pop()?.replace(/\.[^.]+$/, '') ?? 'img'}`;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: color-mix(in srgb, var(--color-muted) 85%, var(--color-accent));
+  }
+
+  .article-paperweight__next {
+    margin-top: 0.875rem;
+    border: 0.5px solid color-mix(in srgb, var(--color-border) 75%, transparent);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--color-surface) 88%, transparent);
+    padding: 0.45rem 0.875rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--color-ink);
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
+  }
+
+  .article-paperweight__next:hover {
+    background: color-mix(in srgb, var(--color-ink) 6%, transparent);
+    border-color: color-mix(in srgb, var(--color-border) 90%, var(--color-accent));
+  }
+
+  .article-paperweight__next:focus-visible {
+    outline: 2px solid color-mix(in srgb, var(--color-accent) 65%, transparent);
+    outline-offset: 2px;
   }
 
   .article-paperweight__close {

@@ -45,12 +45,11 @@ const PAPERWEIGHT_FACTS: Record<string, { title: string; funFact: string }> = {
   },
 };
 
-function listPaperweightImages(): string[] {
+function listPaperweightFilenames(): string[] {
   try {
     return readdirSync(PAPERWEIGHT_DIR)
       .filter((file) => IMAGE_EXT.test(file))
-      .sort((a, b) => a.localeCompare(b))
-      .map((file) => `/images/paperweight/${file}`);
+      .sort((a, b) => a.localeCompare(b));
   } catch {
     return [];
   }
@@ -87,13 +86,45 @@ function resolvePaperweightMeta(src: string): { title: string; alt: string; funF
   };
 }
 
-/** Pick a paperweight image for a post by its position in the published blog list. */
+function toPaperweightImage(filename: string): PaperweightImage {
+  const src = `/images/paperweight/${filename}`;
+  return { src, ...resolvePaperweightMeta(src) };
+}
+
+/** Resolved once at build time so every page shares the same ordered pool. */
+const PAPERWEIGHT_POOL: PaperweightImage[] = listPaperweightFilenames().map(toPaperweightImage);
+
+export function getAllPaperweights(): PaperweightImage[] {
+  return PAPERWEIGHT_POOL;
+}
+
+function hashPostId(postId: string, size: number): number {
+  if (size === 0) return 0;
+
+  let hash = 0;
+  for (let i = 0; i < postId.length; i += 1) {
+    hash = (hash * 31 + postId.charCodeAt(i)) >>> 0;
+  }
+
+  return hash % size;
+}
+
+/** Starting index for a post in the paperweight rotation. */
+export function getPaperweightStartIndex(postId: string, chronologicalIndex: number): number {
+  const size = PAPERWEIGHT_POOL.length;
+  if (size === 0) return 0;
+
+  if (chronologicalIndex >= 0) {
+    return chronologicalIndex % size;
+  }
+
+  return hashPostId(postId, size);
+}
+
+/** @deprecated Use getAllPaperweights + getPaperweightStartIndex instead. */
 export function getPaperweightForPost(postIndex: number): PaperweightImage | null {
-  const images = listPaperweightImages();
-  if (images.length === 0) return null;
+  const pool = getAllPaperweights();
+  if (pool.length === 0) return null;
 
-  const src = images[((postIndex % images.length) + images.length) % images.length];
-  const meta = resolvePaperweightMeta(src);
-
-  return { src, ...meta };
+  return pool[((postIndex % pool.length) + pool.length) % pool.length];
 }

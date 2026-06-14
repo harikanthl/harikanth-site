@@ -13,7 +13,7 @@ import { formatDate } from '../lib/format';
 import { readingTime } from '../lib/reading-time';
 import { relatedPosts } from '../lib/related-posts';
 import { resolvePostTheme, heroTextStyle } from '../lib/theme';
-import { getPaperweightForPost } from '../lib/paperweight';
+import { getAllPaperweights, getPaperweightStartIndex } from '../lib/paperweight';
 import { SITE, canonicalUrl, jsonLdBlogPosting } from '../lib/seo';
 
 type Props = {
@@ -27,8 +27,9 @@ const { Content, headings } = await render(post);
 const { title, description, date, tags } = post.data;
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
 const publishedPosts = allPosts.sort((a, b) => a.data.date.getTime() - b.data.date.getTime());
+const paperweightItems = getAllPaperweights();
 const postIndex = publishedPosts.findIndex((entry) => entry.id === post.id);
-const paperweight = getPaperweightForPost(postIndex >= 0 ? postIndex : 0);
+const paperweightStartIndex = getPaperweightStartIndex(post.id, postIndex);
 const related = relatedPosts(post, allPosts);
 const bodyText = 'body' in post && typeof post.body === 'string' ? post.body : description;
 const { label: readLabel } = readingTime(bodyText);
@@ -105,12 +106,10 @@ const transitionName = `post-title-${post.id}`;
       <div class="grid gap-12 lg:grid-cols-[1fr_16rem]">
         <div class="relative min-w-0">
           {
-            paperweight && (
+            paperweightItems.length > 0 && (
               <ArticlePaperweight
-                src={paperweight.src}
-                alt={paperweight.alt}
-                title={paperweight.title}
-                funFact={paperweight.funFact}
+                items={paperweightItems}
+                startIndex={paperweightStartIndex}
               />
             )
           }
