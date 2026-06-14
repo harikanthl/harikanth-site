@@ -46,16 +46,31 @@ npm run preview
 2. Enter `harikanth.site` (DNS is auto-configured if the zone is on Cloudflare)
 3. Optionally add `www.harikanth.site`
 
-### Lighthouse / SEO: robots.txt
+### Lighthouse / SEO: robots.txt (Cloudflare zone setting)
 
-If PageSpeed reports **robots.txt is not valid**, Cloudflare is likely injecting a non-standard `Content-Signal` directive via **Managed robots.txt**.
+PageSpeed may report **robots.txt is not valid** when Cloudflare injects a `Content-Signal` directive. That happens on your **custom domain** (`harikanth.site`), not on `*.pages.dev`. Cloudflare prepends managed rules at the **zone edge** before your origin file — code in this repo cannot override that merge.
 
-This repo serves a clean `robots.txt` through `functions/robots.txt.ts` on Cloudflare Pages. If the audit still fails after deploy, disable the extra policy in the dashboard:
+Your origin `public/robots.txt` is already valid (verified on [harikanth-site.pages.dev/robots.txt](https://harikanth-site.pages.dev/robots.txt)).
 
-1. [Cloudflare Dashboard](https://dash.cloudflare.com) → your zone → **Security** → **Bots**
-2. Under **AI Crawl Control** / **robots.txt**, turn off **Display Content Signals Policy** (or disable managed `robots.txt` if you prefer your static rules only)
+**To fix the Lighthouse SEO audit on `harikanth.site`**, change a zone setting in the dashboard ([managed robots.txt docs](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/)):
 
-See [Cloudflare managed robots.txt docs](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/).
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → select account → zone **harikanth.site**
+2. **Security** → **Settings** (or go directly to **Security settings**)
+3. Filter by **Bot traffic**
+4. Find **Instruct AI bot traffic with robots.txt** → turn **Off**
+
+That stops Cloudflare from prepending managed `Content-Signal` rules. Your deployed `public/robots.txt` is then served as-is.
+
+**Optional:** If you still want AI crawler policies, use [**AI Crawl Control**](https://developers.cloudflare.com/ai-crawl-control/) (allow/block per crawler at the edge). Cloudflare notes that `robots.txt` is voluntary; AI Crawl Control enforces blocks. Managed `robots.txt` and AI Crawl Control can be used together, but managed `robots.txt` will break strict Lighthouse robots parsing until PageSpeed adopts the `Content-Signal` directive.
+
+**Do not rely on** unchecking “Display Content Signals Policy” alone — that only removes the comment preamble; the `Content-Signal:` line remains while managed robots.txt is enabled.
+
+After toggling, wait ~30 seconds and verify:
+
+```bash
+curl -s https://harikanth.site/robots.txt
+# Should match public/robots.txt (~74 bytes), with no "BEGIN Cloudflare Managed content"
+```
 
 ### Manual deploy (optional)
 
