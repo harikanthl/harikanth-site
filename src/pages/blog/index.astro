@@ -59,7 +59,9 @@ const posts = tagFilter
     }
 
     <div class="mt-12" data-pagefind-body>
-      {posts.map((post) => <PostCard post={post} />)}
+      {posts.map((post, index) => (
+        <PostCard post={post} priority={index === 0 && !tagFilter} />
+      ))}
       {
         posts.length === 0 && (
           <p class="text-[var(--color-muted)]">No posts found.</p>

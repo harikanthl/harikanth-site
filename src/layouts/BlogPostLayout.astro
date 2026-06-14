@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import { components as mdxComponents } from '../mdx-components';
 import BaseLayout from './BaseLayout.astro';
 import IllustrationScene from '../components/editorial/IllustrationScene.astro';
+import '../styles/math.css';
 import ArticlePaperweight from '../components/editorial/ArticlePaperweight.astro';
 import ReadingProgress from '../components/blog/ReadingProgress.astro';
 import TableOfContents from '../components/blog/TableOfContents.astro';
@@ -43,6 +44,7 @@ const transitionName = `post-title-${post.id}`;
   type="article"
   publishedTime={date.toISOString()}
   image={theme.illustration?.hero}
+  preloadImage={theme.illustration?.hero}
   jsonLd={jsonLdBlogPosting({
     title,
     description,

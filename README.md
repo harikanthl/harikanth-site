@@ -46,6 +46,17 @@ npm run preview
 2. Enter `harikanth.site` (DNS is auto-configured if the zone is on Cloudflare)
 3. Optionally add `www.harikanth.site`
 
+### Lighthouse / SEO: robots.txt
+
+If PageSpeed reports **robots.txt is not valid**, Cloudflare is likely injecting a non-standard `Content-Signal` directive via **Managed robots.txt**.
+
+This repo serves a clean `robots.txt` through `functions/robots.txt.ts` on Cloudflare Pages. If the audit still fails after deploy, disable the extra policy in the dashboard:
+
+1. [Cloudflare Dashboard](https://dash.cloudflare.com) → your zone → **Security** → **Bots**
+2. Under **AI Crawl Control** / **robots.txt**, turn off **Display Content Signals Policy** (or disable managed `robots.txt` if you prefer your static rules only)
+
+See [Cloudflare managed robots.txt docs](https://developers.cloudflare.com/bots/additional-configurations/managed-robots-txt/).
+
 ### Manual deploy (optional)
 
 ```bash

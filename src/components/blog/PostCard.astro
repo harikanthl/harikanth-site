@@ -7,9 +7,10 @@ type Props = {
   post: CollectionEntry<'blog'>;
   showThumbnail?: boolean;
   compact?: boolean;
+  priority?: boolean;
 };
 
-const { post, showThumbnail = true, compact = false } = Astro.props;
+const { post, showThumbnail = true, compact = false, priority = false } = Astro.props;
 const { title, description, date, tags, theme } = post.data;
 const href = `/blog/${post.id}`;
 const hero = theme?.illustration?.hero;
@@ -37,7 +38,11 @@ const transitionName = `post-title-${post.id}`;
                 src={hero}
                 alt=""
                 class="h-44 w-full object-cover sm:h-full sm:w-44"
-                loading="lazy"
+                width="352"
+                height="264"
+                loading={priority ? 'eager' : 'lazy'}
+                fetchpriority={priority ? 'high' : undefined}
+                decoding="async"
               />
             ) : (
               <div
@@ -60,7 +65,7 @@ const transitionName = `post-title-${post.id}`;
         {formatDateShort(date)}
       </time>
 
-      <h3
+      <h2
         class:list={[
           'mt-2 font-semibold leading-snug tracking-tight',
           compact ? 'text-base' : 'text-xl sm:text-2xl',
@@ -73,7 +78,7 @@ const transitionName = `post-title-${post.id}`;
         >
           {title}
         </a>
-      </h3>
+      </h2>
 
       <p
         class:list={[

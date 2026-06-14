@@ -15,7 +15,7 @@ const projects = (await getCollection('projects'))
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
-<BaseLayout jsonLd={jsonLdPerson()}>
+<BaseLayout jsonLd={jsonLdPerson()} preloadImage="/images/hari-176.jpg">
   <div class="page-container py-10 sm:py-14">
     <div class="grid gap-12 lg:grid-cols-[minmax(0,13rem)_minmax(0,1fr)] lg:gap-16">
       <BioAside />
@@ -32,7 +32,9 @@ const projects = (await getCollection('projects'))
             </a>
           </div>
           <div class="mt-6">
-            {posts.map((post) => <PostCard post={post} />)}
+            {posts.map((post, index) => (
+              <PostCard post={post} priority={index === 0} />
+            ))}
           </div>
         </section>
 
