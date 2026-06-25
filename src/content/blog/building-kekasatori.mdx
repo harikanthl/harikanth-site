@@ -62,8 +62,18 @@ SwiftUI → ViewModels → Services (Import, Transcript, Study, Tutor/RAG, LLM R
 
 Kekasatori is not on the Mac App Store. An app that downloads media and runs command line tools does not fit inside the sandbox rules, so I went the other legitimate route. It is signed with a Developer ID certificate, notarized by Apple, and handed out as a regular `.dmg`. Gatekeeper opens it with no warnings, and there is no review queue sitting between a fix and your Mac.
 
+## Open source
+
+Kekasatori is open source under the MIT license. The code lives at [github.com/harikanthl/kekasatori](https://github.com/harikanthl/kekasatori).
+
+I did this for two reasons. The first is trust. Privacy claims are easy to make and hard to verify, and this is an app that handles your study material, holds your API keys, and runs outside the App Store sandbox. "Nothing leaves your Mac" should be something you can check rather than something you take my word for, and with the source open you can read exactly what it does.
+
+The second reason is that the build is worth sharing. There are not many worked examples of a real macOS app that leans on Apple's on-device Foundation Models, runs a local vector database for retrieval, and falls back to bring-your-own-key cloud models behind one clean interface. If you are building something in that space, the model router, the chunking, the retrieval budget, and the rest are all there to read and reuse. Issues and pull requests are welcome, and I would rather this knowledge be shared than sit locked in a private repo.
+
 ## What is next
 
 More import sources, better handling of very long documents, and smarter study packs as the on-device models improve. If you try it and something breaks, I would genuinely like to hear about it.
 
-<a href="/projects/kekasatori" class="text-[var(--post-accent)]">Download it here →</a>
+<a href="/projects/kekasatori" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download for macOS</a>
+
+<span style="display:block;margin-top:0.6rem"><a href="https://github.com/harikanthl/kekasatori" class="text-[var(--post-accent)]">View the source on GitHub →</a></span>
