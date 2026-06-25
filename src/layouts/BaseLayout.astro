@@ -22,6 +22,27 @@ const props = Astro.props;
 <!doctype html>
 <html lang="en">
   <head>
+    <script is:inline>
+      (() => {
+        const apply = () => {
+          const t = localStorage.getItem('theme');
+          if (t === 'dark' || t === 'light')
+            document.documentElement.dataset.theme = t;
+          else delete document.documentElement.dataset.theme;
+        };
+        apply();
+        document.addEventListener('astro:after-swap', apply);
+        window.__toggleTheme = () => {
+          const root = document.documentElement;
+          const cur =
+            root.dataset.theme ||
+            (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          const next = cur === 'dark' ? 'light' : 'dark';
+          root.dataset.theme = next;
+          localStorage.setItem('theme', next);
+        };
+      })();
+    </script>
     <Seo {...props} />
     <ClientRouter />
     <!-- Cloudflare Web Analytics: replace token after enabling in dashboard -->

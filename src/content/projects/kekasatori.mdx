@@ -1,0 +1,49 @@
+---
+title: Kekasatori
+date: 2026-06-24
+description: macOS study app that turns videos, papers, and articles into transcripts, flashcards, mind maps, and a grounded AI tutor — local-first and private.
+tags:
+  - macOS
+  - AI
+  - Study
+featured: true
+tech:
+  - SwiftUI
+  - SwiftData
+  - Apple Intelligence
+  - Sparkle
+  - yt-dlp
+image: /images/kekasatori-logo.png
+imageFit: cover
+---
+
+Kekasatori turns videos, papers, and articles into study material on your Mac — transcripts, summaries, flashcards, mind maps, and a tutor that actually reads your sources. Local-first and private.
+
+<a href="https://github.com/harikanthl/kekasatori/releases/latest/download/Kekasatori.dmg" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download for macOS</a>
+
+<span style="display:block;margin-top:0.6rem;color:var(--color-muted);font-size:0.9rem">Free · macOS 15.5+ · Apple Silicon &amp; Intel · notarized by Apple</span>
+
+## What it does
+
+- **Import anything**: a YouTube link, an arXiv / PubMed / DOI paper, a web article, or a multi-chapter book — pulled in and made studyable.
+- **Instant study packs**: transcripts, summaries, structured notes, flashcards, key concepts, and mind maps generated from the source.
+- **A grounded AI tutor**: chat with a tutor that answers from the actual document via retrieval (RAG). Use on-device Apple Intelligence, or bring your own key — Claude, GPT, Gemini, DeepSeek, and more via OpenRouter.
+- **Think it through**: a built-in Excalidraw canvas, a notebook, and animated (Manim) explainers.
+- **Download or stream**: keep media offline in a searchable library, or stream it — each item carries its study pack.
+- **Local-first & private**: your library, notes, and API keys stay on your Mac. No account, no tracking, no servers.
+
+## Stack
+
+SwiftUI + MVVM on SwiftData. On-device generation uses Apple's Foundation Models; cloud models route through an OpenAI-compatible client with keys held only in the Keychain. Retrieval uses on-device embeddings (VecturaKit). `yt-dlp` and a universal `ffmpeg` ship as bundled, hardened-runtime-signed binaries. Auto-updates via Sparkle.
+
+```text
+SwiftUI views → ViewModels → Services (Import, Transcript, Study, Tutor/RAG, LLM Router)
+                                   ↓
+              Foundation Models (on-device) · OpenRouter (BYOK) · yt-dlp + ffmpeg
+```
+
+## Distribution
+
+Signed with a Developer ID certificate and notarized by Apple, distributed directly as a `.dmg` (outside the Mac App Store). You are responsible for ensuring your use of any third-party source complies with that service's terms and applicable copyright law.
+
+See the [Privacy Policy](/kekasatori/privacy) and [Terms](/kekasatori/terms).

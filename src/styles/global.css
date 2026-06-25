@@ -33,8 +33,9 @@
   --width-content: min(72rem, 100% - 2 * var(--spacing-page));
 }
 
+/* Dark tokens, shared by the system-dark and the manual-dark cases. */
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]) {
     --color-surface: #000000;
     --color-ink: #f5f5f7;
     --color-muted: #86868b;
@@ -45,8 +46,51 @@
   }
 }
 
+:root[data-theme="dark"] {
+  --color-surface: #000000;
+  --color-ink: #f5f5f7;
+  --color-muted: #86868b;
+  --color-border: #424245;
+  --color-accent: #ff453a;
+  --color-accent-soft: #2c1518;
+  --color-nav-bg: color-mix(in srgb, #1c1c1e 82%, transparent);
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
 :root {
   color-scheme: light dark;
+}
+
+/* Theme toggle: show the icon for the mode you'll switch *to*. */
+.theme-toggle .sun {
+  display: none;
+}
+.theme-toggle .moon {
+  display: inline;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .sun {
+    display: inline;
+  }
+  :root:not([data-theme="light"]) .theme-toggle .moon {
+    display: none;
+  }
+}
+:root[data-theme="dark"] .theme-toggle .sun {
+  display: inline;
+}
+:root[data-theme="dark"] .theme-toggle .moon {
+  display: none;
+}
+:root[data-theme="light"] .theme-toggle .sun {
+  display: none;
+}
+:root[data-theme="light"] .theme-toggle .moon {
+  display: inline;
 }
 
 html {
@@ -100,6 +144,37 @@ a.btn-primary:hover {
   outline-offset: 3px;
 }
 
+/* Latest-release card on the homepage */
+.release-card {
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+.release-card:hover {
+  border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  box-shadow: 0 8px 28px -14px color-mix(in srgb, var(--color-accent) 50%, transparent);
+  transform: translateY(-2px);
+}
+.release-arrow {
+  transition:
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+.release-card:hover .release-arrow {
+  transform: translateX(3px);
+  color: var(--color-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .release-card:hover {
+    transform: none;
+  }
+  .release-card:hover .release-arrow {
+    transform: none;
+  }
+}
+
 .page-container {
   width: var(--width-content);
   margin-inline: auto;
@@ -129,3 +204,48 @@ a.btn-primary:hover {
     animation: none;
   }
 }
+
+/* ───────────── Refined editorial: depth · texture · motion ───────────── */
+
+/* Soft layered shadow for cards and raised surfaces. */
+.card-soft {
+  box-shadow:
+    0 1px 2px -1px color-mix(in srgb, var(--color-ink) 10%, transparent),
+    0 10px 30px -18px color-mix(in srgb, var(--color-ink) 22%, transparent);
+}
+
+/* Faint film grain for a tactile, premium finish. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
+}
+
+/* Scroll-driven reveal — pure CSS. Content stays visible where scroll
+   timelines aren't supported or motion is reduced. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 38%;
+    }
+  }
+}
+
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+

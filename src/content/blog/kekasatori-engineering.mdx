@@ -1,0 +1,161 @@
+---
+title: The Engineering Behind Kekasatori
+date: 2026-06-25
+description: A long look at how Kekasatori is built, from its SwiftUI and SwiftData architecture to on-device retrieval, chunking, and the decision to drop raw YouTube streams for the embedded player.
+tags:
+  - Swift
+  - AI
+  - RAG
+  - macOS
+featured: true
+theme:
+  accent: "#3a4ea8"
+  paper: "#eef0fb"
+  ink: "#161a33"
+  mood: cool
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/forum.png
+    heroAlt: "A gathering of philosophers in a grand hall, in the style of Raphael's School of Athens"
+---
+
+The short version of Kekasatori is "drop in a link, get something you can study." The longer version is a native macOS app that has to download media, transcribe it, run language models either on the device or in the cloud, embed and search documents locally, and play video back at a quality people will actually tolerate. This post is about how those pieces fit together, and about a few decisions that turned out to be more interesting than I expected when I started.
+
+## The shape of the app
+
+Kekasatori is SwiftUI on top of SwiftData, structured as MVVM, with a layer of services underneath that the view models lean on. Nothing exotic, but a few rules kept it sane as it grew.
+
+Views never touch a process, a file, or a model directly. They talk to a view model, and the view model talks to a service. The services are where the real work lives: importing a source, producing a transcript, generating a study pack, running the tutor, routing a prompt to whichever model is active. Most of those services are actors, so the concurrency story is "the type system already knows what runs where" rather than a pile of dispatch queues.
+
+```text
+View  →  ViewModel  →  Service (actor)  →  binary / model / store
+```
+
+Persistence is SwiftData. There is one model container, opened once, and a set of small persistence actors layered on top for the study sessions, the canvas boards, the notebook, and the tutor conversations. Keeping each of those behind its own actor means a long write never blocks the screen, and it gives each subsystem a clear seam.
+
+One thing I learned the hard way: a database file can be unwritable or corrupt, and an app that calls `fatalError` in that case is an app that simply will not open for that user. So the store now recovers. If the on-disk database fails to open, it backs up the bad file, opens a fresh one, and if even that fails (a full or read-only disk), it falls back to an in-memory store and shows a banner explaining that this session will not be saved. The app launches no matter what, which matters a great deal more than it sounds.
+
+## Where the model runs
+
+The most consequential decision in the whole app is where the intelligence lives, and the answer is "it depends, and the user gets to choose."
+
+By default everything runs on the device through Apple's Foundation Models. That is genuinely good for privacy, since nothing leaves the Mac, but it comes with a hard constraint: the on-device model has a context window of about 4,096 tokens. That number shapes a surprising amount of the design. You cannot dump a forty page paper into it. You have to be deliberate about every token you spend on instructions, source text, and the model's own output.
+
+For people who want more, there is a bring-your-own-key path. A small router decides, per request, whether to go on-device or to the cloud:
+
+```swift
+func resolveRoute(settings: LLMProviderSettings) -> Route {
+    switch settings.preset {
+    case .onDevice:
+        return isOnDeviceAvailable ? .onDevice : .unavailable
+    case .openRouter, .custom:
+        if settings.preferOnDevice, isOnDeviceAvailable { return .onDevice }
+        if hasCloudKey { return .cloud(model: settings.modelId) }
+        if isOnDeviceAvailable { return .onDevice }  // graceful fallback
+        return .unavailable
+    }
+}
+```
+
+The cloud side is an OpenAI-compatible client, so the same code path reaches Claude, GPT, Gemini, DeepSeek, and anything else that speaks that protocol through OpenRouter. The model list in the picker is checked against OpenRouter's live catalog, so it only offers ids that actually resolve. Keys are stored in the Keychain and are sent to exactly one place: the provider you selected.
+
+## Grounding the tutor
+
+A tutor that makes things up is worse than no tutor. The point of Kekasatori's tutor is that it answers from your document, which means retrieval.
+
+Each imported source is indexed into a small on-device vector database (VecturaKit, with its on-device embedding kit). There is no server and no API call. The document is embedded on the Mac and searched on the Mac.
+
+Before you can embed anything you have to chunk it, and chunking is one of those tasks that looks trivial and is not. Split too coarsely and a retrieved passage is mostly noise. Split too finely and you shred sentences in half and lose the meaning. The chunker is sentence-aware: it walks the text with a natural language tokenizer and packs whole sentences into windows of roughly 900 characters, with a 120 character overlap so an idea that straddles a boundary still survives in both neighbors.
+
+```swift
+static func chunk(_ text: String, maxChars: Int = 900, overlap: Int = 120) -> [String] {
+    // Tokenize into sentences, then greedily fill ~900-char windows,
+    // carrying ~120 chars of overlap into the next window.
+}
+```
+
+At query time the tutor embeds the question, pulls the closest chunks, and hands them to the model as grounding, with a system prompt that tells it to answer from the excerpts and to say so plainly when the excerpts do not cover the question.
+
+Here is where the 4,096 token window from earlier comes back. How many chunks should you retrieve? On the on-device model the answer is "not many," because you have almost no room. On a cloud model with a 200,000 token window the answer is "a lot more," and retrieving only five chunks would waste most of the context you are paying for. So the retrieval budget is computed from whichever model is active:
+
+```swift
+static func forCloudModel(_ model: String) -> RAGBudget {
+    let window = contextWindowTokens(for: model)   // 200k for Claude, 128k for GPT-4o, etc.
+    let ragTokens = Double(window) * 0.40          // reserve ~40% for source excerpts
+    let chunks = Int((ragTokens / 250).rounded())  // ~250 tokens per chunk
+    return RAGBudget(chunkLimit: min(48, max(5, chunks)), ...)
+}
+```
+
+On-device stays conservative. Point it at Claude and it will gladly stuff dozens of passages into the prompt. The retrieval code did not change; the budget around it did.
+
+## The study workshop
+
+Retrieval feeds the tutor, but the tutor is only one tool. The study pack itself is structured output. When a source comes in, the model produces a one-line summary, a set of note sections, a deck of flashcards, a glossary of key concepts, and a mind map, all as typed data rather than free text, so the app can render them as real interface instead of a blob of prose. On the device this rides on the Foundation Models structured generation, which means even the flashcards and the mind map are produced without anything leaving your Mac. That on-device default is not a footnote. For a tool that sees what you read and watch, "it runs locally and keeps no account" is the feature.
+
+Around the study pack sit a few tools that earn their own mention.
+
+The canvas is a full build of Excalidraw, shipped as a local web bundle and bridged to the native app, so you can sketch a diagram, annotate, or work a problem out by hand right beside the material. Bundling the editor instead of loading a remote page means it works offline and opens instantly.
+
+The notebook is a native editor backed by SwiftData and kept per source, so your own notes live with the thing they are about rather than scattered across other apps.
+
+The animated explainers are the most fun to demo. For a formula or a concept, Kekasatori can render a Manim animation, the same Python engine behind a lot of the best math explainer videos online. The app holds a set of scene templates and drives a Manim install as a subprocess to produce the clip. It is a small proof that the architecture is paying off: rendering an animation is just another service that spawns a process and returns a file, no different in shape from extracting audio with ffmpeg or resolving a stream with yt-dlp.
+
+## The streaming pivot
+
+This is the part that surprised me most, and it is a good example of a fix that was correct in theory and useless in practice.
+
+A user told me their streamed YouTube videos looked terrible, maybe 360p, even with the quality set to 1080p. My first instinct was that the format selector was wrong, so I rewrote it to prefer an HLS manifest for anything above 720p, since AVPlayer plays HLS natively and adapts up to 1080p. Clean idea.
+
+Then I actually ran yt-dlp against a real video and read what came back. The single combined stream that AVPlayer can play is format 18, which is 360p. The 1080p and 720p renditions exist, but only as DASH "video only" tracks that need their audio merged separately, which is downloading, not streaming. And the number of HLS manifests available with the clients the app is allowed to use was zero. YouTube only hands a ready-to-play high resolution URL to its iOS client, which in mid 2026 requires proof-of-origin tokens that the app deliberately does not deal with.
+
+```
+single combined URL (AVPlayer):  360p  (format 18)
+1080p / 720p:                    DASH video-only, needs merge
+HLS / m3u8 formats:              0
+```
+
+So my elegant HLS-first fix could never fire for YouTube, because there was no HLS to find. The honest conclusion was that you cannot stream YouTube above 360p as a raw URL with this setup, full stop.
+
+The user's own suggestion was the right one: use YouTube's player. The YouTube Data API is metadata only and gives you no stream, but the IFrame embed gives you YouTube's actual player, at full quality, in a way that respects their terms. So for streaming a YouTube video, Kekasatori now loads a tiny privacy-friendly embed in a web view instead of feeding a 360p URL to AVPlayer. Local files, audio, and non-YouTube sources still use AVPlayer, and download mode still produces real 1080p by merging the DASH tracks with ffmpeg. The study tools did not care either way, because the transcript pipeline pulls captions and audio separately from playback.
+
+There was one bug worth mentioning, because it is the kind that only shows up when you actually use the thing. Close the player window and the video kept playing, audio and all. AVPlayer already stopped on teardown, but a web view does not. The fix is to tear the web view down when SwiftUI removes it:
+
+```swift
+static func dismantleNSView(_ webView: WKWebView, coordinator: Coordinator) {
+    webView.stopLoading()
+    webView.loadHTMLString("<html><body style=\"background:#000\"></body></html>", baseURL: nil)
+}
+```
+
+## Searching without an API key
+
+Once the embed was in, the next obvious thing was to let people search instead of hunting for URLs. The clean version of this does not need a Google API key at all. The app already ships yt-dlp, and yt-dlp can search:
+
+```
+yt-dlp "ytsearch15:neural networks" --flat-playlist --print "%(id)s ... %(thumbnail)s"
+```
+
+That returns ids, titles, channels, durations, and thumbnails with no quota and no extra credentials. A small search sheet on the home screen runs that, shows the results, and a tap fills in the link. It reuses a binary that was already there for a job it was never advertised to do.
+
+## Getting it onto people's Macs
+
+None of this matters if it will not open on a stranger's machine. Kekasatori is not in the Mac App Store, because an app that spawns command line tools and ships GPL-licensed ffmpeg does not fit the sandbox or the store's rules. So it goes out the other sanctioned way: a Developer ID signature, notarized by Apple, stapled, and shipped as a `.dmg`.
+
+The notarization step taught me something specific about bundled binaries. Apple's notary service rejects any executable that is not signed with the hardened runtime, and the bundled yt-dlp and ffmpeg are very much executables. The first build failed quietly because the signing script looked for them in a subfolder that the build had flattened, so they went out unsigned. The packaging script now finds them wherever they land and re-signs each one with the runtime flag and the right entitlements before sealing the app. After that, the notary service was happy, and Gatekeeper opens the app with no warnings.
+
+Updates run on Sparkle, with an EdDSA-signed appcast, so a new build reaches existing installs without a store in the middle.
+
+## The small battles
+
+A few smaller things that did not deserve a section but were satisfying to fix.
+
+Several subprocess calls had no timeout, which meant a wedged ffmpeg or a hung network resolve could freeze part of the app forever. They all have ceilings now.
+
+The code used to shell out to `/bin/chmod` and `/usr/bin/xattr` to make a binary executable and strip its quarantine flag, blocking the calling thread on two process spawns. The executable bit was already being set through the file manager, and the quarantine flag can be cleared with a single `removexattr` system call, so both subprocesses are gone.
+
+The debug log used to mirror everything to a plain text file with no size limit, including titles and search terms. That file is now debug-only, so a release build keeps its logging in the system console and off the disk.
+
+## Where this is going
+
+The architecture has held up well as features piled on, mostly because of the discipline of keeping views dumb and pushing everything real into actors behind clear seams. The next round is about depth: better handling of very long documents, smarter study packs as the on-device models improve, and more sources. If you build something in this space, I am always happy to compare notes.

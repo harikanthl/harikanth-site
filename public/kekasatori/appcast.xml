@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Kekasatori</title>
+        <item>
+            <title>1.1.0</title>
+            <pubDate>Thu, 25 Jun 2026 01:41:26 -0700</pubDate>
+            <sparkle:version>2</sparkle:version>
+            <sparkle:shortVersionString>1.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.5</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/harikanthl/kekasatori/releases/download/v1.1.0/Kekasatori.dmg" length="127646447" type="application/octet-stream" sparkle:edSignature="nNWS51WJ0XBwiI9CmRjGH/MRIUNl0GcMKnkZIzAuwEw9td/akie+vK/LlqkdSsY7fW+WTz7oZsUomAHO2Zb0AQ=="/>
+        </item>
+    </channel>
+</rss>

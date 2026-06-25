@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Kekasatori — Privacy Policy"
+  description="How Kekasatori handles your data: local-first, no collection, no tracking."
+  noindex={false}
+>
+  <div class="page-container py-16 md:py-24">
+    <article class="mx-auto max-w-2xl">
+      <a href="/projects/kekasatori" class="text-sm text-[var(--color-muted)] no-underline">← Kekasatori</a>
+      <h1 class="mt-4 text-4xl">Privacy Policy</h1>
+      <p class="mt-3 text-sm text-[var(--color-muted)]">Effective 24 June 2026 · Contact: harikanth.ai@outlook.com</p>
+
+      <div class="mt-10 space-y-6 text-[var(--color-muted)] leading-relaxed">
+        <p>
+          <strong class="text-[var(--color-ink)]">Summary.</strong> Kekasatori is a local-first macOS app.
+          The developer does not run a server, has no user accounts, and does not collect, transmit, or sell
+          your personal data. Your content stays on your Mac except when you choose to send it to a third-party
+          service you configured.
+        </p>
+
+        <div>
+          <h2 class="text-xl text-[var(--color-ink)]">What stays on your device</h2>
+          <p class="mt-2">
+            Imported and downloaded media, papers, and articles; generated study material (transcripts,
+            summaries, notes, flashcards, mind maps, canvas boards, notebook entries); app settings; and any
+            API keys you enter — stored in the macOS Keychain, never in plain files, never logged, and sent
+            only to the provider you configured.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl text-[var(--color-ink)]">Third-party services (only when you use them)</h2>
+          <p class="mt-2">
+            Kekasatori contacts external services only as a result of your actions. If you configure a
+            bring-your-own-key AI provider, the text you ask about — including excerpts of your document — is
+            sent to that provider using your key, under their privacy policy; if you instead use Apple
+            Intelligence, that runs on-device. Importing or downloading from a URL connects to that source.
+            Update checks retrieve files only. The developer receives no copy of any of this data.
+          </p>
+        </div>
+
+        <div>
+          <h2 class="text-xl text-[var(--color-ink)]">Analytics &amp; tracking</h2>
+          <p class="mt-2">None. Kekasatori contains no third-party analytics, advertising, or tracking SDKs.</p>
+        </div>
+
+        <div>
+          <h2 class="text-xl text-[var(--color-ink)]">Your control</h2>
+          <p class="mt-2">
+            Because everything is local, you can delete your data at any time within the app or by removing the
+            app's Application Support folder. Removing the app removes its local data.
+          </p>
+        </div>
+
+        <p>Questions: harikanth.ai@outlook.com</p>
+      </div>
+    </article>
+  </div>
+</BaseLayout>

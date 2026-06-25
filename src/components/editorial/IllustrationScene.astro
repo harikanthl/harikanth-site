@@ -30,45 +30,60 @@ const positionClasses: Record<DecorItem['position'], string> = {
   style={`background: linear-gradient(180deg, ${paper} 0%, color-mix(in srgb, ${paper} 88%, white) 100%)`}
   aria-hidden={!hero && decor.length === 0}
 >
-  <div class="page-container relative min-h-[clamp(12rem,28vw,22rem)] py-10 md:py-14">
-    {
-      hero && (
+  {
+    hero && (
+      <Fragment>
         <img
           src={hero}
           alt={heroAlt}
-          class="pointer-events-none absolute right-[5%] bottom-0 h-auto max-h-[85%] w-[min(55%,28rem)] object-contain object-bottom drop-shadow-sm md:right-[8%]"
+          class="pointer-events-none absolute inset-0 h-full w-full object-cover opacity-90"
           loading="eager"
           fetchpriority="high"
         />
-      )
-    }
-
-    {
-      !hero && (
+        {/* Keep the text side readable while letting the fresco show on the right. */}
         <div
-          class="pointer-events-none absolute right-[10%] bottom-0 h-48 w-48 rounded-full opacity-30 blur-3xl md:h-64 md:w-64"
-          style={`background: ${accent}`}
+          class="pointer-events-none absolute inset-0"
+          style={`background: linear-gradient(90deg, ${paper} 0%, color-mix(in srgb, ${paper} 80%, transparent) 30%, color-mix(in srgb, ${paper} 30%, transparent) 60%, transparent 90%)`}
+          aria-hidden="true"
         />
-      )
-    }
+        {/* Soft fade into the article at the bottom. */}
+        <div
+          class="pointer-events-none absolute inset-0"
+          style={`background: linear-gradient(180deg, transparent 55%, color-mix(in srgb, ${paper} 70%, transparent) 85%, ${paper} 100%)`}
+          aria-hidden="true"
+        />
+      </Fragment>
+    )
+  }
 
+  {
+    !hero && (
+      <div
+        class="pointer-events-none absolute top-1/2 right-[8%] h-48 w-48 -translate-y-1/2 rounded-full opacity-25 blur-3xl md:h-64 md:w-64"
+        style={`background: ${accent}`}
+        aria-hidden="true"
+      />
+    )
+  }
+
+  <div class="page-container relative z-10 flex min-h-[clamp(13rem,22vw,17rem)] flex-col justify-center py-12 md:py-16">
     <slot />
-
-    {
-      decor.map((item) => (
-        <img
-          src={item.src}
-          alt={item.alt}
-          width={item.width ?? 140}
-          class:list={[
-            'pointer-events-none h-auto opacity-90',
-            item.position === 'inline'
-              ? 'block max-w-xs'
-              : `absolute hidden md:block ${positionClasses[item.position]}`,
-          ]}
-          loading="lazy"
-        />
-      ))
-    }
   </div>
+
+  {
+    decor.map((item) => (
+      <img
+        src={item.src}
+        alt={item.alt}
+        width={item.width ?? 140}
+        class:list={[
+          'pointer-events-none z-10 h-auto opacity-90',
+          item.position === 'inline'
+            ? 'relative mx-auto my-8 block max-w-xs'
+            : `absolute hidden md:block ${positionClasses[item.position]}`,
+        ]}
+        loading="lazy"
+      />
+    ))
+  }
 </section>

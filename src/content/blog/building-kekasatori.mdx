@@ -1,0 +1,69 @@
+---
+title: Building Kekasatori
+date: 2026-06-24
+description: A local-first macOS study app that turns videos, papers, and articles into transcripts, flashcards, mind maps, and a grounded AI tutor.
+tags:
+  - macOS
+  - Swift
+  - AI
+featured: true
+theme:
+  accent: "#7c5cff"
+  paper: "#f4f1ff"
+  ink: "#1c1630"
+  mood: cool
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/spark.png
+    heroAlt: "Two hands reaching toward a spark of light, in the style of Michelangelo's Creation of Adam"
+---
+
+For a long time I had two piles that never talked to each other. One was full of "watch later" lectures. The other was "read properly" papers and long blog posts. Most of it stayed unwatched and unread, and when I did get to something, very little of it stuck.
+
+Kekasatori is my attempt to fix that. You drop in a link, it gives you something you can actually study, and you can ask questions about it without leaving the app. It is a native macOS app, it runs local-first, and it shipped this week.
+
+<a href="/projects/kekasatori" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Get Kekasatori →</a>
+
+## What it does
+
+You hand it a source. That can be a YouTube link, an arXiv, PubMed, or DOI paper, a web article, or a multi-chapter book. Kekasatori pulls it in, turns it into a study pack, and then hands you a workshop of tools to actually learn it.
+
+**Private by default, on your Mac.** This is the part I am most proud of. The entire study pack, the transcripts, the summaries, the flashcards, the mind maps, and the tutor itself, can run entirely on-device through Apple Intelligence. No account, no sign-up, no server, and nothing about what you are studying leaves your machine. The retrieval that grounds the tutor happens on your Mac too. You only bring your own key if you specifically want a larger cloud model, and even then it goes to that one provider and nowhere else.
+
+**A grounded AI tutor.** Chat with a tutor that answers from your document rather than from vibes. It pulls the relevant passages out of the source and grounds its replies in them, so when you ask it to explain section three, it actually goes and reads section three. Run it on-device with Apple Intelligence, or bring your own key for a frontier model.
+
+**Transcripts and summaries.** Every video and paper becomes clean, readable text, with a one-line summary and structured notes you can skim before you commit to the whole thing.
+
+**Flashcards and key concepts.** The important terms and ideas come out as flashcards for active recall, plus a glossary of the key concepts so the vocabulary is in one place.
+
+**Mind maps.** See how the ideas connect at a glance instead of as a wall of paragraphs.
+
+**A drawing canvas.** A full Excalidraw canvas is built in, so you can sketch a diagram, annotate, or work a problem out by hand right next to the material.
+
+**Your own notebook.** Take notes in a proper notebook that stays attached to the source, so everything about one topic lives together instead of scattered across apps.
+
+**Animated explainers.** For math and formulas, Kekasatori can generate Manim animations, the same engine behind a lot of the best math videos online, so you can watch a concept move instead of staring at a static equation.
+
+## How it is built
+
+The app is SwiftUI on top of SwiftData, organized as MVVM. Most of the interesting decisions were about where the intelligence runs.
+
+It is on-device first. If your Mac supports Apple Intelligence, the generation and the tutor run locally through Apple's Foundation Models, and nothing leaves the machine. If you want a stronger model, you can bring your own key and point it at Claude, GPT, Gemini, DeepSeek, or anything else that speaks the OpenAI API. Those keys live in the Keychain and only ever travel to the provider you picked. Retrieval is local too, so your documents are embedded and searched on your own Mac with no server in the loop.
+
+The media side (yt-dlp and a universal build of ffmpeg) ships as bundled binaries, and the app keeps itself current with Sparkle.
+
+```text
+SwiftUI → ViewModels → Services (Import, Transcript, Study, Tutor/RAG, LLM Router)
+                              ↓
+        Foundation Models (on-device), OpenRouter (BYOK), yt-dlp + ffmpeg
+```
+
+## Shipping it
+
+Kekasatori is not on the Mac App Store. An app that downloads media and runs command line tools does not fit inside the sandbox rules, so I went the other legitimate route. It is signed with a Developer ID certificate, notarized by Apple, and handed out as a regular `.dmg`. Gatekeeper opens it with no warnings, and there is no review queue sitting between a fix and your Mac.
+
+## What is next
+
+More import sources, better handling of very long documents, and smarter study packs as the on-device models improve. If you try it and something breaks, I would genuinely like to hear about it.
+
+<a href="/projects/kekasatori" class="text-[var(--post-accent)]">Download it here →</a>
