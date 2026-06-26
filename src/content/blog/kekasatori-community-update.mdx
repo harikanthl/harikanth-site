@@ -1,0 +1,61 @@
+---
+title: "Kekasatori 1.2: Share Your Study Packs, Without a Server"
+date: 2026-06-26
+description: The latest Kekasatori update adds a decentralized community wall (Nostr for the index, IPFS for the files), a paper-to-podcast generator, and a calmer redesigned home — without giving up the no-account, local-first principle.
+tags:
+  - macOS
+  - Swift
+  - Nostr
+  - IPFS
+  - AI
+featured: true
+theme:
+  accent: "#7c5cff"
+  paper: "#f4f1ff"
+  ink: "#1c1630"
+  mood: cool
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/forum.png
+    heroAlt: "Figures gathering and exchanging in a Roman forum, in the style of a Renaissance fresco"
+---
+
+When I [shipped Kekasatori](/blog/building-kekasatori) it could turn a video or a paper into a study pack, but each pack stayed on the one Mac that made it. The obvious next step was sharing. The un-obvious part was doing it without quietly betraying the thing the app is supposed to stand for: no account, no server, nothing about what you study leaving your machine unless you ask.
+
+This update is my answer. You can now share a study pack to a community wall and import other people's, and there is still no server of mine anywhere in the path.
+
+<a href="/projects/kekasatori" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Get Kekasatori →</a>
+
+## A wall with no server
+
+A study pack is already a portable file — a single `.kekapack` you can hand to a friend. The hard question is discovery: how do you find packs other people made, and how do the bytes get to you, without me running a database that becomes the chokepoint?
+
+The answer is two different decentralized layers doing two different jobs.
+
+**Nostr carries the index.** Every post — its title, subject, tags, and which community it belongs to — is a small signed event published to public relays. Your identity is just a keypair; there is no sign-up. I don't run the relays, and there is no account system to gate or own the feed. The wall is simply everyone's signed events, filtered to this app.
+
+**IPFS carries the files.** The actual `.kekapack` moves peer-to-peer. When you share, the app adds the file to IPFS through a bundled node and puts the resulting content ID in the Nostr post; when someone imports it, their machine fetches those bytes from the network. The index is decentralized and so is the content.
+
+On top of that you get **subjects** (a fixed set — maths, CS, biology, and so on) and **open communities**: named spaces anyone can create and post into. Pick a subject and a community when you share, browse by them on the wall, and upvote what's good. It's labelled **Beta**, because it is.
+
+## Why bother going decentralized
+
+It would have been a weekend to stand up a normal backend. But "nothing leaves your Mac unless you ask" loses its meaning the moment the social layer routes through a server I control and can read. Keeping the index on Nostr and the files on IPFS means the feature inherits the same property as the rest of the app: there is no middle that has to be trusted.
+
+I'd rather be honest about the trade-off than oversell it. Free public relays don't promise to keep your events forever, so a post can drift off the wall over time. The app fixes the common case by re-broadcasting your own posts whenever it reconnects, and the proper fix — a small first-party relay and a pinning node that improve availability without becoming a hard dependency — is what I'm building next. Decentralized doesn't mean magic; it means the failure modes are yours to see and fix in the open.
+
+## From paper to podcast
+
+The other big addition is for the times you can't sit and read. Open a paper, pick a page range, and Kekasatori writes a two-host script and renders it as a multi-speaker audio podcast you can listen to on a walk. It uses Gemini's multi-speaker text-to-speech, so it's bring-your-own-key, and the key only ever goes to that one provider.
+
+## A calmer front door
+
+The home screen had grown a row of competing buttons — paste a URL, search, search YouTube, go — and a tagline that no longer described the app. I tore it down and rebuilt it around a single Liquid Glass command bar, the way macOS Tahoe leans on Spotlight: one field, paste or search inside it, and the format choices reveal themselves only once your link is valid. The three modes are now ordered the way you actually reach for them — Stream, Research, Download — and there's a proper in-app **Help** guide explaining what every tab does and how to do the common things.
+
+## What's next
+
+A first-party relay and IPFS pinning node so the default feed is fast and durable, light moderation for communities, and articles as a second thing you can share alongside study packs. The community layer is young and I'd genuinely like to hear what breaks.
+
+<a href="/projects/kekasatori" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download for macOS</a>
+
+<span style="display:block;margin-top:0.6rem"><a href="https://github.com/harikanthl/kekasatori" class="text-[var(--post-accent)]">View the source on GitHub →</a></span>
