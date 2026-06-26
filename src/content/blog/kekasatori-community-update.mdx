@@ -1,7 +1,7 @@
 ---
 title: "Kekasatori 1.2: Share Your Study Packs, Without a Server"
 date: 2026-06-26
-description: The latest Kekasatori update adds a decentralized community wall (Nostr for the index, IPFS for the files), a paper-to-podcast generator, and a calmer redesigned home — without giving up the no-account, local-first principle.
+description: The latest Kekasatori update adds a decentralized community wall (Nostr for the index, IPFS for the files), a paper-to-podcast generator, a Shu-Ha-Ri mastery board and focus timer for actually working through your study packs, and a calmer redesigned home, all without giving up the no-account, local-first principle.
 tags:
   - macOS
   - Swift
@@ -28,29 +28,53 @@ This update is my answer. You can now share a study pack to a community wall and
 
 ## A wall with no server
 
-A study pack is already a portable file — a single `.kekapack` you can hand to a friend. The hard question is discovery: how do you find packs other people made, and how do the bytes get to you, without me running a database that becomes the chokepoint?
+A study pack is already a portable file, a single `.kekapack` you can hand to a friend. The hard question is discovery: how do you find packs other people made, and how do the bytes get to you, without me running a database that becomes the chokepoint?
 
 The answer is two different decentralized layers doing two different jobs.
 
-**Nostr carries the index.** Every post — its title, subject, tags, and which community it belongs to — is a small signed event published to public relays. Your identity is just a keypair; there is no sign-up. I don't run the relays, and there is no account system to gate or own the feed. The wall is simply everyone's signed events, filtered to this app.
+**Nostr carries the index.** Every post (its title, subject, tags, and which community it belongs to) is a small signed event published to public relays. Your identity is just a keypair; there is no sign-up. I don't run the relays, and there is no account system to gate or own the feed. The wall is simply everyone's signed events, filtered to this app.
 
 **IPFS carries the files.** The actual `.kekapack` moves peer-to-peer. When you share, the app adds the file to IPFS through a bundled node and puts the resulting content ID in the Nostr post; when someone imports it, their machine fetches those bytes from the network. The index is decentralized and so is the content.
 
-On top of that you get **subjects** (a fixed set — maths, CS, biology, and so on) and **open communities**: named spaces anyone can create and post into. Pick a subject and a community when you share, browse by them on the wall, and upvote what's good. It's labelled **Beta**, because it is.
+On top of that you get **subjects** (a fixed set of maths, CS, biology, and so on) and **open communities**: named spaces anyone can create and post into. Pick a subject and a community when you share, browse by them on the wall, and upvote what's good. It's labelled **Beta**, because it is.
 
 ## Why bother going decentralized
 
 It would have been a weekend to stand up a normal backend. But "nothing leaves your Mac unless you ask" loses its meaning the moment the social layer routes through a server I control and can read. Keeping the index on Nostr and the files on IPFS means the feature inherits the same property as the rest of the app: there is no middle that has to be trusted.
 
-I'd rather be honest about the trade-off than oversell it. Free public relays don't promise to keep your events forever, so a post can drift off the wall over time. The app fixes the common case by re-broadcasting your own posts whenever it reconnects, and the proper fix — a small first-party relay and a pinning node that improve availability without becoming a hard dependency — is what I'm building next. Decentralized doesn't mean magic; it means the failure modes are yours to see and fix in the open.
+I'd rather be honest about the trade-off than oversell it. Free public relays don't promise to keep your events forever, so a post can drift off the wall over time. The app fixes the common case by re-broadcasting your own posts whenever it reconnects, and the proper fix is what I'm building next: a small first-party relay and a pinning node that improve availability without becoming a hard dependency. Decentralized doesn't mean magic; it means the failure modes are yours to see and fix in the open.
 
-## From paper to podcast
+## Turn any paper into a podcast, on the spot
 
-The other big addition is for the times you can't sit and read. Open a paper, pick a page range, and Kekasatori writes a two-host script and renders it as a multi-speaker audio podcast you can listen to on a walk. It uses Gemini's multi-speaker text-to-speech, so it's bring-your-own-key, and the key only ever goes to that one provider.
+This is my favourite thing in the release. Some days you just can't sit and read a dense PDF, and the honest fix is to not read it. So now you don't have to. Open any paper, drag the steppers to the pages you care about, hit go, and Kekasatori writes a script for two AI hosts and renders it as a real multi-speaker audio episode. A few moments later you've got a little show about exactly the section you picked, ready to play.
+
+The point is that it's on demand. You're not subscribing to anything or waiting for someone to cover the paper you happen to be reading. You make the episode you want, about the three pages in front of you, and listen to it on a walk or a commute while the ideas actually sink in. Pick a different range and you get a different episode. It turns the papers piling up in your reading list into something you can get through with your eyes closed.
+
+Under the hood it uses Gemini's multi-speaker text-to-speech, so it's bring-your-own-key, and that key only ever goes to that one provider. Nothing about what you're reading passes through me.
+
+## Studying, not just generating
+
+The first version was good at making study material and oddly quiet about what you did with it afterward. A pack landed in a flat list and that was the end of the relationship. This update turns that list into a place you actually run your studying from.
+
+There's now a proper **Study Packs** library. Search across everything you've ever generated, filter and sort it, and pin the ones you're in the middle of to the top. Each pack shows its vitals at a glance: the one-line summary, how many flashcards, notes, and key concepts it holds, when you last touched it, and whether it was built on-device or through a cloud model.
+
+The part I had the most fun with is how you track progress. Instead of a percentage bar, packs move through **Shu-Ha-Ri**, the old idea that you learn a thing in three stages: Shu (follow the fundamentals), Ha (break them apart and practise), Ri (it's yours now). In the app those read as Learning, Practicing, and Mastered, with the Japanese stage name kept as a quiet subtitle and a small circle that fills from empty to half to full as you climb.
+
+And since three stages plus a "haven't started" pile is basically a Kanban board, that became the second way to view the library. Four columns (To Study, Learning, Practicing, Mastered) and you drag a pack from one to the next as it sinks in. It's a satisfying way to see a week of studying laid out, and pulling a card into Mastered never gets old.
+
+## A timer that nudges, not nags
+
+Tucked in the corner while you study is a small **focus timer**: a retro analog dial you can collapse down to a single button or pop open for the full face. It runs the usual rhythm of twenty-five minutes of focus then a short break, counts the sessions you finish, and tells you when it's time to step away. The idea I kept in mind building it was kaizen, lots of small repeated sessions rather than one heroic cram. It nudges; it doesn't nag.
 
 ## A calmer front door
 
-The home screen had grown a row of competing buttons — paste a URL, search, search YouTube, go — and a tagline that no longer described the app. I tore it down and rebuilt it around a single Liquid Glass command bar, the way macOS Tahoe leans on Spotlight: one field, paste or search inside it, and the format choices reveal themselves only once your link is valid. The three modes are now ordered the way you actually reach for them — Stream, Research, Download — and there's a proper in-app **Help** guide explaining what every tab does and how to do the common things.
+The home screen had grown a row of competing buttons (paste a URL, search, search YouTube, go) and a tagline that no longer described the app. I tore it down and rebuilt it around a single Liquid Glass command bar, the way macOS Tahoe leans on Spotlight: one field, paste or search inside it, and the format choices reveal themselves only once your link is valid. The three modes are now ordered the way you actually reach for them, Stream then Research then Download.
+
+## Help that lives in the app
+
+The last addition is unglamorous and overdue: a real **Help & Guide** built into the app, with no website to visit and no network call to load it. It comes in three parts. There's a plain rundown of what every tab does, from Home to Library to Study Packs to Community. There's a set of short "How to" recipes for the things people actually want done: stream and study a video, turn a paper into a podcast, track mastery across the board, share or import a pack. And there's a "Good to know" list of the small truths that are easy to miss, like the fact that Stream mode never writes video to disk, and that your notebook and mastery progress stay private and never go to the Community.
+
+I'd rather a feature explain itself in the place you'd look for it than send you off to a docs site to dig out the one sentence you needed.
 
 ## What's next
 
