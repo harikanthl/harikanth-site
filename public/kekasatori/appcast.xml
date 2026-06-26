@@ -3,6 +3,22 @@
     <channel>
         <title>Kekasatori</title>
         <item>
+            <title>1.2.0</title>
+            <description><![CDATA[
+                <ul>
+                    <li><b>Community wall (Beta)</b> — share &amp; discover study packs with no server or account (Nostr index + IPFS files); subjects, communities, upvotes.</li>
+                    <li><b>Paper &rarr; podcast</b> — multi-speaker audio from any paper.</li>
+                    <li><b>Redesigned Home</b> — a single Spotlight-style command bar; modes reordered to Stream / Research / Download.</li>
+                    <li>In-app Help guide, relay reconnection fix, mastery board, focus timer.</li>
+                </ul>
+            ]]></description>
+            <pubDate>Fri, 26 Jun 2026 08:30:39 -0700</pubDate>
+            <sparkle:version>3</sparkle:version>
+            <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.5</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/harikanthl/kekasatori/releases/download/v1.2.0/Kekasatori.dmg" length="129275774" type="application/octet-stream" sparkle:edSignature="OUTIaKCm8G1LXxNmr6PfqeJ8i6Eo1CTmdUHFH1WLv4k4+U6P9QFRzkq/yxSJWc6tcOfrc0b4aUKy9yUUEcdHCg=="/>
+        </item>
+        <item>
             <title>1.1.0</title>
             <pubDate>Thu, 25 Jun 2026 01:41:26 -0700</pubDate>
             <sparkle:version>2</sparkle:version>
