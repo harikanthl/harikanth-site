@@ -1,0 +1,99 @@
+---
+title: "Discover, Compare, Run: Kekasatori grows a research cockpit"
+date: 2026-06-27
+description: Since 1.2 the centre of gravity moved. Kekasatori is becoming a cockpit for people who build and evaluate models, not just study them: a multi-source literature Discover with an in-app paper page, a side-by-side model Compare arena spanning local, cloud, and Hugging Face, and a Run tab that executes code and benchmarks inside containers. Plus the design decisions, and the two features I built and then deleted.
+tags:
+  - macOS
+  - Swift
+  - AI
+  - Containers
+  - Hugging Face
+featured: true
+theme:
+  accent: "#5a4fcf"
+  paper: "#efeefb"
+  ink: "#161433"
+  mood: cool
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/spark.png
+    heroAlt: "The spark of creation passing between two hands, in the style of a Renaissance ceiling fresco"
+---
+
+Written on a Saturday, the productive kind, where you look up and it's dark out, the coffee's cold, and the diff is somehow three pillars long. Tired, a little fried, but quietly pleased with where it landed. So here's a build log.
+
+[1.2](/blog/kekasatori-community-update) was about sharing what you study. Since then the app's centre of gravity has quietly moved. Kekasatori started as "drop in a link, get something you can study"; it's growing into a cockpit for the people who actually build and evaluate models (find the work, judge the models, run the things) without giving up the local-first, bring-your-own-key, no-account principles it started with.
+
+Three new pillars carry that: **Discover**, **Compare**, **Run**. Here's the engineering, and the calls behind it.
+
+## Discover: a literature search that isn't one search box
+
+Discover fans a query across the real scholarly providers (Semantic Scholar, arXiv, OpenAlex, Europe PMC, bioRxiv/medRxiv), dedupes them, and adds a trending feed and browse-by-task cards. It's field-aware: AI, Maths, Physics, Chemistry, and Medicine each get their own taxonomy and preprint source, switched with a sliding pill.
+
+The piece I like most is the new in-app paper page. Click any result and you get a Papers-with-Code-style view: an AI TL;DR of the abstract, a BibTeX entry, related work, and chips for the **Tasks** and **Methods** the paper touches.
+
+Those chips are the interesting decision. The obvious way to get them is to ask a model. I didn't. They're detected offline against a controlled vocabulary with word-boundary matching, so the tags stay canonical and the page works with no AI provider and no network. The one subtlety that bit me: short stylised names. "RoPE" and "GAN" have to match case-sensitively, or the regex cheerfully tags the prose words *rope* and *organ*. So acronyms are matched strictly and longer phrases loosely. The whole thing is a pure function with tests. The part that *can* be deterministic shouldn't be left to a model.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/ancient-aliens.jpg" alt="Ancient aliens guy meme" style="width:100%;max-width:360px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">I'm not saying you need an LLM for everything. But the year is 2026 and people are spinning up GPT-5 to do what a 30-line regex does offline.</figcaption>
+</figure>
+
+And it opens **in the app**, with a back button, not in a new window. A paper page is a five-second glance; a window would be friction. (The player, which you sit inside, stays a window. Opposite interactions, opposite answers.)
+
+## Compare: one prompt, every model, side by side
+
+Compare is a BYOK arena. Type one prompt, fan it across N models, watch them stream next to each other, with a real cost meter reading live token prices.
+
+The architecture trick is that there's only one abstraction: a model is a `ModelProfile` (a base URL, a key, a model id), and everything streams through one OpenAI-compatible client. That made two additions almost free. **Local servers** (Ollama, LM Studio, llama.cpp) are detected on the host and slotted in as profiles with no key. And **Hugging Face's router** drops in as a provider preset: one `hf_…` token, an OpenAI-shaped endpoint in front of ~20 providers, and a browsable catalog pulled live from `/v1/models`, every model with its per-provider context length and pricing. Routing became preset-aware so each profile reaches for the right key, and the same profiles feed the Run tab below.
+
+## Run: you should be able to run things, not just read about them
+
+This is the bet. Discover and Compare are about information; Run is about execution. The throughline is containers.
+
+A **Code box** pairs a Monaco editor with run-in-a-container: write Python or shell, hit run, stream the output. The runtime is detected and abstracted: Apple's `container` on macOS 26 Apple Silicon, falling back to Docker, then Colima. (Monaco is vendored offline: no CDN load, no flash on tab switches.) An **eval runner** does the same for benchmarks: lm-eval or inspect-ai inside a container, pointed at any endpoint (a cloud key, a local Ollama model, or later a remote GPU), streaming the log and scraping the metrics out.
+
+The idea binding it together is that *the same image runs locally now and on a GPU later*.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/handshake.jpg" alt="Epic handshake meme" style="width:100%;max-width:380px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">local CPU container · remote H100 · agreeing on the exact same Dockerfile</figcaption>
+</figure>
+
+Two decisions fell out of that. Driving providers over plain REST instead of a bundled Python CLI, because shipping a CPython toolchain inside a notarised app is a packaging and code-signing tax I'd rather not pay. And one networking gotcha worth writing down: `localhost` inside a Docker container is the *container*, not your Mac, so an eval pointed at a host-local model has to rewrite the endpoint to `host.docker.internal`. Apple's container has no such alias, so that rewrite is engine-aware.
+
+A **Learn** tab rounds it out: deep-ml-style challenges where you implement each piece of modern ML yourself, from shell basics up through attention, a tiny GPT, and the modern-LLM stack (RoPE, RMSNorm, GQA, KV cache), each checked by running your code in a container. Same engine, turned toward teaching.
+
+## The design, and a small window bug
+
+The app wears an editorial "gold-rule" aesthetic (thin gold section rules, a Light/Dark/System toggle) pushed through every screen. A nice piece of reuse: the retro terminal status bar became a **Now Playing** bar pinned to the Library, so the separate player windows tie back to the app: tap to focus, one button to stop.
+
+That surfaced a real bug. Player windows are their own `NSHostingController`s, disconnected from the main window's view tree, so they never observed the theme. Change the accent and an open player kept the old one. The fix is a small root view that watches the theme manager and re-applies the tint; the same trick the main window already used, just not extended to the satellite windows. Easy to miss precisely because the main window looked fine.
+
+## The two features I built and then deleted
+
+The honest part. I tried to make those screens self-explanatory with collapsible "How this works" cards. They worked, and they hung. Expanding one pushed the whole view down, and I *animated* the push. Animating a layout change makes SwiftUI re-run layout every frame for the whole subtree, and these subtrees are expensive: a `WKWebView`, a streaming arena. Thirteen frames of re-laying-out a webview in full screen is the jank.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/disaster-girl.jpg" alt="Disaster girl meme" style="width:100%;max-width:340px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">me, having added a <em>helpful</em> little card to every screen</figcaption>
+</figure>
+
+The fix would have been to make the toggle instant, but the better fix was admitting the cards weren't worth it, and deleting them.
+
+The same week I rebuilt Compare's model picker as an always-visible inline catalog: source filter, search, a featured slider, tinted cards. It was nicer. It was also more surface, more state, and more re-rendering in the hot path of a streaming run. So I reverted it to the plain "Add ▾" dropdown and a popup.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/aaaand-its-gone.jpg" alt="Aaaaand it's gone meme" style="width:100%;max-width:340px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">two features, a day of work, one <code>git checkout</code></figcaption>
+</figure>
+
+Both of these I shipped to no one (they live only in a diff that got thrown away), but the lesson was worth the day: a calmer affordance usually beats a clever one, and "I built it" is not a reason to keep it.
+
+## Where this is going
+
+The container abstraction is pointed at a remote-GPU tier next: provision, serve an OpenAI-compatible endpoint, run the eval, tear it down, with the cost always on screen and a hard budget cap. The research said RunPod first (the whole lifecycle is REST, no Python), Hugging Face Jobs for batch evals, and an Agents pillar after that. Still local-first, still your keys, still no server of mine in the path.
+
+That's the plan. For now it's a Saturday, the build is green, the tests pass, and I've earned the right to go look at something that isn't a screen. Three pillars up, two features in the bin. A good day's trade.
+
+<span style="display:block;margin-top:0.6rem"><a href="https://github.com/harikanthl/kekasatori" class="text-[var(--post-accent)]">View the source on GitHub →</a></span>
