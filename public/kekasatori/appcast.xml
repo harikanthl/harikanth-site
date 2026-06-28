@@ -3,6 +3,25 @@
     <channel>
         <title>Kekasatori</title>
         <item>
+            <title>1.3.0</title>
+            <description><![CDATA[
+                <ul>
+                    <li><b>Discover</b> — multi-source literature search (Semantic Scholar, arXiv, OpenAlex, Europe PMC, bioRxiv/medRxiv) with a field switcher, trending feed, and an in-app paper page (AI TL;DR, BibTeX, offline task/method tags).</li>
+                    <li><b>Compare</b> — bring-your-own-key model arena: one prompt across many models side by side, live cost meter, local &amp; Hugging Face router models, saved prompt sets.</li>
+                    <li><b>Run</b> — write &amp; run Python/shell in a container, run lm-eval / inspect-ai benchmarks against any endpoint, now including serverless GPUs (Hugging Face, RunPod).</li>
+                    <li><b>Deep Research</b> — reads full open-access papers (quoted &amp; cited) with an optional skeptical critique pass.</li>
+                    <li><b>Learn</b> — implement-it-yourself ML challenges plus a new data-cleaning track.</li>
+                    <li><b>Agents (MCP)</b> — bundled MCP server for paper search; one-click connect from Settings.</li>
+                    <li>Editorial gold-rule redesign, Light/Dark/System toggle, Now Playing bar.</li>
+                </ul>
+            ]]></description>
+            <pubDate>Sat, 27 Jun 2026 23:11:01 -0700</pubDate>
+            <sparkle:version>4</sparkle:version>
+            <sparkle:shortVersionString>1.3.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.5</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/harikanthl/kekasatori/releases/download/v1.3.0/Kekasatori.dmg" length="146893447" type="application/octet-stream" sparkle:edSignature="fAjsUP+KHpSQERfbReToY7TPdjUTdrRJZH0s2uV4G+nF7yoWjM7tUV80dFak61/JEBiwv00nJqQNs0IaA3EWBA=="/>
+        </item>
+        <item>
             <title>1.2.0</title>
             <description><![CDATA[
                 <ul>
