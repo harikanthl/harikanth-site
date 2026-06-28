@@ -1,0 +1,75 @@
+---
+title: "Kekasatori 1.3: From Study App to Research Cockpit"
+date: 2026-06-27
+description: "The biggest Kekasatori update yet. It still turns a link or a paper into something you can study, but it grew three new pillars for the people who actually build and evaluate models: Discover a literature across five scholarly sources, Compare any models side by side, and Run real code and benchmarks inside containers. Plus a deep-research agent that reads full papers and argues with itself, a learn-by-implementing track, and an MCP server so your own AI assistant can search your library. Still no account, still your keys, still nothing leaving your Mac unless you ask."
+tags:
+  - macOS
+  - Swift
+  - AI
+  - Containers
+  - MCP
+featured: true
+theme:
+  accent: "#4a54d6"
+  paper: "#eef0fb"
+  ink: "#15183a"
+  mood: cool
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/emergence.png
+    heroAlt: "Figures emerging from raw plaster into form, in the style of a Renaissance fresco"
+---
+
+[1.2](/blog/kekasatori-community-update) let you share what you study. With 1.3 the app grew up. Kekasatori started as "drop in a link, get something you can study" and it still does exactly that, but the centre of gravity has moved: it's now a cockpit for the people who actually work with research and models, not just read about them. Find the work, judge the models, run the things, all in one app, and all without giving up the no-account, bring-your-own-key, local-first principles it started with.
+
+This is the largest release so far. Here's what's in it. (If you want the engineering story behind the three pillars, the [build log is here](/blog/kekasatori-research-cockpit); this is the tour.)
+
+<a href="/projects/kekasatori" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Get Kekasatori →</a>
+
+## Discover: one query, every source that matters
+
+Discover is a literature search that isn't a single search box. Type a query and it fans out across the real scholarly providers (Semantic Scholar, arXiv, OpenAlex, Europe PMC, and bioRxiv/medRxiv), merges and de-duplicates the results, and adds a trending feed you can filter by lens, time window, and domain, plus browse-by-task cards for when you don't have a query yet. It's field-aware: AI, Maths, Physics, Chemistry, and Medicine each bring their own taxonomy and preprint source, switched with a sliding pill.
+
+Click any result and you stay in the app: a clean paper page with an AI TL;DR of the abstract, a ready-to-paste BibTeX entry, related work, and chips for the tasks and methods the paper touches. Those chips are detected offline against a controlled vocabulary, so the page is honest and works with no AI key and no network, the deterministic part stays deterministic.
+
+## Compare: one prompt, every model, side by side
+
+Compare is a bring-your-own-key arena. Type a prompt once, fan it across as many models as you like, and watch them stream answers next to each other with a live cost meter reading real token prices as they go.
+
+Because every model is just a base URL, a key, and a model id behind one OpenAI-compatible client, the lineup is wide open. Cloud models from any provider, local servers (Ollama, LM Studio, llama.cpp) detected on your Mac and slotted in with no key, and Hugging Face's router as a one-token preset that puts a browsable catalog of ~20 providers' models in front of you, each with its context length and pricing. New in 1.3 you can save a whole **prompt set**, the prompt plus the exact lineup of models, rerun it later, and read an aggregate cost meter for the whole run so you know what a comparison actually cost before you scale it up.
+
+## Run: you should be able to run things, not just read about them
+
+This is the bet of the release. Discover and Compare are about information; Run is about execution, and the throughline is containers.
+
+A **Code box** pairs a real editor (Monaco, vendored offline, no CDN) with run-in-a-container: write Python or shell, hit run, stream the output. The runtime is detected and abstracted, Apple's `container` on Apple-silicon macOS 26, falling back to Docker, then Colima. An **eval runner** does the same for benchmarks: point lm-eval or inspect-ai at any endpoint (a cloud key, a local model, or a remote GPU), run it inside a container, and watch the log stream while the scores get scraped out for you.
+
+The point is that *the same image runs locally now and on a GPU later*. In 1.3 that "later" arrived: you can run evals on serverless GPUs through Hugging Face and RunPod, spin up, run, scale back to zero, with the cost on screen the whole time. No machine to babysit.
+
+## Deep Research: an agent that reads the paper and argues with itself
+
+Ask a research question and Kekasatori runs a real multi-step search instead of one shot. It screens the candidates and shows you why each made or missed the cut, then for open-access papers it actually **reads the full text**: it pulls the PDF, extracts it, builds a throwaway in-memory index, and pulls quoted excerpts so the answer is grounded in the source, with the quote and its provenance shown right under each claim.
+
+You pick the depth. At the deeper settings it adds a **critique pass**, a skeptical second read that pushes back on its own conclusions before it hands them to you, because the failure mode of these tools is confident nonsense and the cheapest defense is making it disagree with itself. Every source comes with a BibTeX entry, so the output is something you can cite, not just read.
+
+## Learn: implement it yourself, in a container
+
+The Learn tab is for building the muscle, not just reading about it. It's a set of deep-ml-style challenges where you implement each piece yourself, from shell basics up through attention, a tiny GPT, and the modern-LLM stack (RoPE, RMSNorm, GQA, KV cache), each one checked by running your code in a container, the same engine as the Run tab pointed at teaching.
+
+New in 1.3 is a **data-cleaning track**: a dozen hands-on pandas challenges that take you from messy real-world tables to something you'd actually train on, building up to a capstone on a real dataset. Because the missing skill in most ML tutorials isn't the model, it's the afternoon you spend getting the data into shape first.
+
+## Agents: your AI assistant can use Kekasatori
+
+1.3 ships the first piece of the agent story, and it's built MCP-first so it isn't tied to any one assistant. Kekasatori now bundles a small **MCP server** that exposes its tools, starting with paper search, over the standard protocol. Flip one switch in Settings and your own AI assistant (Claude Desktop, or anything that speaks MCP) can search the literature through Kekasatori directly, no copy-paste, no separate API key dance. It runs locally, embedded in the app. This is the foundation; searching your own library and running RAG over it through the same channel are next.
+
+## A calmer, more coherent look
+
+All of this wears a single editorial design: thin gold section rules, a Light / Dark / System toggle that actually reaches every screen, and a few nice touches of reuse, the retro status bar became a **Now Playing** bar pinned to the Library so the separate player windows tie back to the app, tap to focus, one button to stop.
+
+## What's next
+
+A shared core so the MCP server can search your library and answer questions over it, an Agents pillar that can drive these tools end to end, and the remote-GPU tier filled out with a hard budget cap. Still local-first, still your keys, still no server of mine in the path.
+
+<a href="/projects/kekasatori" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download for macOS</a>
+
+<span style="display:block;margin-top:0.6rem"><a href="https://github.com/harikanthl/kekasatori" class="text-[var(--post-accent)]">View the source on GitHub →</a></span>
