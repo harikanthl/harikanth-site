@@ -18,7 +18,7 @@
             <sparkle:version>5</sparkle:version>
             <sparkle:shortVersionString>1.4.0</sparkle:shortVersionString>
             <sparkle:minimumSystemVersion>15.5</sparkle:minimumSystemVersion>
-            <enclosure url="https://github.com/harikanthl/kekaSatori-P/releases/download/v1.4.0/Kekasatori.dmg" length="148950426" type="application/octet-stream" sparkle:edSignature="3B+QgoFHEJKeaGb5iaql57QSjijJS7/Df6Dyl2HBY7tY2GTkFN3CBnvajDxTQb/GvXtWS+qz57d/cELJkQV/DA=="/>
+            <enclosure url="https://github.com/harikanthl/kekasatori/releases/download/v1.4.0/Kekasatori.dmg" length="148950426" type="application/octet-stream" sparkle:edSignature="3B+QgoFHEJKeaGb5iaql57QSjijJS7/Df6Dyl2HBY7tY2GTkFN3CBnvajDxTQb/GvXtWS+qz57d/cELJkQV/DA=="/>
         </item>
         <item>
             <title>1.3.0</title>
