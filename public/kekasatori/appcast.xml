@@ -3,6 +3,24 @@
     <channel>
         <title>Kekasatori</title>
         <item>
+            <title>1.4.1</title>
+            <description><![CDATA[
+                <ul>
+                    <li><b>Fixed a launch-time storm of macOS Keychain permission prompts.</b> The Cockpit agent panel and the compute dial read your provider key during view setup, so macOS could ask to use your confidential information repeatedly on launch. Those reads are now deferred off the launch path.</li>
+                    <li>Also fixes a related side effect where the dismissed prompts could steal focus and jump the sidebar from Home to Cockpit on their own.</li>
+                </ul>
+            ]]></description>
+            <pubDate>Mon, 29 Jun 2026 09:11:59 -0700</pubDate>
+            <sparkle:version>6</sparkle:version>
+            <sparkle:shortVersionString>1.4.1</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.5</sparkle:minimumSystemVersion>
+            <enclosure
+                url="https://github.com/harikanthl/kekasatori/releases/download/v1.4.1/Kekasatori.dmg"
+                length="148951614"
+                type="application/octet-stream"
+                sparkle:edSignature="0Cp0oon2d3/ezB+T8ReRzyBM3HVA2ouy1N/9tQlIjPFcDHDpzcq2ndukex0X2IeZFWX1PDczF57LnltILacoDQ=="/>
+        </item>
+        <item>
             <title>1.4.0</title>
             <description><![CDATA[
                 <ul>
