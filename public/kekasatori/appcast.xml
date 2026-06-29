@@ -3,6 +3,24 @@
     <channel>
         <title>Kekasatori</title>
         <item>
+            <title>1.4.0</title>
+            <description><![CDATA[
+                <ul>
+                    <li><b>Cockpit</b> &mdash; new prototyping-lab pillar (Workspace &middot; Environment &middot; ComputeTarget &middot; Run) with a compute dial that scales from local to serverless GPU (RunPod / Modal).</li>
+                    <li><b>Notebox</b> &mdash; editor-first marimo notebooks + SQL stack, engine controls, and playful native loaders.</li>
+                    <li><b>Agentic memory</b> &mdash; local-first memory backbone (vector + temporal knowledge graph), private and on-device.</li>
+                    <li><b>CockpitAgent</b> &mdash; Ask / Edit agent with gated tool-calling.</li>
+                    <li><b>Learn: Reinforcement Learning</b> &mdash; new 24-challenge track (bandits &rarr; PPO/SAC).</li>
+                    <li>Discover / Library / Code polish, playlist import, and a sticky-cursor fix.</li>
+                </ul>
+            ]]></description>
+            <pubDate>Mon, 29 Jun 2026 07:37:48 -0700</pubDate>
+            <sparkle:version>5</sparkle:version>
+            <sparkle:shortVersionString>1.4.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.5</sparkle:minimumSystemVersion>
+            <enclosure url="https://github.com/harikanthl/kekaSatori-P/releases/download/v1.4.0/Kekasatori.dmg" length="148950426" type="application/octet-stream" sparkle:edSignature="3B+QgoFHEJKeaGb5iaql57QSjijJS7/Df6Dyl2HBY7tY2GTkFN3CBnvajDxTQb/GvXtWS+qz57d/cELJkQV/DA=="/>
+        </item>
+        <item>
             <title>1.3.0</title>
             <description><![CDATA[
                 <ul>
