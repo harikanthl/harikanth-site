@@ -1,0 +1,97 @@
+---
+title: "Kekasatori 1.4: From Study App to Prototyping Cockpit"
+date: 2026-06-29
+description: "The biggest Kekasatori release yet. It still turns a link or a paper into something you can study, but 1.4 adds the machinery to actually build: a Cockpit that makes a Workspace the unit of work, a compute dial that runs the same job locally or on a rented GPU, reactive marimo notebooks with SQL, a learn-by-implementing Reinforcement Learning track, and an agent that remembers you and has to ask before it touches anything. Still no account, still your keys, still local-first."
+tags:
+  - macOS
+  - Swift
+  - AI
+  - Containers
+  - Agents
+featured: true
+theme:
+  accent: "#b8472a"
+  paper: "#fbf0ea"
+  ink: "#2a1712"
+  mood: warm
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/plaster.png
+    heroAlt: "Figures being shaped out of raw plaster, in the style of a Renaissance fresco"
+---
+
+[1.3](/blog/kekasatori-1-3) turned Kekasatori from a study app into a research cockpit: find the work, judge the models, run the things. 1.4 is about the last word in that list. It stops treating "run" as a single box you visit and turns the whole app into a place where a piece of work has a home, a compute target, a memory, and an agent that can help you push it forward.
+
+Kekasatori started as "drop in a link, get something you can study." That is still the front door. But the centre of gravity has moved again: it is now a prototyping cockpit for the people who build and evaluate models, and 1.4 is the release where the cockpit grew an engine, a notebook, and a memory. All of it on your Mac, with your keys, and nothing leaving the machine unless you ask.
+
+<a href="https://github.com/harikanthl/kekasatori/releases/latest/download/Kekasatori.dmg" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download Kekasatori 1.4 for macOS →</a>
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/expanding-brain.jpg" alt="Expanding brain meme" style="width:100%;max-width:360px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">study app, then research cockpit, then a Workspace with its own compute and memory. The brain kept expanding.</figcaption>
+</figure>
+
+## Cockpit: a Workspace is now the unit of work
+
+Before 1.4, a paper, a code box, and an eval run were three unrelated things you happened to open. Now there is a **Workspace**: it remembers where it came from (a blank slate, a paper, a repo, or a notebook), which environment and compute target it prefers, every run you have launched from it, and a set of context references (papers, notes, transcripts, research briefs) that the agent can read without you copy-pasting anything.
+
+The Cockpit tab is the home for all of this. You can start a Workspace straight from a paper in Discover and it follows you across tabs, so when you drop into Code or Notebox the runs land back in the same Workspace and show up in its history. Work stopped being a pile of open windows and became a thing with a name.
+
+## The compute dial: same job, local now or GPU later
+
+The bet of 1.3 was "the same image runs locally now and on a GPU later." In 1.4 that later is a dial you actually turn. A **ComputeTarget** is a small value that says where a run executes: local container engine, RunPod serverless, a RunPod pod, or a Modal endpoint, each carrying its own capabilities (GPU or not, streaming, cost per hour, max runtime).
+
+You write and test against your own machine for free, then promote the exact same job to a rented GPU with one selection. There is a budget guard watching elapsed time and accumulated cost so a runaway job stops itself, and the price is on screen the whole time. No machine to babysit, no second tool to learn.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/two-buttons.jpg" alt="Two buttons sweating meme" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">the dial exists so this is not a crisis. Test on the laptop, promote to an H100, same container either way.</figcaption>
+</figure>
+
+## Notebox: reactive notebooks, with SQL
+
+Notebox is a notebook tab built on **marimo**, the reactive Python notebook that stores files as plain `.py` and runs headless. Change a cell and everything that depends on it recomputes. There is no hidden execution order to get burned by, and no "restart kernel and run all" ritual to remember what state you are actually in.
+
+It ships with the SQL stack wired in (DuckDB under the hood, plus pandas, polars, pyarrow, and altair), so you can query a dataframe with real SQL in a cell and chart the result next to it. The notebook runs in a container like everything else, with engine start and stop controls in the header for the runtimes that need them.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/drake.jpg" alt="Drake preferring one option over another" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">classic notebook with invisible run-order state: no thanks. Reactive cells that recompute themselves: yes.</figcaption>
+</figure>
+
+## An agent that remembers you, and has to ask first
+
+This is the part the rest of the release was built to support. Kekasatori now keeps a **local-first memory**: things you tell it, things it figures out, and a small knowledge graph of facts, all stored on your Mac. When you ask it something it recalls the relevant pieces and brings them into the conversation, so it gets less repetitive the more you use it. Every fact carries a time window, so when something changes the old version is retired rather than overwritten, and the app can still answer "what was true back then."
+
+The agent has two modes. **Ask** grounds an answer in your memory, your active Workspace, and your recent runs. **Edit** can actually do things: search memory, record a fact, look at recent runs. But the two actions that touch the world, switching your compute target and launching a run, are **gated**. The agent does not perform them; it proposes them, and nothing happens until you approve. An agent with a leash is a feature, not a limitation.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/roll-safe.jpg" alt="Roll Safe tapping his head" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">you cannot keep re-explaining your context to the assistant if the assistant remembers it for you.</figcaption>
+</figure>
+
+## Learn: a Reinforcement Learning track you implement yourself
+
+The Learn tab keeps its rule: you build the thing, and your code is checked by running it in a container. New in 1.4 is a full **Reinforcement Learning** track, 24 challenges across 6 modules. It walks from bandits (epsilon-greedy, UCB, Thompson sampling) through dynamic programming and model-free control (Q-learning, Sarsa), into deep RL (DQN with replay and Double DQN), policy gradients (REINFORCE, GAE, PPO clipping), and finishes on continuous and maximum-entropy methods (TD3, SAC).
+
+The early modules are plain NumPy. The deep-RL ones implement the core update rules in PyTorch against tiny self-contained tensors, so you are writing the actual math of the algorithm, not configuring a library and waiting for a training run. Each lesson has a concept writeup next to it.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/yoda.jpg" alt="Yoda meme" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">read the PPO paper, you can. Implement the clipped objective until the test passes, you must.</figcaption>
+</figure>
+
+## The small things you feel
+
+The loaders got playful: a rotating cast of animated critters that scale cleanly into their frame, sized to fit each pane, and they respect Reduce Motion. And a cursor bug that had been quietly annoying everyone got fixed. The text I-beam from the editor tabs used to leak onto whatever tab you switched to, leaving you with a typing cursor floating over a button. That is gone. The engineering story behind both, plus the architecture under the Cockpit and the memory, is in the [companion deep-dive](/blog/kekasatori-1-4-engineering).
+
+## What it is now
+
+It started as a way to turn a link into a study pack. It is now a place where you can find a paper, spin up a Workspace from it, prototype in a reactive notebook, run the job locally and then on a GPU without changing anything, and have an agent that remembers the work and asks before it acts. Same principles the whole way: no account, your keys, local-first.
+
+<a href="https://github.com/harikanthl/kekasatori/releases/latest/download/Kekasatori.dmg" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download Kekasatori 1.4 for macOS →</a>
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/leonardo-cheers.jpg" alt="Leonardo DiCaprio raising a glass" style="width:100%;max-width:340px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">to everyone who shipped a study app and woke up maintaining a prototyping cockpit.</figcaption>
+</figure>

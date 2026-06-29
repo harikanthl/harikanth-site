@@ -1,0 +1,113 @@
+---
+title: "Building the Cockpit: a compute dial, an agent on a leash, and a memory that doesn't forget"
+date: 2026-06-29
+description: "The engineering story behind Kekasatori 1.4. How three loosely-related pillars became one Cockpit built on a four-object model, how one ComputeBackend protocol lets the same job run locally or on a rented GPU, how the agentic memory works (a hashing embedder, multi-signal recall, and a temporal knowledge graph that closes facts instead of deleting them), why the agent has to ask before it acts, and the AppKit tracking-area bug that made a text cursor haunt every tab."
+tags:
+  - macOS
+  - Swift
+  - Architecture
+  - Agents
+  - AppKit
+featured: false
+theme:
+  accent: "#3f6f52"
+  paper: "#eef4ee"
+  ink: "#162018"
+  mood: earth
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/garden.png
+    heroAlt: "A cultivated garden taking shape, in the style of a Renaissance fresco"
+---
+
+The [1.4 tour](/blog/kekasatori-1-4) is the what. This is the how. 1.4 was the release where Kekasatori stopped being three pillars that happened to share a window (Discover, Compare, Run) and became one Cockpit where a piece of work has a home, an engine, and a memory. That is mostly an architecture problem, and the interesting parts are the seams.
+
+## The four-object model
+
+Everything in the Cockpit reduces to four small value types, each `Codable, Equatable, Sendable`, one file each under `Models/`.
+
+- **Workspace** is the keystone. It carries a source (`.blank`, `.paper`, `.repo`, `.notebook`), a root directory, a default environment and target, the ids of every run launched from it, and a list of context references. That last field is the quiet upgrade: a paper or a note or a transcript becomes first-class agent context instead of something you paste in.
+- **LabEnvironment** is a base image plus a pip overlay plus env vars, with deterministic-UUID presets (Python slim, PyTorch CPU, HF Transformers, pandas, marimo). It is spelled `LabEnvironment` rather than `Environment` so it does not collide with SwiftUI's property wrapper, which is the kind of naming tax you pay exactly once and remember forever.
+- **ComputeTarget** is the compute dial as data: a `location` (local engine, RunPod serverless, RunPod pod, Modal) plus a capabilities struct (gpu, streaming, cost per hour, max runtime). The local target keeps a fixed sentinel id so your selection survives the app re-detecting runtimes underneath you.
+- **Run** is the uniform execution object, and its best decision is event-folding. Every backend emits the same `RunEvent` stream (`.status`, `.log`, `.metric`, `.artifact`, `.cost`), and `Run.apply(_:)` is the single place an event becomes state. One reducer, one source of truth, every backend downstream-identical.
+
+## One protocol makes the dial possible
+
+The whole compute dial rests on one abstraction in `Services/ComputeBackend.swift`:
+
+```swift
+protocol ComputeBackend: AnyObject {
+    var capabilities: ComputeTarget.Capabilities { get }
+    func launch(_ request: RunRequest) -> AsyncThrowingStream<RunEvent, Error>
+    func cancel() async
+}
+```
+
+Because every backend yields the same event stream, local and remote execution are the same shape to everything above them. Three implementations conform:
+
+- **LocalContainerBackend** wraps the existing local path (stage files, build args, run the process) and maps each stdout line to a `.log` event.
+- **RunPodBackend** runs an ephemeral serverless GPU job, driving submit, poll, output, and cancel through an injectable client that normalizes RunPod's `IN_QUEUE / IN_PROGRESS / COMPLETED / FAILED / TIMED_OUT / CANCELLED` into one enum.
+- **ModalBackend** is the second GPU provider. Modal has no public REST API, so this one drives a deployed Modal web endpoint with key and secret headers, request and response, no polling.
+
+The portability bridge between them is a `ContainerJobSpec` (image, command, env, and files as name to base64). `ComputeTargetStore.makeBackend(runtime:)` switches on the selected location and builds the right one, reading credentials through injectable providers so the dial is fully unit-testable without ever touching the Keychain or the network. The `promote()` helper is the one-click "switch to the first runnable remote target." A run launched locally and the same run launched on an H100 differ by exactly one field.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/two-buttons.jpg" alt="Two buttons sweating meme" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">the protocol is the whole point: the code above the seam never has to pick. It just reads RunEvents.</figcaption>
+</figure>
+
+## The memory, in detail
+
+The headline feature is the memory, and the implementation is deliberately humble. There is no vector database and no SQLite. `LocalMemoryStore` keeps a capped list of `Memory` values as JSON in UserDefaults. A memory has a kind (episodic, semantic, procedural, profile), content, an optional embedding, a scope (global or per-workspace), and three temporal fields: `validFrom`, `validTo`, and `supersededBy`.
+
+Recall is multi-signal. The score blends keyword overlap and vector cosine in equal parts, so it degrades gracefully: it works with no embeddings at all, and gets sharper with them. The embeddings come from an injectable `Embedder`, and the shipped one is a `HashingEmbedder`: dependency-free FNV-1a signed hashing of tokens into a 128-dimensional L2-normalized vector. It is deterministic across launches, which matters more than it sounds. It means stored embeddings stay valid forever and the tests are stable, with no model download and no network. The store also consolidates near-duplicates and supports selective forgetting, because a memory you cannot prune is a liability.
+
+The temporal knowledge graph is the part worth slowing down on. It is a separate store of typed entities and relations, where each relation is a `from -> predicate -> to` triple that carries a validity window. "Temporal" is not decoration here. When a new fact contradicts an old one, the old fact is not deleted; its window is closed by setting `validTo = now`. So `relations(at: someDate)` can answer what was true at that moment, and asserting an identical live triple is idempotent. This is the Zep and Graphiti approach to agent memory, built local-first: you get a model that can change its mind without losing its history.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/roll-safe.jpg" alt="Roll Safe tapping his head" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">close the fact's validity window instead of deleting it, and you can never be wrong about the past. You can only be done with it.</figcaption>
+</figure>
+
+## The agent has a leash, on purpose
+
+`CockpitAgent` is built against an injectable LLM client and the memory store. Ask mode is pure prompt assembly: it packs working context, the active workspace, and recent runs into the turn, answers, and writes the exchange back as an episodic memory so the agent compounds.
+
+Edit mode is a ReAct loop, and notably it does not use provider-native function calling. The model emits a single line, `TOOL <name> {json}`, which a small parser turns into a call; the result is fed back as `TOOL_RESULT` until the model replies with `ANSWER:`. Keeping tool-calling as plain text means it works the same across every provider behind the router, which is the whole point of a bring-your-own-key app.
+
+The tools split into two classes. The safe ones read or write memory and the graph: search memory, write a memory, record a fact, list recent runs. The two that touch the world, switching compute and launching a run, are gated. A gated tool does not act; it calls `propose(PendingAction)`, which posts a pending item that says it needs approval. Nothing mutates until you call `approve(id)`, at which point the carried action runs through an injected closure. There is a dedicated test file for the approval gate, because "the agent cannot launch a GPU job without consent" is exactly the kind of invariant you want a red test guarding.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/boardroom-meeting.jpg" alt="Boardroom meeting suggestion meme" style="width:100%;max-width:360px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">agent: "I'll just switch your compute to the H100 pod and launch the run." The gate: out the window it goes, until you say yes.</figcaption>
+</figure>
+
+## The bug that taught us AppKit was still in charge
+
+The marquee fix of 1.4 is a one-line root cause with a satisfying explanation. The editor tabs (Code, Learn, Notebox) are all `WKWebView`s, and to avoid a reload flash every time you switch to them, they are kept alive in a `ZStack`, hidden when inactive with `.opacity(0)` and `.allowsHitTesting(false)`.
+
+The catch: `opacity` and `allowsHitTesting` are SwiftUI concepts. The underlying AppKit `WKWebView` still had a live `NSTrackingArea`, and that tracking area kept firing `cursorUpdate` and setting the I-beam text cursor over whatever pane was actually on screen. So you would switch from the code editor to another tab and find a typing cursor hovering over a button, set by an invisible web view you thought was off.
+
+The fix is two parts. First, an `isActive` flag is threaded from the top view down into the `NSViewRepresentable` wrappers, which set `nsView.isHidden = !isActive`. A genuinely hidden `NSView` tears down its cursor updates in a way that opacity never will. Second, belt and suspenders, the tab switch calls `NSCursor.arrow.set()` to clear anything an editor left behind on the way out. The lesson, re-learned: when you keep AppKit views alive under a SwiftUI surface, SwiftUI's idea of hidden and AppKit's idea of hidden are not the same idea.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/running-away-balloon.jpg" alt="Running away balloon meme" style="width:100%;max-width:340px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">you switch tabs. The I-beam cursor, set by an invisible WKWebView's tracking area, follows you anyway.</figcaption>
+</figure>
+
+## A smaller cousin: the loader that overflowed
+
+The playful loaders had their own version of the same lesson. They render Lottie animations through the airbnb library, and "native" here means using the SwiftUI `LottieView` rather than the AppKit view. The first cut set `contentMode`, but SwiftUI's intrinsic sizing overrode it, so some artboards (the owl, specifically) rendered at native size and spilled past the frame. The fix was to stop fighting it: `.resizable().aspectRatio(contentMode: .fit)` scales the whole animation into its box, no overflow and no crop. Same shape of problem as the cursor: an AppKit-era instinct that SwiftUI quietly ignored.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/hide-the-pain-harold.jpg" alt="Hide the pain Harold meme" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">smiling through a loading animation cropped a quarter-inch past its frame, for longer than anyone should admit.</figcaption>
+</figure>
+
+## The throughline: everything is injectable
+
+If there is one habit holding 1.4 together, it is dependency injection as a default. UserDefaults, the embedder, the LLM client, the RunPod and Modal clients, the clock, and the credential providers are all injected, each with a matching test file. The compute dial can be exercised without a Keychain, the memory store without a model, the agent without a network, and the approval gate against a fake dispatcher. That is what let a release this wide land without turning into a pile of code nobody could verify. The full phase notes live in the repo under `docs/cockpit-architecture.md` and `docs/agentic-memory.md`.
+
+If you just want to use the thing, the [tour is here](/blog/kekasatori-1-4) and the download is below.
+
+<a href="https://github.com/harikanthl/kekasatori/releases/latest/download/Kekasatori.dmg" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download Kekasatori 1.4 for macOS →</a>
