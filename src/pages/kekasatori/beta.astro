@@ -1,0 +1,769 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const features = [
+  {
+    title: 'Import anything',
+    body: 'Drop a YouTube link, an arXiv / PubMed / DOI paper, a web article, or a whole multi-chapter book. Kekasatori pulls it in, cleans it up, and makes it studyable — code blocks, tables, figures and all.',
+  },
+  {
+    title: 'Instant study packs',
+    body: 'Every source becomes a full study pack: accurate transcripts, tight summaries, structured notes, flashcards, key concepts, and a mind map — generated from the material, ready in one pass.',
+  },
+  {
+    title: 'A grounded AI tutor',
+    body: 'Chat with a tutor that answers from the actual document via retrieval (RAG), with citations — not vibes. Run it fully on-device with Apple Intelligence, or bring your own key: Claude, GPT, Gemini, DeepSeek, and more via OpenRouter.',
+  },
+  {
+    title: 'Think it through',
+    body: 'A built-in Excalidraw canvas for diagrams, a rich notebook for your own notes, and animated Manim explainers that turn a hard idea into a short, clear visual.',
+  },
+  {
+    title: 'Create & publish',
+    body: "A visual editor for animated, layered backgrounds and 3D scenes — the moving hero on this page was made in it — plus a page builder that turns your work into a polished article or site you can publish in a click.",
+  },
+  {
+    title: 'Download or stream',
+    body: 'Keep media offline in a fast, searchable library, or stream it — either way each item carries its own study pack, so your work travels with the source.',
+  },
+  {
+    title: 'Local-first & private',
+    body: 'Your library, notes, and API keys stay on your Mac. No account, no tracking, no servers. Keys live only in the Keychain; on-device models mean you can study without anything leaving your machine.',
+  },
+];
+
+const perks = [
+  'Early builds before public release',
+  'A direct line to shape the roadmap',
+  'Local-first & private — no account, no tracking',
+];
+
+// App screen catalogue — filenames are the ones in /public/images (kept as-is,
+// URL-encoded for the src); names match what each screen is called in the app.
+const screens = [
+  { name: 'Homepage', file: 'homepage.png', caption: 'Paste a link, DOI, or file — and go.' },
+  { name: 'Discover', file: 'discover.png', caption: 'Browse the literature by area, or just ask.' },
+  { name: 'Papers', file: 'papers.png', caption: 'Trending arXiv papers, refreshed daily.' },
+  { name: 'Paper', file: 'paper.png', caption: 'Read papers with code, tables, and figures intact.' },
+  { name: 'Knowledge graph', file: 'knowledge graph.png', caption: 'Atlas links your papers, notes, and study packs.' },
+  { name: 'Cockpit', file: 'cockpit.png', caption: "A paper's repo, runs, and agent in one place." },
+  { name: 'Evals', file: 'Evals.png', caption: 'Benchmark models in a container with live logs.' },
+  { name: 'Code editor', file: 'code editor.png', caption: 'An in-app editor wired to your workspace.' },
+  { name: 'Paper writer', file: 'paper writer.png', caption: 'Draft papers and articles with a grounded assistant.' },
+  { name: 'Editor', file: 'editor.png', caption: 'Animated backgrounds and 3D scenes — no code.' },
+  { name: 'Animator', file: 'animator.png', caption: 'Turn a paper into a narrated Manim explainer.' },
+];
+const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
+---
+
+<BaseLayout
+  title="Join the Kekasatori beta"
+  description="Get early access to Kekasatori — the local-first macOS study app that turns videos, papers, and articles into transcripts, flashcards, mind maps, and a grounded AI tutor."
+>
+  <!-- Hero: full-bleed ambient video -->
+  <section class="beta-hero">
+    <video
+      class="beta-hero__video"
+      autoplay
+      muted
+      loop
+      playsinline
+      preload="metadata"
+      poster="/images/kekasatori-beta-hook.png"
+      data-ambient
+      aria-hidden="true"
+    >
+      <source src="/media/kekasatori-atmosphere.mp4" type="video/mp4" />
+    </video>
+    <div class="beta-hero__scrim"></div>
+
+    <div class="page-container beta-hero__content">
+      <p class="text-sm font-medium tracking-wide uppercase" style="color: rgba(255,255,255,0.75)">Private beta</p>
+      <h1 class="mt-3 max-w-3xl text-4xl md:text-6xl tracking-tight">Study anything. On your Mac. Privately.</h1>
+      <p class="mt-6 max-w-2xl text-lg md:text-xl" style="color: rgba(255,255,255,0.88)">
+        Kekasatori turns videos, papers, and articles into transcripts, flashcards,
+        mind maps, and a tutor that actually reads your sources. Get an early build.
+      </p>
+      <a
+        href="#join"
+        class="mt-8 inline-block rounded-full bg-[var(--color-accent)] px-6 py-3 text-base font-medium text-white no-underline transition-opacity hover:opacity-90"
+      >
+        Get early access ↓
+      </a>
+      <p class="mt-6 text-xs" style="color: rgba(255,255,255,0.65)">
+        ↑ This ambient background was made in Kekasatori's built-in editor.
+      </p>
+    </div>
+  </section>
+
+  <div class="page-container py-16 md:py-20">
+    <div class="mx-auto max-w-3xl">
+      <!-- Hook -->
+      <figure class="beta-figure card-soft">
+        <img
+          src="/images/kekasatori-beta-hook.png"
+          alt="A marble statue quietly reading from a phone — timeless focus, modern tools."
+          width="1024"
+          height="576"
+          loading="lazy"
+        />
+      </figure>
+      <p class="mt-6 text-xl md:text-2xl leading-relaxed">
+        The classics knew how to think. Kekasatori gives that focus a modern engine —
+        it reads your sources so you can actually learn them.
+      </p>
+
+      <!-- Core features -->
+      <section class="mt-16">
+        <h2 class="text-2xl md:text-3xl tracking-tight">Everything it does</h2>
+        <div class="mt-8 grid gap-8 sm:grid-cols-2">
+          {features.map((f) => (
+            <div>
+              <h3 class="text-lg font-semibold">{f.title}</h3>
+              <p class="mt-2 text-[var(--color-muted)] leading-relaxed">{f.body}</p>
+            </div>
+          ))}
+        </div>
+        <p class="mt-8 text-sm text-[var(--color-muted)]">
+          Free · macOS 15.5+ · Apple Silicon &amp; Intel · notarized by Apple.
+        </p>
+      </section>
+
+      <!-- Catalogue: a tour of the app screens -->
+      <section class="mt-16">
+        <h2 class="text-2xl md:text-3xl tracking-tight">Take a look inside</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
+          A quick tour of the app — tap any screen to enlarge.
+        </p>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2">
+          {screens.map((s) => (
+            <figure class="beta-shot">
+              <button type="button" class="beta-shot__btn" data-shot={shotSrc(s.file)} data-shot-name={s.name}>
+                <img src={shotSrc(s.file)} alt={`Kekasatori — ${s.name}`} loading="lazy" />
+              </button>
+              <figcaption class="beta-shot__cap">
+                <span class="beta-shot__name">{s.name}</span>
+                <span class="beta-shot__desc">{s.caption}</span>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </section>
+
+      <!-- Paper → podcast: clean audio player -->
+      <section class="mt-16">
+        <h2 class="text-2xl md:text-3xl tracking-tight">Paper → podcast</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
+          Too busy to read? Kekasatori turns a dense paper into a natural, listenable
+          podcast you can take on a walk. Here's one it generated from the paper
+          <em>“Unlimited OCR Works.”</em>
+        </p>
+
+        <figure class="beta-podcast card-soft" data-podcast>
+          <div class="beta-podcast__row">
+            <button class="beta-podcast__play" type="button" aria-label="Play podcast">▶</button>
+            <div class="beta-podcast__meta">
+              <p class="beta-podcast__title">Unlimited OCR Works</p>
+              <p class="beta-podcast__sub">AI podcast · generated from the paper</p>
+              <div class="beta-podcast__bar" role="slider" aria-label="Seek" tabindex="0" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+                <div class="beta-podcast__fill"></div>
+              </div>
+              <div class="beta-podcast__time">
+                <span class="beta-podcast__cur">0:00</span>
+                <span class="beta-podcast__dur">3:50</span>
+              </div>
+            </div>
+          </div>
+          <audio class="beta-podcast__audio" preload="metadata">
+            <source src="/media/kekasatori-paper-podcast.mp3" type="audio/mpeg" />
+          </audio>
+        </figure>
+      </section>
+
+      <!-- Paper → animation: narrated Manim explainer -->
+      <section class="mt-16">
+        <h2 class="text-2xl md:text-3xl tracking-tight">Paper → animation</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
+          Kekasatori can turn a paper into an animated, narrated explainer — the
+          3Blue1Brown-style Manim kind. Here's a ~6-minute one it generated from the
+          <em>DSpark</em> paper.
+        </p>
+        <figure class="beta-figure card-soft mt-6">
+          <video
+            class="beta-explainer__video"
+            controls
+            preload="metadata"
+            playsinline
+            poster="/images/kekasatori-paper-animation.jpg"
+          >
+            <source src="/media/kekasatori-paper-animation.mp4" type="video/mp4" />
+          </video>
+        </figure>
+      </section>
+
+      <!-- Built in the editor: showcase clips -->
+      <section class="mt-16">
+        <h2 class="text-2xl md:text-3xl tracking-tight">Built in the editor</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
+          No code. These rotating 3D scenes and animated backgrounds — including the
+          hero above — were made right inside Kekasatori's editor, then exported as
+          clean video.
+        </p>
+        <div class="mt-8 grid gap-6 sm:grid-cols-2">
+          <figure class="beta-figure card-soft">
+            <div class="beta-player">
+              <video class="beta-showcase__video" data-ambient autoplay muted loop playsinline preload="metadata" aria-label="Rotating 3D scene made in Kekasatori's editor">
+                <source src="/media/kekasatori-scene-3d.mp4" type="video/mp4" />
+              </video>
+              <button class="beta-player__toggle" type="button" aria-label="Pause video">⏸</button>
+            </div>
+            <figcaption class="beta-showcase__cap">Rotating 3D objects · Scene studio</figcaption>
+          </figure>
+          <figure class="beta-figure card-soft">
+            <div class="beta-player">
+              <video class="beta-showcase__video" data-ambient autoplay muted loop playsinline preload="metadata" aria-label="Animated background made in Kekasatori's editor">
+                <source src="/media/kekasatori-scene-atmosphere.mp4" type="video/mp4" />
+              </video>
+              <button class="beta-player__toggle" type="button" aria-label="Pause video">⏸</button>
+            </div>
+            <figcaption class="beta-showcase__cap">Animated background · Background studio</figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section id="join" class="mt-20 scroll-mt-24">
+        <figure class="beta-figure beta-figure--cta card-soft">
+          <img
+            src="/images/kekasatori-beta-cta.png"
+            alt="Michelangelo's David holding a glowing tablet, energy coursing through the marble."
+            width="1376"
+            height="768"
+            loading="lazy"
+          />
+          <figcaption class="beta-figure__caption">
+            <p class="text-2xl md:text-3xl font-semibold text-white">Ready to think faster?</p>
+            <p class="mt-1 text-white/85">Join the beta — I'll send you an early build.</p>
+          </figcaption>
+        </figure>
+
+        <form id="beta-form" class="card-soft mt-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:p-8">
+          <div class="grid gap-5">
+            <div>
+              <label for="beta-email" class="block text-sm font-medium">Email <span class="text-[var(--color-accent)]">*</span></label>
+              <input
+                id="beta-email"
+                name="email"
+                type="email"
+                required
+                autocomplete="email"
+                placeholder="you@example.com"
+                class="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-transparent px-4 py-3 text-base outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/30"
+              />
+            </div>
+
+            <div>
+              <label for="beta-name" class="block text-sm font-medium">Name <span class="text-[var(--color-muted)] font-normal">(optional)</span></label>
+              <input
+                id="beta-name"
+                name="name"
+                type="text"
+                autocomplete="name"
+                placeholder="Your name"
+                class="mt-2 w-full rounded-xl border border-[var(--color-border)] bg-transparent px-4 py-3 text-base outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/30"
+              />
+            </div>
+
+            <div>
+              <label for="beta-usecase" class="block text-sm font-medium">
+                What would you use Kekasatori for? <span class="text-[var(--color-muted)] font-normal">(optional)</span>
+              </label>
+              <textarea
+                id="beta-usecase"
+                name="useCase"
+                rows="3"
+                placeholder="Research papers, lecture videos, exam prep…"
+                class="mt-2 w-full resize-y rounded-xl border border-[var(--color-border)] bg-transparent px-4 py-3 text-base outline-none focus:border-[var(--color-accent)] focus:ring-2 focus:ring-[var(--color-accent)]/30"
+              ></textarea>
+            </div>
+
+            <!-- Honeypot: hidden from humans, catches bots. -->
+            <div class="hidden" aria-hidden="true">
+              <label>Leave this empty
+                <input type="text" name="website" tabindex="-1" autocomplete="off" />
+              </label>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-4">
+              <button
+                id="beta-submit"
+                type="submit"
+                class="rounded-full bg-[var(--color-accent)] px-6 py-3 text-base font-medium text-white transition-opacity hover:opacity-90 disabled:opacity-50"
+              >
+                Join the beta
+              </button>
+              <p id="beta-msg" role="status" aria-live="polite" class="text-sm text-[var(--color-muted)]"></p>
+            </div>
+          </div>
+        </form>
+
+        <ul class="mt-8 space-y-2">
+          {perks.map((perk) => (
+            <li class="flex items-start gap-3 text-[var(--color-muted)]">
+              <span class="mt-1 text-[var(--color-accent)]" aria-hidden="true">✓</span>
+              <span>{perk}</span>
+            </li>
+          ))}
+        </ul>
+
+        <p class="mt-6 text-sm text-[var(--color-muted)]">
+          No spam — just beta invites and the occasional update. Read the
+          <a href="/kekasatori/privacy" class="text-[var(--color-ink)]">privacy policy</a> and
+          <a href="/kekasatori/terms" class="text-[var(--color-ink)]">terms</a>.
+        </p>
+      </section>
+    </div>
+  </div>
+
+  <!-- Lightbox for the screen catalogue -->
+  <div id="beta-lightbox" class="beta-lightbox" hidden>
+    <button class="beta-lightbox__close" type="button" aria-label="Close">✕</button>
+    <figure class="beta-lightbox__inner">
+      <img id="beta-lightbox-img" src="" alt="" />
+      <figcaption id="beta-lightbox-cap" class="beta-lightbox__cap"></figcaption>
+    </figure>
+  </div>
+
+  <style>
+    .beta-hero {
+      position: relative;
+      width: 100%;
+      min-height: min(78vh, 720px);
+      display: flex;
+      align-items: flex-end;
+      overflow: hidden;
+      isolation: isolate;
+      background: #0a0a0a;
+    }
+    .beta-hero__video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+    }
+    .beta-hero__scrim {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.30) 45%, rgba(0, 0, 0, 0.62) 100%);
+    }
+    .beta-hero__content {
+      padding-block: clamp(3rem, 9vw, 6.5rem);
+    }
+    .beta-hero h1 {
+      color: #fff;
+    }
+
+    .beta-figure {
+      overflow: hidden;
+      border-radius: 1rem;
+      margin: 0;
+    }
+    .beta-figure img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .beta-figure--cta {
+      position: relative;
+    }
+    .beta-figure__caption {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: clamp(1.25rem, 4vw, 2.25rem);
+      background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.72) 100%);
+    }
+
+    .beta-showcase__video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    .beta-explainer__video {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: #000;
+    }
+    .beta-showcase__cap {
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+
+    /* Clean player: chrome-free, subtle hover play/pause. */
+    .beta-player {
+      position: relative;
+      display: block;
+      line-height: 0;
+    }
+    .beta-player__toggle {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 9999px;
+      background: rgba(0, 0, 0, 0.42);
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+    .beta-player:hover .beta-player__toggle,
+    .beta-player:focus-within .beta-player__toggle,
+    .beta-player.is-paused .beta-player__toggle {
+      opacity: 1;
+    }
+
+    /* Clean audio player: paper → podcast. */
+    .beta-podcast {
+      margin: 1.5rem 0 0;
+      padding: 1.25rem 1.5rem;
+      border-radius: 1rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+    }
+    .beta-podcast__row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .beta-podcast__play {
+      flex: none;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 9999px;
+      background: var(--color-accent);
+      color: #fff;
+      font-size: 18px;
+      line-height: 1;
+      cursor: pointer;
+      transition: opacity 0.15s ease;
+    }
+    .beta-podcast__play:hover {
+      opacity: 0.9;
+    }
+    .beta-podcast__meta {
+      flex: 1;
+      min-width: 0;
+    }
+    .beta-podcast__title {
+      font-weight: 600;
+    }
+    .beta-podcast__sub {
+      margin-top: 0.1rem;
+      font-size: 0.85rem;
+      color: var(--color-muted);
+    }
+    .beta-podcast__bar {
+      margin-top: 0.6rem;
+      height: 6px;
+      border-radius: 9999px;
+      background: color-mix(in srgb, var(--color-ink) 12%, transparent);
+      cursor: pointer;
+      overflow: hidden;
+    }
+    .beta-podcast__bar:focus-visible {
+      outline: 2px solid var(--color-accent);
+      outline-offset: 3px;
+    }
+    .beta-podcast__fill {
+      height: 100%;
+      width: 0;
+      background: var(--color-accent);
+      border-radius: 9999px;
+    }
+    .beta-podcast__time {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--color-muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Screen catalogue */
+    .beta-shot {
+      margin: 0;
+      overflow: hidden;
+      border-radius: 1rem;
+      border: 1px solid var(--color-border);
+      background: var(--color-surface);
+      box-shadow:
+        0 1px 2px -1px color-mix(in srgb, var(--color-ink) 10%, transparent),
+        0 10px 30px -18px color-mix(in srgb, var(--color-ink) 22%, transparent);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .beta-shot:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 2px 4px -1px color-mix(in srgb, var(--color-ink) 12%, transparent),
+        0 18px 40px -20px color-mix(in srgb, var(--color-ink) 30%, transparent);
+    }
+    .beta-shot__btn {
+      display: block;
+      width: 100%;
+      padding: 0;
+      border: none;
+      background: none;
+      cursor: zoom-in;
+      line-height: 0;
+    }
+    .beta-shot__btn img {
+      display: block;
+      width: 100%;
+      aspect-ratio: 16 / 10;
+      object-fit: cover;
+      object-position: top left;
+      border-bottom: 1px solid var(--color-border);
+    }
+    .beta-shot__cap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+      padding: 0.75rem 1rem 0.9rem;
+    }
+    .beta-shot__name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+    .beta-shot__desc {
+      font-size: 0.82rem;
+      color: var(--color-muted);
+    }
+
+    /* Lightbox */
+    .beta-lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 50;
+      display: grid;
+      place-items: center;
+      padding: clamp(1rem, 4vw, 3rem);
+      background: rgba(0, 0, 0, 0.82);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .beta-lightbox[hidden] {
+      display: none;
+    }
+    .beta-lightbox__inner {
+      margin: 0;
+      max-width: 1100px;
+      width: 100%;
+    }
+    .beta-lightbox__inner img {
+      display: block;
+      width: 100%;
+      height: auto;
+      border-radius: 0.75rem;
+      box-shadow: 0 20px 60px -20px rgba(0, 0, 0, 0.6);
+    }
+    .beta-lightbox__cap {
+      margin-top: 0.75rem;
+      text-align: center;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+    .beta-lightbox__close {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border: none;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      font-size: 18px;
+      cursor: pointer;
+    }
+    .beta-lightbox__close:hover {
+      background: rgba(255, 255, 255, 0.24);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .beta-hero__video {
+        display: none;
+      }
+      .beta-hero {
+        background-image: url('/images/kekasatori-beta-hook.png');
+        background-size: cover;
+        background-position: center;
+      }
+    }
+  </style>
+
+  <script>
+    // Respect reduced motion: pause every ambient/showcase video.
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      document.querySelectorAll<HTMLVideoElement>('video[data-ambient]').forEach((v) => {
+        v.pause();
+        v.removeAttribute('autoplay');
+      });
+    }
+
+    // Clean player: click the clip or its toggle to play/pause; icon reflects state.
+    document.querySelectorAll<HTMLElement>('.beta-player').forEach((player) => {
+      const video = player.querySelector('video');
+      const toggle = player.querySelector<HTMLButtonElement>('.beta-player__toggle');
+      if (!video || !toggle) return;
+
+      const sync = () => {
+        const paused = video.paused;
+        player.classList.toggle('is-paused', paused);
+        toggle.textContent = paused ? '▶' : '⏸';
+        toggle.setAttribute('aria-label', paused ? 'Play video' : 'Pause video');
+      };
+
+      const flip = () => {
+        if (video.paused) video.play().catch(() => {});
+        else video.pause();
+      };
+
+      toggle.addEventListener('click', (e) => { e.stopPropagation(); flip(); });
+      video.addEventListener('click', flip);
+      video.addEventListener('play', sync);
+      video.addEventListener('pause', sync);
+      sync();
+    });
+
+    // Clean audio player for the paper → podcast demo.
+    const fmt = (s: number) => {
+      if (!isFinite(s)) return '0:00';
+      const m = Math.floor(s / 60);
+      const sec = Math.floor(s % 60);
+      return `${m}:${sec.toString().padStart(2, '0')}`;
+    };
+    document.querySelectorAll<HTMLElement>('[data-podcast]').forEach((pod) => {
+      const audio = pod.querySelector('audio');
+      const play = pod.querySelector<HTMLButtonElement>('.beta-podcast__play');
+      const fill = pod.querySelector<HTMLElement>('.beta-podcast__fill');
+      const bar = pod.querySelector<HTMLElement>('.beta-podcast__bar');
+      const cur = pod.querySelector<HTMLElement>('.beta-podcast__cur');
+      const dur = pod.querySelector<HTMLElement>('.beta-podcast__dur');
+      if (!audio || !play || !fill || !bar) return;
+
+      play.addEventListener('click', () => {
+        if (audio.paused) audio.play().catch(() => {});
+        else audio.pause();
+      });
+      audio.addEventListener('play', () => { play.textContent = '⏸'; play.setAttribute('aria-label', 'Pause podcast'); });
+      audio.addEventListener('pause', () => { play.textContent = '▶'; play.setAttribute('aria-label', 'Play podcast'); });
+      audio.addEventListener('loadedmetadata', () => { if (dur) dur.textContent = fmt(audio.duration); });
+      audio.addEventListener('timeupdate', () => {
+        const pct = audio.duration ? (audio.currentTime / audio.duration) * 100 : 0;
+        fill.style.width = `${pct}%`;
+        if (cur) cur.textContent = fmt(audio.currentTime);
+        bar.setAttribute('aria-valuenow', String(Math.round(pct)));
+      });
+      const seek = (clientX: number) => {
+        const rect = bar.getBoundingClientRect();
+        const ratio = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+        if (audio.duration) audio.currentTime = ratio * audio.duration;
+      };
+      bar.addEventListener('click', (e) => seek(e.clientX));
+      bar.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') audio.currentTime = Math.min(audio.duration, audio.currentTime + 5);
+        else if (e.key === 'ArrowLeft') audio.currentTime = Math.max(0, audio.currentTime - 5);
+      });
+    });
+
+    // Screen catalogue lightbox.
+    const lb = document.getElementById('beta-lightbox');
+    const lbImg = document.getElementById('beta-lightbox-img') as HTMLImageElement | null;
+    const lbCap = document.getElementById('beta-lightbox-cap');
+    const lbClose = lb?.querySelector('.beta-lightbox__close');
+
+    const closeLb = () => {
+      if (!lb) return;
+      lb.hidden = true;
+      if (lbImg) lbImg.src = '';
+      document.body.style.overflow = '';
+    };
+    const openLb = (src: string, name: string) => {
+      if (!lb || !lbImg) return;
+      lbImg.src = src;
+      lbImg.alt = `Kekasatori — ${name}`;
+      if (lbCap) lbCap.textContent = name;
+      lb.hidden = false;
+      document.body.style.overflow = 'hidden';
+    };
+
+    document.querySelectorAll<HTMLButtonElement>('.beta-shot__btn').forEach((btn) => {
+      btn.addEventListener('click', () => openLb(btn.dataset.shot || '', btn.dataset.shotName || ''));
+    });
+    lb?.addEventListener('click', (e) => { if (e.target === lb) closeLb(); });
+    lbClose?.addEventListener('click', closeLb);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && lb && !lb.hidden) closeLb(); });
+
+    const form = document.getElementById('beta-form') as HTMLFormElement | null;
+    const msg = document.getElementById('beta-msg');
+    const submit = document.getElementById('beta-submit') as HTMLButtonElement | null;
+
+    form?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!msg || !submit) return;
+
+      const data = Object.fromEntries(new FormData(form).entries());
+      submit.disabled = true;
+      msg.textContent = 'Sending…';
+      msg.style.color = 'var(--color-muted)';
+
+      try {
+        const res = await fetch('/api/beta-signup', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify(data),
+        });
+        const out = await res.json().catch(() => ({}));
+
+        if (res.ok && out.ok) {
+          form.reset();
+          msg.textContent = out.already
+            ? "You're already on the list — thanks!"
+            : "You're in. I'll be in touch with an early build.";
+          msg.style.color = 'var(--color-accent)';
+        } else {
+          submit.disabled = false;
+          msg.textContent = out.error || 'Something went wrong. Please try again.';
+          msg.style.color = 'var(--color-accent)';
+        }
+      } catch {
+        submit.disabled = false;
+        msg.textContent = 'Network error. Please try again.';
+        msg.style.color = 'var(--color-accent)';
+      }
+    });
+  </script>
+</BaseLayout>

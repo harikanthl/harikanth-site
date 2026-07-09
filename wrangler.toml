@@ -2,6 +2,13 @@ name = "harikanth-site"
 compatibility_date = "2025-01-01"
 pages_build_output_dir = "dist"
 
+# Kekasatori beta signups — stored by the Pages Function at functions/api/beta-signup.ts.
+# Create the namespace once, then paste its id below:
+#   npx wrangler kv namespace create BETA_SIGNUPS
+[[kv_namespaces]]
+binding = "BETA_SIGNUPS"
+id = "1ce29960a7584d83b279dbccc8a70b1e"
+
 # Optional: bind R2 for image assets when ready
 # [[r2_buckets]]
 # binding = "IMAGES"
