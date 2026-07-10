@@ -1,43 +1,91 @@
 ---
 title: Aptoshare
-date: 2025-01-10
-description: Apartment management app for owners and tenants, with rent, maintenance, and notifications on the edge.
+date: 2026-07-10
+description: Open-source remote control for high-voltage devices. A single ESP32 and a relay board switch motors, pumps, gates, and lights from a phone, with apartment and property management built in.
 tags:
-  - Mobile
-  - Property
-featured: false
+  - IoT
+  - Hardware
+  - Open Source
+featured: true
 tech:
+  - ESP32
+  - Firebase RTDB
+  - Cloudflare Workers
+  - D1
   - Expo
   - React Native
-  - Hono
-  - Drizzle
-  - Cloudflare D1
-  - R2
-demo: https://aptoshare-api.harikanth-ai.workers.dev
-image: /images/projects/aptoshare.png
-imageFit: contain
+github: https://github.com/harikanthl/AptoShare
+image: /images/projects/aptoshare-onboarding-a.jpg
+imageFit: cover
 ---
 
-Aptoshare is a simple apartment management monorepo: an Expo mobile app for owners and tenants, backed by a Cloudflare Workers API.
+Aptoshare is an open-source app for running a small apartment building: rent, bills, tenants, and one more thing that turned out to be the interesting part. It can open the gate and switch the lights and the water pump from a phone. That control layer is a general-purpose way to turn real, high-voltage devices on and off over the internet, and it costs about as much as a couple of coffees in parts.
 
-## Structure
+## One ESP32, ten devices
 
-- **Mobile**: Expo React Native with owner and tenant roles
-- **API**: Hono on Cloudflare Workers with Drizzle ORM, D1, and R2
-- **Shared**: Zod schemas and types across both apps
+The whole controller is a cheap **ESP32** wired to an **8 to 10 channel relay board**. Each relay is an independent switch rated for mains voltage and around 10 amps. So a single small board can remotely turn ten or more separate high-voltage loads on or off: lighting circuits, water pumps, borewell motors, gate openers, exhaust fans, heaters. The ESP32 holds the WiFi connection and flips the relays; the relays do the heavy switching.
 
-## Features
+It is a reliable bridge between a phone and a contactor, and that is useful in more places than one.
 
-- Role-based sign-in for owners and tenants
-- Monthly rent generation via cron (`0 0 1 * *` UTC)
-- Document and media storage on R2
-- Push notifications via FCM (EAS development builds)
-- Firebase auth in production; dev-token bypass for local testing
+## Millions of apartment blocks
 
-## Production stack
+The app began with apartments, and that is still where it fits most naturally. In India, Mexico, China, and much of the world, a huge share of people live in mid-size residential blocks that one owner or a small resident society runs. Almost all of them share the same manual chores:
 
-The API runs on Cloudflare Workers with a D1 database and R2 bucket. Migrations apply locally and remotely via Wrangler. The mobile app points at the production Worker URL through `EXPO_PUBLIC_API_URL`.
+- An **entrance gate** that someone buzzes open by hand
+- **Staircase and common-area lights** left on all night, or switched by whoever remembers
+- A **borewell or booster pump** that fills the overhead tank, started and stopped by walking to a switch
+- **Rent** collected in cash and tracked in a notebook, and **electricity and water bills** that arrive on paper, one per meter, to be sorted and handed to each tenant
+
+Aptoshare turns all of that into an app. The gate, the common lights, and the water pump run off the same ESP32 and relay board, with schedules handling the lights and the pump on their own. Tenants open the gate from their phones, but only the gate, and only if the owner granted access. On the management side, the owner photographs a paper bill and the app reads the meter number and routes it to the right tenant, while rent is tracked per unit with reminders.
+
+There are millions of these buildings. Each one can automate its shared services and its paperwork for the price of one small board.
+
+## Why this is useful on a ranch or farm
+
+Ranches and farms across America run a lot of motors and pumps spread over a lot of acres, and someone usually has to walk or drive out to switch them. With one ESP32 and a relay board in a weatherproof box, you can:
+
+- Start and stop **irrigation pumps** and **borewell motors** from the house or the truck
+- Switch **barn and yard lighting** on a schedule or on demand
+- Trigger **gates** and **feeders**
+- Put any of it on a **time-of-day schedule** that runs on the device itself, even if the internet drops
+
+![Aptoshare controlling a gate and lights from a phone](/images/projects/aptoshare-onboarding-b.jpg)
+
+The relays switch the high-voltage side. The ESP32 only ever handles low-voltage logic, so the electronics stay isolated from the mains.
+
+## The ESP32 firmware
+
+The firmware is a single Arduino sketch, written to be readable and to survive a barn. The parts that matter:
+
+- **No hard-coded WiFi.** On first boot the device broadcasts a setup hotspot. You join it from your phone, pick your network, and it remembers it. To move it to a different network later, hold the BOOT button for three seconds.
+- **Realtime control** over one Firebase Realtime Database stream. When the app writes a new relay state, the device sees it in well under a second and switches.
+- **Momentary gate pulses.** A sliding-gate opener expects a button press, not a held switch, so the firmware pulses one relay for about 700 milliseconds across the opener's dry-contact terminals.
+- **On-device automation.** Schedules are evaluated on the ESP32 itself, so a pump that should run from 6am to 7am still runs even if the WiFi is down.
+- **Runtime tracking.** The device reports how long each channel has been on, which the app turns into energy and cost estimates.
+
+It runs on any ESP32 in the current lineup: the classic ESP32, and the newer S3, S2, C3, and C6. The only thing you change per board is the list of GPIO pins.
+
+## Design choices
+
+A few decisions made it dependable and cheap to run:
+
+- **Firebase Realtime Database is the device bus.** It pushes changes to the ESP32 instantly and costs nothing at this scale. The device subscribes and reacts.
+- **Cloudflare Workers, D1, and R2 hold everything else:** users, roles, tenants, bills, and history. It is a relational system of record on the edge, on free tiers.
+- **Every control write goes through the API, not straight to the device.** That is where roles are enforced. An owner can switch anything; a tenant can only trigger a gate they were granted. A phone never writes to a relay directly.
+- **Dry-contact relays, never mains through the board.** The ESP32 and its logic stay on the low-voltage side. The relay contacts do the switching, isolated from the electronics.
+
+## Add sensors, not just switches
+
+Switching is one direction. The same hardware reads just as easily. Because the ESP32 code is open and simple, you can wire up sensors (a soil-moisture probe, a tank-level float, a temperature sensor, a flow meter) and add a few lines to push those readings up to Cloudflare on an interval. From there it is your data: dashboards, alerts, or automations that, for example, start a pump when a tank drops below a threshold. The controller becomes a two-way farm node, not just a remote switch.
+
+## Safety
+
+This drives real mains voltage. Use relays or contactors rated for your load, fuse the circuits, put everything in a proper enclosure, and if you are wiring pumps or motors, get a licensed electrician. The firmware and app are the easy part. The wiring is the part to respect.
+
+## Build your own
+
+The whole thing is open source under MIT. The repo has the mobile app, the Cloudflare backend, the ESP32 firmware, and step-by-step setup for Firebase, Cloudflare, and flashing the board. Buy an ESP32 and a relay board, follow the firmware guide, and you have a remote control for anything you can safely switch. The GitHub link is at the top of this page.
 
 ## Why I built it
 
-Managing a small apartment block should not require spreadsheets and WhatsApp threads. Aptoshare keeps rent schedules, tenant communication, and file storage in one place, and it is cheap to run on Cloudflare's edge.
+It started because posting each tenant their electricity bill by hand every month was tedious, and because I wanted to open the building gate without a physical remote. Once the relay control worked, it was obvious the same box could run a pump on a farm as easily as a gate in a city. So I made it general, and open.
