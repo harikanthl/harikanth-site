@@ -1,0 +1,86 @@
+---
+title: "Vireeel is Live on the App Store"
+date: 2026-07-10
+description: "Vireeel shipped to the App Store today. The honest version: this is a crowded corner of the store, I spent four months convinced I could out-build the incumbents, and I couldn't. So I made almost all of it free, fixed the bugs that mattered, and shipped. Here is what it does and how it actually got out the door."
+tags:
+  - iOS
+  - React Native
+  - AI
+  - Media
+  - GIF
+featured: true
+theme:
+  accent: "#e0447f"
+  paper: "#fdeef4"
+  ink: "#2a1018"
+  mood: warm
+  headingStyle: serif
+  illustration:
+    hero: /images/frescoes/emergence.png
+    heroAlt: "Figures emerging into light, in the style of a Renaissance fresco"
+---
+
+Vireeel cleared Apple review yesterday and went live on the App Store today. Before I list what it does, I want to tell the honest version of how it shipped, because the story is more useful than the feature grid.
+
+<a href="https://apps.apple.com/us/app/vireeel/id6759361686" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Get Vireeel on the App Store →</a>
+
+## The segment is already crowded
+
+GIF and meme and AI-photo apps are not an empty market. There are already four to six genuinely good apps that put editors, AI tools, filters, and a share flow in one place and do it well. When I started, I knew that, and I told myself the usual founder story: the incumbents are bloated, I can build something cleaner and cheaper, users will notice.
+
+## I spent four months learning I could not out-build them
+
+I could not out-build them. Not in four months, not on my own. Every week I would ship a tool, and the polished apps already had a better version of it. Every AI feature I bolted on cost real money per call, which meant a pricing conversation I did not have a good answer to. For most of those four months the app was a slightly worse copy of things that already existed, and I kept convincing myself the next feature was the one that would change that.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/bad-luck-brian.jpg" alt="Bad Luck Brian meme" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">enters a crowded app category. Spends four months building a worse version of what already exists.</figcaption>
+</figure>
+
+## So I made almost all of it free and fixed the bugs
+
+The thing that finally moved was not a feature. It was a decision. I stopped trying to win on breadth and I changed the model instead. Almost everything in the app is now free: browsing and searching GIFs and memes, saving favorites, the on-device GIF and meme editors, the camera, the joke cards, the chat helper. No paywall in onboarding, and no subscription anywhere.
+
+The only thing that costs anything is the AI image tools, because each generation calls a third-party model that costs real money to run. Those use consumable credit packs, and every tool shows its credit cost before you tap generate. That was the unlock. I did not need to be better than the incumbents at everything. I needed to be free at the things that should be free and honest about the one thing that is not. Then I spent the last stretch not adding anything, just fixing the bugs that actually got in the way.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/everybody-loses-their-minds.jpg" alt="And everybody loses their minds meme" style="width:100%;max-width:360px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">add one more AI feature, nobody bats an eye. Make the whole thing free and just fix the bugs, and everybody loses their minds.</figcaption>
+</figure>
+
+## Then I submitted it for review
+
+With the model simplified and the rough edges filed down, there was nothing left to keep polishing toward. So I stopped, wrote the reviewer notes, and pushed the build to App Store review. It went in yesterday and came back approved.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/look-at-me.jpg" alt="Look at me, I am the captain now meme" style="width:100%;max-width:340px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">submit build for review. Look at me. I am the release manager now.</figcaption>
+</figure>
+
+## What is actually in it
+
+**Discovery.** Home opens on trending content, with a toggle between GIFs and memes and between sources. Search finds specific clips, category pills scroll across the top, and the feed pages in with infinite scroll. Tap anything for a full-size preview with Save and Edit. All free.
+
+**On-device studios.** GIF Studio does text overlays, stickers, drawing, crop and resize, filters, and speed. Meme Studio does text and stickers with full control over font, color, and size. A camera captures straight into GIF, meme, or video mode. None of it touches a server and none of it uses credits.
+
+**AI tools.** The Create tab is the credit-powered shelf: Imagine for art styles, Couples and Glow Up and Makeup for photo transformations, Dream for multi-image editing, Lmaoji for emoji stickers of a face, the travel tools that drop you into a scene, and a full Photo Studio set for Hair Change, Headshot Pro, Photo FX, Photo Restoration, Portrait Enhance, and Relighting. Because these upload your image to third-party providers, the first use of any AI tool shows a data-use disclosure you have to accept, enforced across every tool.
+
+**Social rooms.** The Feed tab lets you browse rooms by category and city, create a room from an image or a link, and comment on others. Images are AI-scanned before they post, links are validated, heavily reported comments are auto-hidden, and users can report content and behavior. The guardrails ship in v1, not later.
+
+## Where it landed
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/success-kid.jpg" alt="Success Kid meme" style="width:100%;max-width:320px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">did not beat the incumbents. Shipped anyway.</figcaption>
+</figure>
+
+I did not out-build a crowded market. What I did was stop pretending that was the goal, make the app free where it should be free, fix what was broken, and get it out the door. That turned out to be the whole job.
+
+<figure style="margin:2rem auto;text-align:center">
+  <img src="/images/memes/archer.jpg" alt="Archer meme" style="width:100%;max-width:330px;border-radius:12px" />
+  <figcaption style="font-size:0.85rem;opacity:0.65;margin-top:0.5rem">do you want to ship? Because making it free and fixing the bugs is how you ship.</figcaption>
+</figure>
+
+It is on the App Store today. If you make GIFs, edit memes, or just want to see your face as an emoji, go grab it.
+
+<a href="https://apps.apple.com/us/app/vireeel/id6759361686" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Get Vireeel on the App Store →</a>

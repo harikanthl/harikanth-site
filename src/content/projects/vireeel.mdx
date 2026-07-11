@@ -1,59 +1,77 @@
 ---
 title: Vireeel
-date: 2024-03-01
-description: GIF creation, search, and sharing platform with client-side FFmpeg, progressive caching, and infinite scroll.
+date: 2026-07-10
+description: iOS app for creating GIFs and memes, running AI photo tools, and sharing in social rooms. Free by default, with credits only for the AI generations.
 tags:
-  - Web
+  - iOS
   - Media
+  - AI
   - GIF
 featured: true
 tech:
-  - Next.js
-  - FFmpeg.wasm
-  - Prisma
-  - PostgreSQL
-  - Zustand
+  - React Native
+  - Expo
+  - TypeScript
+  - FFmpeg Kit
+  - SQLite
+  - Firebase
+  - Cloudflare R2
+  - Cloudflare D1
   - Tenor
-  - GIPHY
+  - Gemini
 github: https://github.com/harikanthlingutla/Gifwala-mob
+demo: https://apps.apple.com/us/app/vireeel/id6759361686
 image: /images/vireeel.png
 imageFit: contain
 ---
 
-Vireeel is a modern GIF platform for creating, searching, browsing, and sharing GIFs, with client-side video processing so user content never leaves the browser.
+Vireeel is an iOS app for making and sharing GIFs and memes, running AI photo tools, and posting into social rooms. It started life as a browser GIF maker and shipped to the App Store as a full React Native app. Almost everything is free, and credits apply only to the AI image generations. There is no subscription. The story of how it actually got out the door is in the [launch write-up](/blog/vireeel-app-store-launch).
 
-## Create
+## Discover
 
-- Import YouTube videos and trim segments
-- Add text overlays with custom fonts, colors, and positions
-- Adjust quality, duration, and compression
-- Process entirely in-browser via FFmpeg compiled to WebAssembly
-- Optional watermarking on exported GIFs
+- Trending GIFs and memes on the home feed, with a toggle between GIFs and memes and between sources
+- Search, category pills, and infinite scroll with pull to refresh
+- Tap anything for a full-size preview with Save to the photo library and Edit
+- Previously loaded content is cached in SQLite for offline viewing
 
-## Browse and search
+## On-device studios
 
-- Search across Tenor and GIPHY providers (switchable in settings)
-- Trending GIFs, category browsing, likes and personal collections
-- Infinite scrolling with seamless pagination
-- Light and dark mode, fully responsive
+- **GIF Studio**: text overlays, stickers, drawing, crop and resize, filters, and speed
+- **Meme Studio**: text and stickers with full control over font, color, and size
+- Camera capture straight into GIF, meme, or video mode
+- All of it runs on the device through FFmpeg Kit, uses no credits, and never uploads unless you share
 
-## Progressive GIF database
+## AI tools
 
-The database grows organically as users interact:
+The Create tab is the credit-powered shelf. Each tool takes a photo and returns a transformed version:
 
-1. Requests check the local cache first and return immediately if enough GIFs exist
-2. API fallbacks fetch from Tenor/GIPHY when the cache is thin
-3. New GIFs are stored with metadata, categories, and tags; duplicates filtered
-4. Over time the system becomes less reliant on external APIs, which means faster loads, lower cost, and resilience when providers are down
+- **Imagine** for art styles, **Couples**, **Glow Up**, and **Makeup** for photo transformations
+- **Dream** for multi-image editing, **Lmaoji** for emoji stickers of a face, travel tools that drop you into a scene
+- **Photo Studio**: Hair Change, Headshot Pro, Photo FX, Photo Restoration, Portrait Enhance, Relighting
+
+Because these send the selected image to third-party AI providers, the first use of any AI tool shows a data-use disclosure the user must accept, enforced across every tool. Each tool shows its credit cost before it runs.
+
+## Social rooms and moderation
+
+- Browse rooms by category and city, create a room from an image or a link, and comment
+- Images are AI-scanned for inappropriate content before posting, and links are validated
+- Heavily reported comments are hidden automatically, and users can report content and behavior
+
+## Monetization
+
+- Free by default: browsing, search, saving, the on-device editors, the camera, joke cards, and the chat helper
+- Credits are consumable in-app purchase packs (small, medium, large) used only for AI generations
+- No subscription, and no paywall in onboarding
 
 ## Stack
 
-- **Frontend**: Next.js, React, Tailwind CSS, shadcn/ui
-- **State**: Zustand with persisted preferences
-- **Processing**: `@ffmpeg/ffmpeg` WebAssembly pipeline
-- **Backend**: Next.js API routes, PostgreSQL with Prisma ORM
-- **Storage**: AWS S3 in production, local files in development
+- **App**: React Native and Expo, TypeScript, Expo Router
+- **Media**: FFmpeg Kit for on-device video and GIF processing, Expo Camera and Media Library
+- **Local data**: SQLite for the GIF cache and user content, AsyncStorage for preferences
+- **Auth**: Firebase (Apple, Google, and email sign-in)
+- **Cloud**: Cloudflare R2 for storage, D1 for metadata, and Workers for processing
+- **Content**: Tenor for GIF and meme discovery, Gemini for AI frame generation
 
 ## Why I built it
 
-GIF creation tools either upload your video to a server or limit customization. Vireeel keeps processing local, builds a smart cache over time, and supports multiple providers without locking you into one API.
+GIF and AI-photo apps are a crowded category, and I spent months trying to out-build the incumbents on features before changing tack. The answer was not more surface area. It was to make the creative tools free where they should be free, charge only for the AI generations that cost real money to run, keep the on-device work private, and ship.
