@@ -9,6 +9,14 @@ pages_build_output_dir = "dist"
 binding = "BETA_SIGNUPS"
 id = "1ce29960a7584d83b279dbccc8a70b1e"
 
+# Kekasatori licenses — written by functions/api/stripe-webhook.ts,
+# read by functions/api/license/*.ts. Secrets required:
+#   npx wrangler pages secret put LICENSE_SIGNING_KEY --project-name harikanth-site
+#   npx wrangler pages secret put STRIPE_WEBHOOK_SECRET --project-name harikanth-site
+[[kv_namespaces]]
+binding = "LICENSES"
+id = "b037b7c49fe34e34bec5a8079cc1e267"
+
 # Optional: bind R2 for image assets when ready
 # [[r2_buckets]]
 # binding = "IMAGES"
