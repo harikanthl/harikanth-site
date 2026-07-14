@@ -123,6 +123,22 @@ async function handleCheckoutCompleted(session: any, env: LicenseEnv): Promise<R
   const now = new Date();
   const lid = crypto.randomUUID();
 
+  // Subscription paid-through: prefer the first invoice's billing-period end —
+  // it's the only place the real interval (monthly vs yearly) appears, and
+  // Stripe doesn't order deliveries, so invoice.paid may have landed first and
+  // stashed it under subperiod:<sub_id>. Fall back to ~a month; a yearly buyer
+  // in that rare path is corrected by the invoice.paid retry/refresh cycle
+  // before the 31-day key (+grace) runs out.
+  let paidThroughDate: Date | null = null;
+  if (kind === "sub") {
+    paidThroughDate = addDays(now, 31);
+    if (session.subscription) {
+      const stashed = await env.LICENSES.get(`subperiod:${session.subscription}`);
+      const end = Number(stashed);
+      if (stashed && Number.isFinite(end) && end > 0) paidThroughDate = new Date(end * 1000);
+    }
+  }
+
   const payload: LicensePayload = {
     v: 1,
     lid,
@@ -131,9 +147,7 @@ async function handleCheckoutCompleted(session: any, env: LicenseEnv): Promise<R
     major: 1,
     iat: isoDate(now),
   };
-  // First subscription key covers ~1 month + grace; renewals extend it via
-  // invoice.paid and the app's /api/license/refresh calls.
-  if (kind === "sub") payload.exp = isoDate(addDays(now, 31 + SUB_GRACE_DAYS));
+  if (paidThroughDate) payload.exp = isoDate(addDays(paidThroughDate, SUB_GRACE_DAYS));
 
   const key = await mintKey(payload, env.LICENSE_SIGNING_KEY!);
 
@@ -144,7 +158,7 @@ async function handleCheckoutCompleted(session: any, env: LicenseEnv): Promise<R
     status: "active",
     stripeCustomer: String(session.customer ?? ""),
     stripeSubscription: session.subscription ? String(session.subscription) : undefined,
-    paidThrough: kind === "sub" ? isoDate(addDays(now, 31)) : undefined,
+    paidThrough: paidThroughDate ? isoDate(paidThroughDate) : undefined,
     sessionId: session.id,
     created: now.toISOString(),
   };
@@ -170,7 +184,19 @@ async function handleInvoicePaid(invoice: any, env: LicenseEnv): Promise<Respons
   const subId = invoice.subscription ? String(invoice.subscription) : "";
   if (!subId) return json({ ok: true, ignored: "no subscription" });
   const lid = await env.LICENSES.get(`sub:${subId}`);
-  if (!lid) return json({ ok: true, ignored: "unknown subscription" });
+  if (!lid) {
+    // checkout.session.completed may simply not have landed yet (Stripe doesn't
+    // order deliveries). Stash the billing-period end so the checkout handler
+    // can mint the first key with the REAL interval — critical for yearly,
+    // whose next invoice is a year away.
+    const periodEnd = invoice.lines?.data?.[0]?.period?.end;
+    if (periodEnd) {
+      await env.LICENSES.put(`subperiod:${subId}`, String(periodEnd), {
+        expirationTtl: 30 * 86_400,
+      });
+    }
+    return json({ ok: true, deferred: "unknown subscription" });
+  }
 
   const raw = await env.LICENSES.get(`lic:${lid}`);
   if (!raw) return json({ ok: true, ignored: "missing record" });

@@ -4,15 +4,15 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 const features = [
   {
     title: 'Import anything',
-    body: 'Drop a YouTube link, an arXiv / PubMed / DOI paper, a web article, or a whole multi-chapter book. Kekasatori pulls it in, cleans it up, and makes it studyable — code blocks, tables, figures and all.',
+    body: 'Drop a YouTube link, an arXiv / PubMed / DOI paper, a web article, or a whole multi-chapter book. Kekasatori pulls it in, cleans it up, and makes it studyable: code blocks, tables, figures and all.',
   },
   {
     title: 'Instant study packs',
-    body: 'Every source becomes a full study pack: accurate transcripts, tight summaries, structured notes, flashcards, key concepts, and a mind map — generated from the material, ready in one pass.',
+    body: 'Every source becomes a full study pack: accurate transcripts, tight summaries, structured notes, flashcards, key concepts, and a mind map, generated from the material and ready in one pass.',
   },
   {
     title: 'A grounded AI tutor',
-    body: 'Chat with a tutor that answers from the actual document via retrieval (RAG), with citations — not vibes. Run it fully on-device with Apple Intelligence, or bring your own key: Claude, GPT, Gemini, DeepSeek, and more via OpenRouter.',
+    body: 'Chat with a tutor that answers from the actual document via retrieval (RAG), with citations, not vibes. Run it fully on-device with Apple Intelligence, or bring your own key: Claude, GPT, Gemini, DeepSeek, and more via OpenRouter.',
   },
   {
     title: 'Think it through',
@@ -20,11 +20,11 @@ const features = [
   },
   {
     title: 'Create & publish',
-    body: "A visual editor for animated, layered backgrounds and 3D scenes — the moving hero on this page was made in it — plus a page builder that turns your work into a polished article or site you can publish in a click.",
+    body: "A visual editor for animated, layered backgrounds and 3D scenes (the moving hero on this page was made in it), plus a page builder that turns your work into a polished article or site you can publish in a click.",
   },
   {
     title: 'Download or stream',
-    body: 'Keep media offline in a fast, searchable library, or stream it — either way each item carries its own study pack, so your work travels with the source.',
+    body: 'Keep media offline in a fast, searchable library, or stream it. Either way each item carries its own study pack, so your work travels with the source.',
   },
   {
     title: 'Local-first & private',
@@ -35,32 +35,43 @@ const features = [
 const perks = [
   'Early builds before public release',
   'A direct line to shape the roadmap',
-  'Local-first & private — no account, no tracking',
+  'Local-first & private: no account, no tracking',
 ];
 
-// App screen catalogue — filenames are the ones in /public/images (kept as-is,
+// App screen catalogue. Filenames are the ones in /public/images (kept as-is,
 // URL-encoded for the src); names match what each screen is called in the app.
 const screens = [
-  { name: 'Homepage', file: 'homepage.png', caption: 'Paste a link, DOI, or file — and go.' },
+  { name: 'Homepage', file: 'homepage.png', caption: 'Paste a link, DOI, or file, and go.' },
   { name: 'Discover', file: 'discover.png', caption: 'Browse the literature by area, or just ask.' },
   { name: 'Papers', file: 'papers.png', caption: 'Trending arXiv papers, refreshed daily.' },
-  { name: 'Paper', file: 'paper.png', caption: 'Read papers with code, tables, and figures intact.' },
   { name: 'Knowledge graph', file: 'knowledge graph.png', caption: 'Atlas links your papers, notes, and study packs.' },
   { name: 'Cockpit', file: 'cockpit.png', caption: "A paper's repo, runs, and agent in one place." },
   { name: 'Evals', file: 'Evals.png', caption: 'Benchmark models in a container with live logs.' },
   { name: 'Code editor', file: 'code editor.png', caption: 'An in-app editor wired to your workspace.' },
   { name: 'Paper writer', file: 'paper writer.png', caption: 'Draft papers and articles with a grounded assistant.' },
-  { name: 'Editor', file: 'editor.png', caption: 'Animated backgrounds and 3D scenes — no code.' },
+  { name: 'Editor', file: 'editor.png', caption: 'Animated backgrounds and 3D scenes, no code.' },
   { name: 'Animator', file: 'animator.png', caption: 'Turn a paper into a narrated Manim explainer.' },
 ];
 const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
+
+// Renaissance-tech artworks (made with Kekasatori's own media tools).
+const FOUNTAIN_IMG = '/images/kekasatori/66-fountain-dna.webp';
+const ATLAS_IMG = '/images/kekasatori/72-atlas-satellites.webp';
+const SAMURAI_IMG = '/images/kekasatori/19-robot-samurai-lilies.webp';
 ---
 
 <BaseLayout
   title="Join the Kekasatori beta"
-  description="Get early access to Kekasatori — the local-first macOS study app that turns videos, papers, and articles into transcripts, flashcards, mind maps, and a grounded AI tutor."
+  description="Get early access to Kekasatori, the local-first macOS study app that turns videos, papers, and articles into transcripts, flashcards, mind maps, and a grounded AI tutor."
 >
-  <!-- Hero: full-bleed ambient video -->
+  <!-- Enable motion styling only when JS runs and the user allows motion. -->
+  <script is:inline>
+    if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('anim');
+    }
+  </script>
+
+  <!-- ============ HERO: full-bleed ambient video ============ -->
   <section class="beta-hero">
     <video
       class="beta-hero__video"
@@ -78,45 +89,73 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
     <div class="beta-hero__scrim"></div>
 
     <div class="page-container beta-hero__content">
-      <p class="text-sm font-medium tracking-wide uppercase" style="color: rgba(255,255,255,0.75)">Private beta</p>
-      <h1 class="mt-3 max-w-3xl text-4xl md:text-6xl tracking-tight">Study anything. On your Mac. Privately.</h1>
-      <p class="mt-6 max-w-2xl text-lg md:text-xl" style="color: rgba(255,255,255,0.88)">
+      <p class="text-sm font-medium tracking-wide uppercase" style="color: rgba(255,255,255,0.75)" data-reveal>Private beta</p>
+      <h1 class="mt-3 max-w-3xl text-4xl md:text-6xl tracking-tight" data-split>Study anything. On your Mac. Privately.</h1>
+      <p class="mt-6 max-w-2xl text-lg md:text-xl" style="color: rgba(255,255,255,0.88)" data-reveal>
         Kekasatori turns videos, papers, and articles into transcripts, flashcards,
         mind maps, and a tutor that actually reads your sources. Get an early build.
       </p>
       <a
         href="#join"
         class="mt-8 inline-block rounded-full bg-[var(--color-accent)] px-6 py-3 text-base font-medium text-white no-underline transition-opacity hover:opacity-90"
+        data-reveal
       >
         Get early access ↓
       </a>
-      <p class="mt-6 text-xs" style="color: rgba(255,255,255,0.65)">
+      <p class="mt-6 text-xs" style="color: rgba(255,255,255,0.65)" data-reveal>
         ↑ This ambient background was made in Kekasatori's built-in editor.
       </p>
     </div>
   </section>
 
-  <div class="page-container py-16 md:py-20">
+  <!-- ============ MANIFESTO: why one app ============ -->
+  <div class="page-container pt-16 md:pt-24">
     <div class="mx-auto max-w-3xl">
-      <!-- Hook -->
-      <figure class="beta-figure card-soft">
+      <p class="beta-manifesto" data-split>
+        You do not need another app. You need fewer. The reader lives in one place,
+        the notes in a second, the flashcards in a third, and the AI in a browser tab
+        that has never read your sources. Kekasatori exists because serious study
+        deserves one instrument: local, private, and whole.
+      </p>
+
+      <figure class="beta-figure card-soft mt-12" data-reveal>
         <img
           src="/images/kekasatori-beta-hook.png"
-          alt="A marble statue quietly reading from a phone — timeless focus, modern tools."
+          alt="A marble statue quietly reading from a phone. Timeless focus, modern tools."
           width="1024"
           height="576"
           loading="lazy"
         />
       </figure>
-      <p class="mt-6 text-xl md:text-2xl leading-relaxed">
-        The classics knew how to think. Kekasatori gives that focus a modern engine —
-        it reads your sources so you can actually learn them.
+      <p class="mt-6 text-xl md:text-2xl leading-relaxed" data-reveal>
+        The classics knew how to think. Kekasatori gives that focus a modern engine.
+        It reads your sources so you can actually learn them.
       </p>
+    </div>
+  </div>
 
-      <!-- Core features -->
-      <section class="mt-16">
-        <h2 class="text-2xl md:text-3xl tracking-tight">Everything it does</h2>
-        <div class="mt-8 grid gap-8 sm:grid-cols-2">
+  <!-- ============ ART BAND: the fountain ============ -->
+  <section class="art-band" data-reveal>
+    <img src={FOUNTAIN_IMG} data-parallax alt="Marble statues pouring water into a fountain crowned by a glowing DNA helix" loading="lazy" />
+    <div class="art-band__veil"></div>
+    <div class="page-container art-band__copy">
+      <blockquote>
+        <p>“Much learning does not teach understanding.”</p>
+        <cite>Heraclitus</cite>
+      </blockquote>
+      <p class="art-band__line">
+        So Kekasatori builds understanding instead: study packs from the source,
+        quizzes at four depths, and a tutor that cites the passage it answered from.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ FEATURES ============ -->
+  <div class="page-container py-16 md:py-20">
+    <div class="mx-auto max-w-3xl">
+      <section>
+        <h2 class="text-2xl md:text-3xl tracking-tight" data-reveal>Everything it does</h2>
+        <div class="mt-8 grid gap-8 sm:grid-cols-2" data-reveal-group>
           {features.map((f) => (
             <div>
               <h3 class="text-lg font-semibold">{f.title}</h3>
@@ -124,22 +163,41 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
             </div>
           ))}
         </div>
-        <p class="mt-8 text-sm text-[var(--color-muted)]">
+        <p class="mt-8 text-sm text-[var(--color-muted)]" data-reveal>
           Free · macOS 15.5+ · Apple Silicon &amp; Intel · notarized by Apple.
         </p>
       </section>
+    </div>
+  </div>
 
-      <!-- Catalogue: a tour of the app screens -->
-      <section class="mt-16">
-        <h2 class="text-2xl md:text-3xl tracking-tight">Take a look inside</h2>
-        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
-          A quick tour of the app — tap any screen to enlarge.
+  <!-- ============ ART BAND: Atlas ============ -->
+  <section class="art-band" data-reveal>
+    <img src={ATLAS_IMG} data-parallax alt="A stone Atlas holding a glowing sphere of orbiting satellites" loading="lazy" />
+    <div class="art-band__veil"></div>
+    <div class="page-container art-band__copy">
+      <blockquote>
+        <p>Atlas carried the heavens. Yours fits on your Mac.</p>
+      </blockquote>
+      <p class="art-band__line">
+        Every paper, pack, note, and draft joins one living knowledge graph. The app
+        calls it Atlas, and it is why nothing you learn here gets lost.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ SCREENS ============ -->
+  <div class="page-container py-16 md:py-20">
+    <div class="mx-auto max-w-3xl">
+      <section>
+        <h2 class="text-2xl md:text-3xl tracking-tight" data-reveal>Take a look inside</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed" data-reveal>
+          A quick tour of the app. Tap any screen to enlarge.
         </p>
-        <div class="mt-8 grid gap-6 sm:grid-cols-2">
+        <div class="mt-8 grid gap-6 sm:grid-cols-2" data-reveal-group>
           {screens.map((s) => (
             <figure class="beta-shot">
               <button type="button" class="beta-shot__btn" data-shot={shotSrc(s.file)} data-shot-name={s.name}>
-                <img src={shotSrc(s.file)} alt={`Kekasatori — ${s.name}`} loading="lazy" />
+                <img src={shotSrc(s.file)} alt={`Kekasatori · ${s.name}`} loading="lazy" />
               </button>
               <figcaption class="beta-shot__cap">
                 <span class="beta-shot__name">{s.name}</span>
@@ -152,14 +210,14 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
 
       <!-- Paper → podcast: clean audio player -->
       <section class="mt-16">
-        <h2 class="text-2xl md:text-3xl tracking-tight">Paper → podcast</h2>
-        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
+        <h2 class="text-2xl md:text-3xl tracking-tight" data-reveal>Paper → podcast</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed" data-reveal>
           Too busy to read? Kekasatori turns a dense paper into a natural, listenable
           podcast you can take on a walk. Here's one it generated from the paper
           <em>“Unlimited OCR Works.”</em>
         </p>
 
-        <figure class="beta-podcast card-soft" data-podcast>
+        <figure class="beta-podcast card-soft" data-podcast data-reveal>
           <div class="beta-podcast__row">
             <button class="beta-podcast__play" type="button" aria-label="Play podcast">▶</button>
             <div class="beta-podcast__meta">
@@ -182,13 +240,13 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
 
       <!-- Paper → animation: narrated Manim explainer -->
       <section class="mt-16">
-        <h2 class="text-2xl md:text-3xl tracking-tight">Paper → animation</h2>
-        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
-          Kekasatori can turn a paper into an animated, narrated explainer — the
-          3Blue1Brown-style Manim kind. Here's a ~6-minute one it generated from the
+        <h2 class="text-2xl md:text-3xl tracking-tight" data-reveal>Paper → animation</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed" data-reveal>
+          Kekasatori can turn a paper into an animated, narrated explainer of the
+          3Blue1Brown kind. Here's a ~6-minute one it generated from the
           <em>DSpark</em> paper.
         </p>
-        <figure class="beta-figure card-soft mt-6">
+        <figure class="beta-figure card-soft mt-6" data-reveal>
           <video
             class="beta-explainer__video"
             controls
@@ -203,13 +261,13 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
 
       <!-- Built in the editor: showcase clips -->
       <section class="mt-16">
-        <h2 class="text-2xl md:text-3xl tracking-tight">Built in the editor</h2>
-        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed">
-          No code. These rotating 3D scenes and animated backgrounds — including the
-          hero above — were made right inside Kekasatori's editor, then exported as
+        <h2 class="text-2xl md:text-3xl tracking-tight" data-reveal>Built in the editor</h2>
+        <p class="mt-3 max-w-2xl text-[var(--color-muted)] leading-relaxed" data-reveal>
+          No code. These rotating 3D scenes and animated backgrounds, including the
+          hero above, were made right inside Kekasatori's editor, then exported as
           clean video.
         </p>
-        <div class="mt-8 grid gap-6 sm:grid-cols-2">
+        <div class="mt-8 grid gap-6 sm:grid-cols-2" data-reveal-group>
           <figure class="beta-figure card-soft">
             <div class="beta-player">
               <video class="beta-showcase__video" data-ambient autoplay muted loop playsinline preload="metadata" aria-label="Rotating 3D scene made in Kekasatori's editor">
@@ -230,10 +288,30 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
           </figure>
         </div>
       </section>
+    </div>
+  </div>
 
-      <!-- CTA -->
-      <section id="join" class="mt-20 scroll-mt-24">
-        <figure class="beta-figure beta-figure--cta card-soft">
+  <!-- ============ ART BAND: the samurai ============ -->
+  <section class="art-band" data-reveal>
+    <img src={SAMURAI_IMG} data-parallax alt="A robot samurai meditating in a field of glowing blue lilies under a ringed planet" loading="lazy" />
+    <div class="art-band__veil"></div>
+    <div class="page-container art-band__copy">
+      <blockquote>
+        <p>You become what you give your attention to.</p>
+        <cite>after Epictetus</cite>
+      </blockquote>
+      <p class="art-band__line">
+        No account. No tracking. No feed fighting for your eyes. Sit down with the
+        material, and the field blooms.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ CTA + FORM ============ -->
+  <div class="page-container py-16 md:py-20">
+    <div class="mx-auto max-w-3xl">
+      <section id="join" class="scroll-mt-24">
+        <figure class="beta-figure beta-figure--cta card-soft" data-reveal>
           <img
             src="/images/kekasatori-beta-cta.png"
             alt="Michelangelo's David holding a glowing tablet, energy coursing through the marble."
@@ -243,11 +321,11 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
           />
           <figcaption class="beta-figure__caption">
             <p class="text-2xl md:text-3xl font-semibold text-white">Ready to think faster?</p>
-            <p class="mt-1 text-white/85">Join the beta — I'll send you an early build.</p>
+            <p class="mt-1 text-white/85">Join the beta and I'll send you an early build.</p>
           </figcaption>
         </figure>
 
-        <form id="beta-form" class="card-soft mt-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:p-8">
+        <form id="beta-form" class="card-soft mt-8 rounded-2xl border border-[var(--color-border)] bg-[var(--color-surface)] p-6 md:p-8" data-reveal>
           <div class="grid gap-5">
             <div>
               <label for="beta-email" class="block text-sm font-medium">Email <span class="text-[var(--color-accent)]">*</span></label>
@@ -307,7 +385,7 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
           </div>
         </form>
 
-        <ul class="mt-8 space-y-2">
+        <ul class="mt-8 space-y-2" data-reveal-group>
           {perks.map((perk) => (
             <li class="flex items-start gap-3 text-[var(--color-muted)]">
               <span class="mt-1 text-[var(--color-accent)]" aria-hidden="true">✓</span>
@@ -316,8 +394,8 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
           ))}
         </ul>
 
-        <p class="mt-6 text-sm text-[var(--color-muted)]">
-          No spam — just beta invites and the occasional update. Read the
+        <p class="mt-6 text-sm text-[var(--color-muted)]" data-reveal>
+          No spam, just beta invites and the occasional update. Read the
           <a href="/kekasatori/privacy" class="text-[var(--color-ink)]">privacy policy</a> and
           <a href="/kekasatori/terms" class="text-[var(--color-ink)]">terms</a>.
         </p>
@@ -364,6 +442,68 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
     }
     .beta-hero h1 {
       color: #fff;
+    }
+
+    /* Manifesto */
+    .beta-manifesto {
+      font-size: clamp(1.35rem, 1.1rem + 1.2vw, 1.9rem);
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+      max-width: 34ch;
+      text-wrap: pretty;
+    }
+
+    /* ---------- Full-bleed art bands ---------- */
+    .art-band {
+      position: relative;
+      overflow: clip;
+      min-height: clamp(380px, 62vh, 640px);
+      display: flex;
+      align-items: flex-end;
+      isolation: isolate;
+      background: #0a0a0a;
+    }
+    .art-band > img {
+      position: absolute;
+      inset: -12% 0;
+      width: 100%;
+      height: 124%;
+      object-fit: cover;
+      z-index: -2;
+      will-change: transform;
+    }
+    .art-band__veil {
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.16) 45%, rgba(0,0,0,0.72) 100%);
+    }
+    .art-band__copy {
+      width: 100%;
+      padding-block: clamp(2.5rem, 6vw, 4.5rem);
+    }
+    .art-band blockquote { margin: 0; }
+    .art-band blockquote p {
+      font-family: Georgia, 'Times New Roman', serif;
+      font-style: italic;
+      color: #fff;
+      font-size: clamp(1.3rem, 1.05rem + 1.4vw, 2rem);
+      line-height: 1.35;
+      max-width: 30ch;
+      text-wrap: balance;
+    }
+    .art-band cite {
+      display: block;
+      margin-top: 0.5rem;
+      font-style: normal;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.75);
+    }
+    .art-band__line {
+      margin-top: 1rem;
+      max-width: 52ch;
+      color: rgba(255, 255, 255, 0.88);
+      line-height: 1.6;
     }
 
     .beta-figure {
@@ -611,6 +751,56 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
       background: rgba(255, 255, 255, 0.24);
     }
 
+    /* ---------- Scroll motion (gated on html.anim, set pre-paint) ----------
+       Reveal: fade + rise + blur, played once. Split: masked word rise.
+       Without JS (or with reduced motion) everything is simply visible. */
+    :global(html.anim) [data-reveal] {
+      opacity: 0;
+      transform: translateY(32px);
+      filter: blur(8px);
+      transition:
+        opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--reveal-delay, 0s);
+      will-change: transform, opacity, filter;
+    }
+    :global(html.anim) [data-reveal].in-view {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+    :global(html.anim) [data-reveal-group] > * {
+      opacity: 0;
+      transform: translateY(28px);
+      filter: blur(6px);
+      transition:
+        opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        transform 0.85s cubic-bezier(0.22, 1, 0.36, 1),
+        filter 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--reveal-delay, 0s);
+    }
+    :global(html.anim) [data-reveal-group].in-view > * {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+    :global(.split-mask) {
+      display: inline-block;
+      overflow: hidden;
+      vertical-align: bottom;
+    }
+    :global(html.anim .split-word) {
+      display: inline-block;
+      transform: translateY(110%);
+      transition: transform 0.95s cubic-bezier(0.22, 1, 0.36, 1);
+      transition-delay: var(--reveal-delay, 0s);
+      will-change: transform;
+    }
+    :global(html.anim [data-split].in-view .split-word) {
+      transform: translateY(0);
+    }
+
     @media (prefers-reduced-motion: reduce) {
       .beta-hero__video {
         display: none;
@@ -624,13 +814,90 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
   </style>
 
   <script>
-    // Respect reduced motion: pause every ambient/showcase video.
     const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const animate = document.documentElement.classList.contains('anim') && !prefersReduced;
+
+    // Respect reduced motion: pause every ambient/showcase video.
     if (prefersReduced) {
       document.querySelectorAll<HTMLVideoElement>('video[data-ambient]').forEach((v) => {
         v.pause();
         v.removeAttribute('autoplay');
       });
+    }
+
+    // ---------- Scroll storytelling: masked word reveals + section reveals ----------
+    if (animate) {
+      // Split [data-split] text into masked words (aria-label keeps the full text).
+      document.querySelectorAll<HTMLElement>('[data-split]').forEach((el) => {
+        const text = el.textContent || '';
+        el.setAttribute('aria-label', text.trim());
+        el.textContent = '';
+        text.split(/(\s+)/).forEach((part) => {
+          if (!part.trim()) {
+            el.appendChild(document.createTextNode(part));
+            return;
+          }
+          const mask = document.createElement('span');
+          mask.className = 'split-mask';
+          mask.setAttribute('aria-hidden', 'true');
+          const word = document.createElement('span');
+          word.className = 'split-word';
+          word.textContent = part;
+          mask.appendChild(word);
+          el.appendChild(mask);
+        });
+        // Word stagger.
+        el.querySelectorAll<HTMLElement>('.split-word').forEach((w, i) => {
+          w.style.setProperty('--reveal-delay', `${Math.min(i * 0.045, 1.2)}s`);
+        });
+      });
+
+      // Grouped children stagger.
+      document.querySelectorAll<HTMLElement>('[data-reveal-group]').forEach((group) => {
+        Array.from(group.children).forEach((child, i) => {
+          (child as HTMLElement).style.setProperty('--reveal-delay', `${Math.min(i * 0.08, 0.64)}s`);
+        });
+      });
+
+      const io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('in-view');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+      );
+      document
+        .querySelectorAll('[data-reveal], [data-reveal-group], [data-split]')
+        .forEach((el) => io.observe(el));
+
+      // ---------- Parallax on the art bands (small, subtle, rAF-throttled) ----------
+      const layers = Array.from(document.querySelectorAll<HTMLElement>('[data-parallax]'));
+      if (layers.length) {
+        let ticking = false;
+        const update = () => {
+          ticking = false;
+          const vh = window.innerHeight;
+          layers.forEach((img) => {
+            const rect = (img.parentElement as HTMLElement).getBoundingClientRect();
+            if (rect.bottom < 0 || rect.top > vh) return;
+            const centerOffset = rect.top + rect.height / 2 - vh / 2;
+            img.style.transform = `translateY(${(-centerOffset * 0.08).toFixed(1)}px)`;
+          });
+        };
+        const onScroll = () => {
+          if (!ticking) {
+            ticking = true;
+            requestAnimationFrame(update);
+          }
+        };
+        window.addEventListener('scroll', onScroll, { passive: true });
+        window.addEventListener('resize', onScroll, { passive: true });
+        update();
+      }
     }
 
     // Clean player: click the clip or its toggle to play/pause; icon reflects state.
@@ -714,7 +981,7 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
     const openLb = (src: string, name: string) => {
       if (!lb || !lbImg) return;
       lbImg.src = src;
-      lbImg.alt = `Kekasatori — ${name}`;
+      lbImg.alt = `Kekasatori · ${name}`;
       if (lbCap) lbCap.textContent = name;
       lb.hidden = false;
       document.body.style.overflow = 'hidden';
@@ -751,7 +1018,7 @@ const shotSrc = (file: string) => `/images/${encodeURIComponent(file)}`;
         if (res.ok && out.ok) {
           form.reset();
           msg.textContent = out.already
-            ? "You're already on the list — thanks!"
+            ? "You're already on the list. Thanks!"
             : "You're in. I'll be in touch with an early build.";
           msg.style.color = 'var(--color-accent)';
         } else {

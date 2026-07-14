@@ -2,68 +2,382 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
 // Stripe Payment Links (live mode).
-const LIFETIME_LINK = 'https://buy.stripe.com/dRmeVc7hUbmcfri1v3cAo01';
-const MONTHLY_LINK = 'https://buy.stripe.com/8x26oG9q21LCdjaddLcAo02';
+const MONTHLY_LINK = 'https://buy.stripe.com/14A7sK59Mcqg4ME0qZcAo03';
+const YEARLY_LINK = 'https://buy.stripe.com/28EbJ059M9e4a6Y8XvcAo04';
+const LIFETIME_LINK = 'https://buy.stripe.com/7sYaEWdGi75Wgvm8XvcAo05';
+
+const HERO_IMG = '/images/kekasatori/09-space-revolution-ceiling.webp';
+const SOCRATES_IMG = '/images/kekasatori/57-socratic-hologram.webp';
+const HOURGLASS_IMG = '/images/kekasatori/69-hourglass-galaxy.webp';
+const CHARIOT_IMG = '/images/kekasatori/71-chariot-of-progress.webp';
 ---
 
 <BaseLayout
   title="Buy Kekasatori"
-  description="Kekasatori for macOS — $49 lifetime or $4.99/month. 14-day free trial, 14-day refunds."
+  description="Kekasatori for macOS: $9.99/month, $99.99/year, or $199.99 lifetime. One app for discovering, studying, animating, and publishing serious work. 14-day free trial, 14-day refunds."
+  image={HERO_IMG}
+  preloadImage={HERO_IMG}
 >
-  <div class="page-container py-16 md:py-24">
-    <article class="mx-auto max-w-2xl">
-      <a href="/projects/kekasatori" class="text-sm text-[var(--color-muted)] no-underline">← Kekasatori</a>
-      <h1 class="mt-4 text-4xl">Buy Kekasatori</h1>
-      <p class="mt-3 text-[var(--color-muted)]">
-        One app, your keys, your Mac. Try everything free for 14 days — then pick whichever shape suits you.
-      </p>
+  <div class="keka-buy">
 
-      <div class="mt-10 grid gap-6 sm:grid-cols-2">
-        <div class="rounded-xl border border-[var(--color-border,rgba(128,128,128,0.3))] p-6">
-          <h2 class="text-xl text-[var(--color-ink)]">Lifetime</h2>
-          <p class="mt-1 text-3xl text-[var(--color-ink)]">$49</p>
-          <p class="mt-1 text-sm text-[var(--color-muted)]">one-time · all 1.x updates</p>
-          <ul class="mt-4 space-y-1 text-sm text-[var(--color-muted)] list-disc pl-5">
-            <li>Yours forever, fully offline</li>
-            <li>Every update to the current major version</li>
-            <li>Use on Macs you own or control</li>
-          </ul>
-          {LIFETIME_LINK ? (
-            <a href={LIFETIME_LINK} class="mt-6 inline-block rounded-md border border-[var(--color-border,rgba(128,128,128,0.3))] px-4 py-2 text-sm no-underline text-[var(--color-ink)]">Buy lifetime — $49</a>
-          ) : (
-            <p class="mt-6 text-sm text-[var(--color-muted)]">Available shortly.</p>
-          )}
-        </div>
+    <!-- ============ HERO: the ceiling ============ -->
+    <section class="hero">
+      <img class="hero-img" src={HERO_IMG} alt="Baroque ceiling fresco: figures reach toward a spiral galaxy while rockets and satellites cross the dome" loading="eager" />
+      <div class="hero-veil"></div>
+      <div class="band hero-copy">
+        <p class="kicker">Kekasatori for macOS</p>
+        <h1>Character is destiny.</h1>
+        <p class="attrib">Heraclitus</p>
+        <p class="sub">
+          Destiny is not handed out. It is built, one studied page, one honest question,
+          one finished piece of work at a time. Kekasatori is one native Mac app for that
+          whole arc: find the paper, master it, question it, animate it, publish it.
+        </p>
+        <a class="cta" href="#pricing">Choose your license</a>
+        <p class="proof">14-day free trial · 14-day refunds · one license, every pillar</p>
+      </div>
+    </section>
 
-        <div class="rounded-xl border border-[var(--color-border,rgba(128,128,128,0.3))] p-6">
-          <h2 class="text-xl text-[var(--color-ink)]">Monthly</h2>
-          <p class="mt-1 text-3xl text-[var(--color-ink)]">$4.99</p>
-          <p class="mt-1 text-sm text-[var(--color-muted)]">per month · cancel anytime</p>
-          <ul class="mt-4 space-y-1 text-sm text-[var(--color-muted)] list-disc pl-5">
-            <li>Same app, no commitment</li>
-            <li>Keeps working 7 days past a missed payment</li>
-            <li>Switch to lifetime whenever you like</li>
+    <!-- ============ DESTINY: Socrates ============ -->
+    <section class="story">
+      <div class="band split">
+        <figure class="art">
+          <img src={SOCRATES_IMG} alt="Marble bust of a philosopher with glowing formulas streaming from his mind" loading="lazy" />
+        </figure>
+        <div class="prose-col">
+          <blockquote>
+            <p>“Wisdom begins in wonder.”</p>
+            <cite>Socrates, after Plato</cite>
+          </blockquote>
+          <h2>Take your education into your own hands.</h2>
+          <p>
+            The old teachers never left. They were waiting for better instruments. Kekasatori
+            puts the whole apparatus of serious study on your machine, answering to you alone:
+          </p>
+          <ul>
+            <li><strong>A tutor that reads with you.</strong> Papers, books, lectures, articles: answers grounded in the exact source, with the passage to prove it.</li>
+            <li><strong>Study packs from anything.</strong> Drop a link and get transcripts, notes, flashcards, chapter quizzes, and mock tests at four depths.</li>
+            <li><strong>Mathematics you can watch.</strong> Turn a paper's ideas into narrated Manim animations, rendered locally in a sandbox.</li>
+            <li><strong>Your keys, your machine.</strong> Bring your own AI keys; providers bill you at cost. Your library never leaves your Mac.</li>
           </ul>
-          {MONTHLY_LINK ? (
-            <a href={MONTHLY_LINK} class="mt-6 inline-block rounded-md border border-[var(--color-border,rgba(128,128,128,0.3))] px-4 py-2 text-sm no-underline text-[var(--color-ink)]">Subscribe — $4.99/mo</a>
-          ) : (
-            <p class="mt-6 text-sm text-[var(--color-muted)]">Available shortly.</p>
-          )}
+          <p class="aside">“No man is free who is not master of himself.” · Epictetus</p>
         </div>
       </div>
+    </section>
 
-      <div class="mt-10 space-y-3 text-sm text-[var(--color-muted)] leading-relaxed">
+    <!-- ============ THE HOURS: hourglass ============ -->
+    <section class="story alt">
+      <div class="band split reverse">
+        <figure class="art">
+          <img src={HOURGLASS_IMG} alt="An ornate hourglass filled with galaxies, watched by marble statues" loading="lazy" />
+        </figure>
+        <div class="prose-col">
+          <blockquote>
+            <p>“We are what we repeatedly do. Excellence, then, is not an act, but a habit.”</p>
+            <cite>after Aristotle</cite>
+          </blockquote>
+          <h2>Greatness is paved daily. Waste fewer hours.</h2>
+          <p>
+            The sand does not stop. Kekasatori gives the hours back: a lecture becomes a study
+            pack while you make coffee, a dense paper becomes a quiz you can pass, a week of
+            reading becomes a knowledge atlas you can walk. Research, compare models, run
+            benchmarks, draft, and deploy from the same window.
+          </p>
+          <p>
+            Fourteen days free to see how much of your time it returns. Fourteen more to change
+            your mind. The only unrecoverable cost is another month of doing it the slow way.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ THE CHARIOT: the invitation ============ -->
+    <section class="chariot">
+      <img class="chariot-img" src={CHARIOT_IMG} alt="A golden chariot drawn by horses of light, racing across a nebula" loading="lazy" />
+      <div class="chariot-veil"></div>
+      <div class="band chariot-copy">
+        <blockquote class="light">
+          <p>Plato pictured the soul as a charioteer behind winged horses, climbing the vault of heaven toward what is true.</p>
+          <cite>after Phaedrus</cite>
+        </blockquote>
+        <h2>The chariot of progress is harnessed and waiting.</h2>
         <p>
-          Payments are handled by Stripe; your license key appears right after checkout and unlocks the app in
-          Settings → License. Kekasatori is bring-your-own-key: AI providers bill you directly at cost, and
-          nothing routes through our servers.
+          Every pillar is a horse in the team: discovery, study, tutoring, animation,
+          publishing. The reins are a single license. Nobody drives it for you, and nobody
+          can drive it but you. Climb in.
         </p>
-        <p>
-          14-day refunds, no questions asked — see the <a href="/kekasatori/refunds">Terms of Sale &amp;
-          Refund Policy</a>, <a href="/kekasatori/terms">Terms of Use</a>, and
-          <a href="/kekasatori/privacy">Privacy Policy</a>.
+        <a class="cta gold" href="#pricing">Take the reins</a>
+      </div>
+    </section>
+
+    <!-- ============ PRICING ============ -->
+    <section class="pricing" id="pricing">
+      <div class="band">
+        <blockquote class="center">
+          <p>“Give me a place to stand, and I shall move the earth.”</p>
+          <cite>Archimedes</cite>
+        </blockquote>
+        <h2 class="center-h">Here is your place to stand.</h2>
+        <p class="center-sub">Every tier unlocks the entire app. Pick the shape, not the size.</p>
+
+        <div class="tiers">
+          <div class="tier">
+            <h3>Monthly</h3>
+            <p class="price">$9.99</p>
+            <p class="cadence">per month · cancel anytime</p>
+            <ul>
+              <li>The whole app, no commitment</li>
+              <li>Keeps working 7 days past a missed payment</li>
+              <li>Switch tiers whenever you like</li>
+            </ul>
+            <a class="buy" href={MONTHLY_LINK}>Start monthly</a>
+          </div>
+
+          <div class="tier">
+            <h3>Yearly</h3>
+            <p class="price">$99.99</p>
+            <p class="cadence">per year · two months free</p>
+            <ul>
+              <li>Everything in monthly</li>
+              <li>One renewal a year, not twelve</li>
+              <li>Same 7-day grace on a missed payment</li>
+            </ul>
+            <a class="buy" href={YEARLY_LINK}>Start yearly</a>
+          </div>
+
+          <div class="tier featured">
+            <p class="flag">Ride it forever</p>
+            <h3>Lifetime</h3>
+            <p class="price">$199.99</p>
+            <p class="cadence">one-time · all 1.x updates</p>
+            <ul>
+              <li>Yours forever, fully offline</li>
+              <li>Every update to the current major version</li>
+              <li>Use on Macs you own or control</li>
+            </ul>
+            <a class="buy gold" href={LIFETIME_LINK}>Buy lifetime</a>
+          </div>
+        </div>
+
+        <p class="assurance">
+          Checkout by Stripe. Your license key appears right after payment and unlocks the app in
+          Settings → License. 14-day refunds, no questions asked.
         </p>
       </div>
-    </article>
+    </section>
+
+    <!-- ============ FAQ ============ -->
+    <section class="faq">
+      <div class="band narrow">
+        <h2>Questions, answered plainly</h2>
+        <dl>
+          <dt>What exactly do I get?</dt>
+          <dd>One notarized Mac app with every pillar included: paper discovery and deep research, study packs and quizzes, a source-grounded tutor, Manim math animations, podcast generation, model comparison and benchmarking, a knowledge atlas, and a publishing pipeline. Direct download, automatic updates.</dd>
+
+          <dt>What does bring-your-own-key mean for cost?</dt>
+          <dd>AI features run on keys you hold: your OpenAI, Anthropic, Gemini, DeepSeek, or other provider account bills you at cost, and Apple Intelligence runs free on-device. Kekasatori adds no markup and routes nothing through its own servers.</dd>
+
+          <dt>Is my work private?</dt>
+          <dd>Your library, notes, and study material live on your Mac. The only network calls are the ones you invoke: your chosen AI provider, and a license check at activation and subscription renewal.</dd>
+
+          <dt>What happens when the trial ends?</dt>
+          <dd>Nothing is taken away. Browsing and reading everything you made stays free forever; a license unlocks creating new packs, renders, runs, and publishes.</dd>
+
+          <dt>What if it is not for me?</dt>
+          <dd>Full refund within 14 days of purchase, no questions asked. Subscriptions cancel anytime and keep working 7 days past a missed payment.</dd>
+
+          <dt>What does it require?</dt>
+          <dd>macOS 15.5 or later. AI features work with any supported provider key or with Apple Intelligence on-device.</dd>
+        </dl>
+        <p class="final-line">
+          The reins are one click away. <a href="#pricing">Choose your license</a>.
+        </p>
+        <p class="legal">
+          <a href="/kekasatori/refunds">Terms of Sale &amp; Refund Policy</a> ·
+          <a href="/kekasatori/terms">Terms of Use</a> ·
+          <a href="/kekasatori/privacy">Privacy Policy</a> ·
+          <a href="/projects/kekasatori">About Kekasatori</a>
+        </p>
+      </div>
+    </section>
   </div>
 </BaseLayout>
+
+<style>
+  /* Dark, luminous canvas for the whole page regardless of site theme. */
+  .keka-buy {
+    --canvas: #0b0a10;
+    --canvas-2: #111019;
+    --ink: #f2efe6;
+    --muted: #b7b2a4;
+    --line: rgba(212, 175, 55, 0.28);
+    --gold: #d4af37;
+    --gold-soft: rgba(212, 175, 55, 0.14);
+    background: var(--canvas);
+    color: var(--ink);
+    overflow-x: clip;
+  }
+
+  /* One shared contained column (full-bleed bands, contained content). */
+  .band {
+    max-width: 1200px;
+    margin-inline: auto;
+    padding-inline: clamp(20px, 5vw, 48px);
+  }
+  .band.narrow { max-width: 860px; }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; min-height: 92dvh; display: flex; align-items: flex-end; }
+  .hero-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; object-position: center 30%;
+  }
+  .hero-veil {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to bottom, rgba(11,10,16,0.25) 0%, rgba(11,10,16,0.05) 35%, rgba(11,10,16,0.82) 78%, var(--canvas) 100%);
+  }
+  .hero-copy { position: relative; width: 100%; padding-block: clamp(56px, 9vh, 104px); }
+  .kicker {
+    font-size: 0.8rem; letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); margin-bottom: 16px;
+  }
+  h1 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(2.4rem, 1.4rem + 4vw, 4.4rem);
+    line-height: 1.05; max-width: 20ch; text-wrap: balance; margin: 0;
+  }
+  .attrib { color: var(--gold); font-style: italic; margin-top: 8px; }
+  .sub {
+    max-width: 62ch; color: var(--muted); line-height: 1.6;
+    font-size: clamp(1rem, 0.95rem + 0.4vw, 1.2rem); margin-top: 24px;
+  }
+  .proof { color: var(--muted); font-size: 0.9rem; margin-top: 16px; }
+
+  /* ---------- CTAs ---------- */
+  .cta {
+    display: inline-block; margin-top: 32px;
+    padding: 14px 28px; border-radius: 10px;
+    background: var(--ink); color: #14120c; text-decoration: none;
+    font-weight: 600; letter-spacing: 0.01em;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .cta.gold, .buy.gold { background: var(--gold); color: #14120c; }
+  .cta:hover { transform: translateY(-1px); box-shadow: 0 8px 28px rgba(212,175,55,0.25); }
+
+  /* ---------- Story sections ---------- */
+  .story { padding-block: clamp(56px, 9vh, 104px); }
+  .story.alt { background: var(--canvas-2); }
+  .split {
+    display: grid; gap: clamp(32px, 5vw, 64px); align-items: center;
+    grid-template-columns: 1fr;
+  }
+  @media (min-width: 880px) {
+    .split { grid-template-columns: 5fr 6fr; }
+    .split.reverse { grid-template-columns: 6fr 5fr; }
+    .split.reverse .art { order: 2; }
+  }
+  .art { margin: 0; }
+  .art img {
+    width: 100%; height: auto; display: block; border-radius: 14px;
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+  }
+  .prose-col h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.7rem, 1.2rem + 1.8vw, 2.6rem);
+    line-height: 1.12; text-wrap: balance; margin: 24px 0 16px;
+  }
+  .prose-col p { color: var(--muted); line-height: 1.65; max-width: 62ch; }
+  .prose-col ul { margin: 16px 0 0; padding: 0; list-style: none; }
+  .prose-col li {
+    color: var(--muted); line-height: 1.55; padding: 10px 0 10px 20px;
+    border-left: 2px solid var(--line); margin-bottom: 8px;
+  }
+  .prose-col li strong { color: var(--ink); }
+  .aside { font-style: italic; color: var(--gold); margin-top: 24px; }
+
+  blockquote { margin: 0; }
+  blockquote p {
+    font-family: Georgia, 'Times New Roman', serif; font-style: italic;
+    font-size: clamp(1.15rem, 1rem + 0.8vw, 1.5rem);
+    color: var(--ink); line-height: 1.4; max-width: 34ch;
+  }
+  blockquote cite { display: block; margin-top: 8px; color: var(--gold); font-style: normal; font-size: 0.9rem; }
+
+  /* ---------- Chariot ---------- */
+  .chariot { position: relative; overflow: clip; }
+  .chariot-img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; object-fit: cover; object-position: center;
+  }
+  .chariot-veil {
+    position: absolute; inset: 0;
+    background: linear-gradient(to right, rgba(6,8,10,0.88) 0%, rgba(6,8,10,0.55) 48%, rgba(6,8,10,0.15) 100%);
+  }
+  .chariot-copy { position: relative; padding-block: clamp(96px, 16vh, 176px); max-width: 1200px; }
+  .chariot-copy h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3.1rem);
+    line-height: 1.1; max-width: 20ch; text-wrap: balance; margin: 24px 0 16px;
+  }
+  .chariot-copy p { color: #d9d4c5; max-width: 56ch; line-height: 1.65; }
+  blockquote.light cite { color: var(--gold); }
+
+  /* ---------- Pricing ---------- */
+  .pricing { padding-block: clamp(72px, 11vh, 128px); background: var(--canvas-2); }
+  blockquote.center { text-align: center; }
+  blockquote.center p { margin-inline: auto; }
+  .center-h {
+    font-family: Georgia, 'Times New Roman', serif; text-align: center;
+    font-size: clamp(1.8rem, 1.3rem + 2vw, 2.8rem); margin: 24px 0 8px; text-wrap: balance;
+  }
+  .center-sub { text-align: center; color: var(--muted); margin-bottom: 48px; }
+
+  .tiers { display: grid; gap: 24px; grid-template-columns: 1fr; }
+  @media (min-width: 880px) { .tiers { grid-template-columns: repeat(3, 1fr); } }
+  .tier {
+    border: 1px solid var(--line); border-radius: 14px;
+    padding: 28px 24px; background: rgba(255,255,255,0.02);
+    display: flex; flex-direction: column;
+  }
+  .tier.featured {
+    border-color: var(--gold);
+    background: var(--gold-soft);
+    box-shadow: 0 16px 56px rgba(212,175,55,0.12);
+  }
+  .flag {
+    align-self: flex-start; font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    color: #14120c; background: var(--gold); border-radius: 999px; padding: 4px 10px; margin: 0 0 12px;
+  }
+  .tier h3 { margin: 0; font-size: 1.1rem; }
+  .price { font-size: 2.2rem; font-weight: 700; margin: 8px 0 0; }
+  .cadence { color: var(--muted); font-size: 0.9rem; margin: 4px 0 16px; }
+  .tier ul { list-style: disc; padding-left: 20px; margin: 0 0 24px; color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+  .buy {
+    margin-top: auto; display: block; text-align: center;
+    padding: 12px 16px; border-radius: 10px; text-decoration: none; font-weight: 600;
+    border: 1px solid var(--line); color: var(--ink);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .buy:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(212,175,55,0.2); }
+  .buy.gold { border-color: var(--gold); }
+  .assurance { text-align: center; color: var(--muted); font-size: 0.9rem; margin-top: 40px; }
+
+  /* ---------- FAQ ---------- */
+  .faq { padding-block: clamp(56px, 9vh, 104px); }
+  .faq h2 {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: clamp(1.5rem, 1.2rem + 1.2vw, 2.1rem); margin-bottom: 32px;
+  }
+  .faq dt { font-weight: 600; margin-top: 24px; }
+  .faq dd { margin: 8px 0 0; color: var(--muted); line-height: 1.65; }
+  .final-line { margin-top: 48px; font-size: 1.05rem; }
+  .final-line a { color: var(--gold); }
+  .legal { margin-top: 32px; font-size: 0.85rem; color: var(--muted); }
+  .legal a { color: var(--muted); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cta, .buy { transition: none; }
+  }
+</style>
