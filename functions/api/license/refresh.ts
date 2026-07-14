@@ -48,6 +48,12 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
   if (record.status === "revoked") {
     return json({ ok: false, error: "License revoked." }, 403);
   }
+  // A device-bound key only refreshes while its Mac is still registered —
+  // support-side deactivation therefore also cuts off future refreshes.
+  if (presented.dev && (record.devices?.length ?? 0) > 0 &&
+      !record.devices!.some((d) => d.hash === presented.dev)) {
+    return json({ ok: false, error: "This Mac is no longer registered to the license." }, 403);
+  }
   const paidThrough = record.paidThrough ? new Date(`${record.paidThrough}T00:00:00Z`) : null;
   const lapsed = !paidThrough || addDays(paidThrough, SUB_GRACE_DAYS) < new Date();
   if (record.status === "canceled" && lapsed) {
@@ -66,6 +72,7 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
     iat: isoDate(new Date()),
     exp: isoDate(addDays(paidThrough!, SUB_GRACE_DAYS)),
   };
+  if (presented.dev) payload.dev = presented.dev;   // keep the key device-bound
   const key = await mintKey(payload, env.LICENSE_SIGNING_KEY);
   return json({ ok: true, key });
 };

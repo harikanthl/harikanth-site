@@ -26,6 +26,19 @@ export interface LicensePayload {
   major: number;
   iat: string;
   exp?: string;
+  /** Device-bound keys only: SHA-256 hash (hex) of the Mac's platform UUID.
+   *  The app refuses a key whose `dev` doesn't match the machine it runs on;
+   *  keys fresh from checkout have no `dev` and must pass through
+   *  /api/license/activate to get bound. */
+  dev?: string;
+}
+
+/** One activated Mac under a license. */
+export interface LicenseDevice {
+  hash: string;
+  name?: string;
+  first: string;   // ISO date of first activation
+  last: string;    // ISO date of most recent activation
 }
 
 /** KV record at `lic:<lid>` — the server-side truth behind a key. */
@@ -40,7 +53,17 @@ export interface LicenseRecord {
   paidThrough?: string;
   sessionId: string;
   created: string;
+  /** Macs this license has been activated on (see /api/license/activate). */
+  devices?: LicenseDevice[];
+  /** Lifetime count of activations (concurrent slots free up on support
+   *  deactivation, this never decrements — the resale backstop). */
+  totalActivations?: number;
 }
+
+/** Concurrent Macs allowed per license. */
+export const MAX_CONCURRENT_DEVICES = 3;
+/** Total activations ever, across hardware churn — the resale backstop. */
+export const MAX_TOTAL_ACTIVATIONS = 10;
 
 export interface LicenseEnv {
   LICENSES: KVNamespace;
