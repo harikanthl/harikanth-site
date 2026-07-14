@@ -64,6 +64,11 @@ export interface LicenseRecord {
 export const MAX_CONCURRENT_DEVICES = 3;
 /** Total activations ever, across hardware churn — the resale backstop. */
 export const MAX_TOTAL_ACTIVATIONS = 10;
+/** Device-bound LIFETIME keys are leases: valid this many days, silently
+ *  renewed by the app via /api/license/refresh. This is what makes a lifetime
+ *  license REVOCABLE (refunds, resale abuse) — a revoked record stops renewing
+ *  and every bound copy of the key dies when its lease runs out. */
+export const LIFETIME_LEASE_DAYS = 45;
 
 export interface LicenseEnv {
   LICENSES: KVNamespace;

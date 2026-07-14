@@ -19,6 +19,7 @@ import {
   LicenseEnv,
   LicensePayload,
   LicenseRecord,
+  LIFETIME_LEASE_DAYS,
   MAX_CONCURRENT_DEVICES,
   MAX_TOTAL_ACTIVATIONS,
   SUB_GRACE_DAYS,
@@ -105,8 +106,9 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
   record.devices = devices;
   await env.LICENSES.put(`lic:${record.lid}`, JSON.stringify(record));
 
-  // Mint the device-bound key. Sub keys get a fresh exp from the record's
-  // paid-through (falling back to whatever the presented key carried).
+  // Mint the device-bound key. EVERY bound key is a lease: sub keys run to
+  // paid-through + grace, lifetime keys to a rolling window the app silently
+  // renews — which is what keeps a lifetime license revocable.
   const payload: LicensePayload = {
     v: 1,
     lid: record.lid,
@@ -124,6 +126,8 @@ export const onRequestPost: PagesFunction<LicenseEnv> = async ({ request, env })
       ? isoDate(addDays(paidThrough, SUB_GRACE_DAYS))
       : presented.exp;
     if (!payload.exp) return json({ ok: false, error: "License record is incomplete." }, 500);
+  } else {
+    payload.exp = isoDate(addDays(now, LIFETIME_LEASE_DAYS));
   }
 
   const key = await mintKey(payload, env.LICENSE_SIGNING_KEY);
