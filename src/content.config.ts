@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { dsaEpisodesLoader, dsaPatternsLoader } from './loaders/dsa';
 
 const decorPosition = z.enum([
   'top-left',
@@ -76,4 +77,60 @@ const notes = defineCollection({
   }),
 });
 
-export const collections = { blog, projects, notes };
+const episodeStatus = z.enum(['planned', 'prep', 'solved', 'recorded', 'uploaded']);
+
+// Learn-in-public tracks: one markdown file per course/series in src/content/tracks.
+const tracks = defineCollection({
+  loader: glob({ base: './src/content/tracks', pattern: '**/*.{md,mdx}' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    order: z.number(),
+    status: z.enum(['planned', 'active', 'done']).default('planned'),
+    source: z.string().url().optional(),
+    sourceLabel: z.string().optional(),
+    started: z.coerce.date().optional(),
+    // Set for the track whose pages are generated from external data.
+    dataDriven: z.boolean().default(false),
+  }),
+});
+
+// LeetCode patterns: generated from the dsa-content submodule (see src/loaders/dsa.ts).
+const dsaEpisodes = defineCollection({
+  loader: dsaEpisodesLoader(),
+  schema: z.object({
+    ep: z.number(),
+    code: z.string(),
+    title: z.string(),
+    difficulty: z.string().optional(),
+    pattern: z.string(),
+    patternSlug: z.string(),
+    patternNo: z.number(),
+    patternEp: z.number(),
+    links: z.array(z.string()),
+    status: episodeStatus,
+    published: z.boolean(),
+    youtubeUrl: z.string().optional(),
+    youtubeId: z.string().optional(),
+    reps: z.number(),
+    solution: z.string().optional(),
+    solutionPath: z.string(),
+    prepPath: z.string(),
+  }),
+});
+
+const dsaPatterns = defineCollection({
+  loader: dsaPatternsLoader(),
+  schema: z.object({
+    no: z.number(),
+    title: z.string(),
+    folder: z.string(),
+    episodeCount: z.number(),
+    epStart: z.number(),
+    epEnd: z.number(),
+    counts: z.record(episodeStatus, z.number()),
+    hasCard: z.boolean(),
+  }),
+});
+
+export const collections = { blog, projects, notes, tracks, dsaEpisodes, dsaPatterns };

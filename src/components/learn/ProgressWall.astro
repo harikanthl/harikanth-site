@@ -1,0 +1,102 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { STATUS_LABEL, STATUS_ORDER, episodeHref } from '../../lib/learn';
+
+type Props = {
+  episodes: CollectionEntry<'dsaEpisodes'>[];
+  /** Hide the legend when several walls sit on one page. */
+  legend?: boolean;
+};
+
+const { episodes, legend = true } = Astro.props;
+---
+
+<div class="wall" role="list" aria-label="Episode progress">
+  {
+    episodes.map((e) => {
+      const label = `EP${String(e.data.ep).padStart(3, '0')} · ${e.data.title} · ${STATUS_LABEL[e.data.status]}`;
+      return e.data.published ? (
+        <a
+          role="listitem"
+          href={episodeHref(e)}
+          class:list={['cell', `cell-${e.data.status}`]}
+          title={label}
+          aria-label={label}
+        />
+      ) : (
+        <span
+          role="listitem"
+          class:list={['cell', `cell-${e.data.status}`]}
+          title={label}
+          aria-label={label}
+        />
+      );
+    })
+  }
+</div>
+{
+  legend && (
+    <ul class="legend" aria-label="Legend">
+      {STATUS_ORDER.map((s) => (
+        <li>
+          <span class:list={['cell', 'cell-static', `cell-${s}`]} aria-hidden="true" />
+          {STATUS_LABEL[s]}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .wall {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(0.9rem, 1fr));
+    gap: 0.2rem;
+  }
+  .cell {
+    display: block;
+    aspect-ratio: 1;
+    border-radius: 0.2rem;
+    border: 1px solid var(--color-border);
+    background: transparent;
+    transition: transform 0.12s ease;
+  }
+  a.cell:hover {
+    transform: scale(1.35);
+    border-color: var(--color-ink);
+  }
+  .cell-prep {
+    background: color-mix(in srgb, var(--color-ink) 14%, transparent);
+  }
+  .cell-solved {
+    background: color-mix(in srgb, var(--color-accent) 40%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 40%, var(--color-border));
+  }
+  .cell-recorded {
+    background: color-mix(in srgb, var(--color-accent) 72%, transparent);
+    border-color: color-mix(in srgb, var(--color-accent) 72%, var(--color-border));
+  }
+  .cell-uploaded {
+    background: var(--color-accent);
+    border-color: var(--color-accent);
+  }
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    margin-top: 0.9rem;
+    padding: 0;
+    list-style: none;
+    font-size: 0.75rem;
+    color: var(--color-muted);
+  }
+  .legend li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+  .cell-static {
+    width: 0.7rem;
+    height: 0.7rem;
+  }
+</style>

@@ -1,0 +1,90 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProgressWall from '../../components/learn/ProgressWall.astro';
+import { byEpisode, checklistProgress, countStatuses, doneCount } from '../../lib/learn';
+
+const tracks = (await getCollection('tracks')).sort((a, b) => a.data.order - b.data.order);
+const episodes = (await getCollection('dsaEpisodes')).sort(byEpisode);
+const dsaCounts = countStatuses(episodes);
+
+function progressOf(track: (typeof tracks)[number]) {
+  if (track.data.dataDriven) {
+    return { done: doneCount(dsaCounts), total: episodes.length, unit: 'episodes' };
+  }
+  const { done, total } = checklistProgress(track.body);
+  return { done, total, unit: 'items' };
+}
+
+function hrefOf(track: (typeof tracks)[number]) {
+  return `/learn/${track.id}`;
+}
+
+const STATUS: Record<string, string> = { planned: 'Up next', active: 'In progress', done: 'Done' };
+---
+
+<BaseLayout
+  title="Learn"
+  description="Three things I'm finishing in public: LeetCode patterns, Stanford CS336, and a distributed training framework from first principles."
+>
+  <div class="page-container py-16">
+    <header class="max-w-2xl">
+      <h1 class="text-4xl md:text-5xl">Learn</h1>
+      <p class="mt-4 text-lg text-[var(--color-muted)]">
+        Three things I'm finishing, in public. Every item here has an artefact you can check:
+        a video, a write-up, or tested code.
+      </p>
+    </header>
+
+    <section class="mt-12" aria-label="LeetCode progress">
+      <ProgressWall episodes={episodes} />
+    </section>
+
+    <ul class="mt-12 grid gap-6 md:grid-cols-3" data-pagefind-body>
+      {
+        tracks.map((track) => {
+          const p = progressOf(track);
+          const pct = p.total ? Math.round((100 * p.done) / p.total) : 0;
+          return (
+            <li class="card-soft rounded-2xl border border-[var(--color-border)] p-6">
+              <a href={hrefOf(track)} class="group block no-underline">
+                <div class="flex items-center justify-between gap-3">
+                  <span class="text-xs font-medium uppercase tracking-wide text-[var(--color-muted)]">
+                    {STATUS[track.data.status]}
+                  </span>
+                  <span class="font-mono text-xs text-[var(--color-muted)]">
+                    {p.done}/{p.total} {p.unit}
+                  </span>
+                </div>
+                <h2 class="mt-3 text-2xl transition-opacity group-hover:opacity-70">{track.data.title}</h2>
+                <p class="mt-2 text-sm text-[var(--color-muted)]">{track.data.description}</p>
+                <div
+                  class="mt-5 h-1.5 overflow-hidden rounded-full bg-[color-mix(in_srgb,var(--color-ink)_10%,transparent)]"
+                  role="progressbar"
+                  aria-valuemin="0"
+                  aria-valuemax={p.total}
+                  aria-valuenow={p.done}
+                  aria-label={`${track.data.title} progress`}
+                >
+                  <div class="h-full rounded-full bg-[var(--color-accent)]" style={`width:${pct}%`} />
+                </div>
+              </a>
+              {
+                track.data.source && (
+                  <a
+                    href={track.data.source}
+                    rel="noopener"
+                    target="_blank"
+                    class="mt-4 inline-block text-xs text-[var(--color-muted)] no-underline hover:text-[var(--color-ink)]"
+                  >
+                    {track.data.sourceLabel ?? track.data.source} ↗
+                  </a>
+                )
+              }
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</BaseLayout>

@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import EpisodeLayout from '../../../../layouts/EpisodeLayout.astro';
+import { byEpisode, episodeSlug } from '../../../../lib/learn';
+
+// Only published episodes get a page (recorded=Y in progress.csv, or LEARN_PREVIEW=1).
+export async function getStaticPaths() {
+  const all = (await getCollection('dsaEpisodes')).sort(byEpisode);
+  return all
+    .filter((e) => e.data.published)
+    .map((episode) => {
+      const i = all.indexOf(episode);
+      const prev = all[i - 1];
+      const next = all[i + 1];
+      return {
+        params: { pattern: episode.data.patternSlug, episode: episodeSlug(episode) },
+        props: {
+          episode,
+          prev: prev?.data.patternSlug === episode.data.patternSlug ? prev : undefined,
+          next: next?.data.patternSlug === episode.data.patternSlug ? next : undefined,
+        },
+      };
+    });
+}
+
+const { episode, prev, next } = Astro.props;
+---
+
+<EpisodeLayout episode={episode} prev={prev} next={next} />

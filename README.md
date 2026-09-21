@@ -18,6 +18,25 @@ npm run build   # astro build + pagefind index
 npm run preview
 ```
 
+## Learn section (`/learn`)
+
+Three learn-in-public tracks live under `src/content/tracks/`. Two are markdown
+checklists (tick `- [ ]` → `- [x]` to update progress). The LeetCode track is
+generated from the [dsa-content](https://github.com/harikanthl/dsa-content) repo,
+attached as a git submodule at `external/dsa-content` and read by
+`src/loaders/dsa.ts` at build time — nothing is copied.
+
+```bash
+git submodule update --init            # first clone
+git submodule update --remote external/dsa-content && git add external/dsa-content
+                                       # pull the latest dsa-content and pin it
+LEARN_PREVIEW=1 npm run dev            # show every episode page locally, ignoring the gate
+```
+
+An episode's prep sheet and solution are published only once `recorded=Y` in
+`curriculum/progress.csv`; before that the episode shows as "Coming".
+Cloudflare Pages clones public submodules automatically.
+
 ## Adding a blog post
 
 1. Create `src/content/blog/your-slug.mdx`

@@ -1,0 +1,3 @@
+[submodule "external/dsa-content"]
+	path = external/dsa-content
+	url = https://github.com/harikanthl/dsa-content.git
