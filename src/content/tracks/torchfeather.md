@@ -1,6 +1,6 @@
 ---
 title: Distributed Training from First Principles
-description: Umar Jamil's 19-hour build of a distributed training framework in PyTorch — RoPE, MLA, pipeline / data / tensor / context / expert parallelism, MoE — followed chapter by chapter.
+description: Umar Jamil's 19-hour build of a distributed training framework in PyTorch (RoPE, MLA, pipeline / data / tensor / context / expert parallelism, MoE), followed chapter by chapter.
 order: 3
 status: planned
 source: https://github.com/hkproj/torchfeather
@@ -31,7 +31,7 @@ Prerequisites the author names, done first:
 - [ ] 05:04 · Distributed computation graphs and DDP
 - [ ] 05:10 · Building the training loop
 - [ ] 06:06 · Pipeline parallelism from first principles
-- [ ] 06:26 · Pipeline schedules — GPipe, 1F1B and Zero Bubble
+- [ ] 06:26 · Pipeline schedules: GPipe, 1F1B and Zero Bubble
 - [ ] 07:10 · Datasets, tokenization and data parallelism
 - [ ] 07:42 · Coding pipeline parallelism
 - [ ] 08:37 · Device meshes and combining PP with DP
