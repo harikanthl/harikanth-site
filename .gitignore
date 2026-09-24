@@ -22,3 +22,22 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# Pattern explainers: the rendered videos/posters/captions are hosted externally, so only
+# the metadata (src/data/pattern-explainers.json) and the studio source are committed.
+public/media/pattern-explainers/
+
+# Studio scratch: render workdirs, finished masters, the TTS venv and voice models.
+studio/pattern-explainers/work/
+studio/pattern-explainers/out/
+studio/pattern-explainers/.venv-tts/
+studio/pattern-explainers/.uvcache/
+studio/pattern-explainers/.pipcache/
+studio/pattern-explainers/voices/
+studio/_probe/
+
+# Python / manim scratch produced by the explainer studio
+__pycache__/
+*.pyc
+*.ses
+studio/pattern-explainers/media/

@@ -1,0 +1,5 @@
+{
+  "_comment": "Where the pattern-explainer videos are served from. Leave hostedBaseUrl empty to serve the locally rendered files out of public/media/pattern-explainers (dev + preview). Set it to the public bucket/CDN prefix for production, e.g. 'https://media.harikanth.site/pattern-explainers'. No re-render is needed to switch hosts.",
+  "hostedBaseUrl": "https://media.harikanth.site/pattern-explainers",
+  "localBaseUrl": "/media/pattern-explainers"
+}

@@ -2,8 +2,10 @@
 import { getCollection, render } from 'astro:content';
 import BaseLayout from '../../../../layouts/BaseLayout.astro';
 import ProgressWall from '../../../../components/learn/ProgressWall.astro';
+import PatternExplainer from '../../../../components/learn/PatternExplainer.astro';
 import TableOfContents from '../../../../components/blog/TableOfContents.astro';
 import { byEpisode, episodeHref, STATUS_LABEL } from '../../../../lib/learn';
+import { explainerFor } from '../../../../lib/explainers';
 
 export async function getStaticPaths() {
   const patterns = await getCollection('dsaPatterns');
@@ -17,6 +19,7 @@ const { Content, headings } = pattern.data.hasCard
   : { Content: undefined, headings: [] };
 const { no, title, episodeCount, epStart, epEnd, counts } = pattern.data;
 const done = counts.recorded + counts.uploaded;
+const explainer = explainerFor(pattern.id);
 ---
 
 <BaseLayout
@@ -42,12 +45,20 @@ const done = counts.recorded + counts.uploaded;
     <div class="mt-12 grid gap-12 lg:grid-cols-[1fr_16rem]">
       <div class="min-w-0">
         {
+          explainer && (
+            <div data-pagefind-ignore>
+              <PatternExplainer explainer={explainer} patternNo={no} />
+            </div>
+          )
+        }
+
+        {
           Content ? (
-            <div class="prose" data-pagefind-body data-pagefind-meta={`title:${title}`}>
+            <div class="prose mt-14" data-pagefind-body data-pagefind-meta={`title:${title}`}>
               <Content />
             </div>
           ) : (
-            <p class="text-[var(--color-muted)]">
+            <p class="mt-14 text-[var(--color-muted)]">
               The pattern card is written when the pattern starts. Episodes below.
             </p>
           )

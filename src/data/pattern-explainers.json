@@ -1,0 +1,1010 @@
+{
+  "binary-search": {
+    "title": "Binary Search",
+    "summary": "A question that flips exactly once turns a linear scan into a halving search.",
+    "duration": 126.6,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 4.17,
+        "label": "Guess the number"
+      },
+      {
+        "at": 8.2,
+        "label": "The insight"
+      },
+      {
+        "at": 12.57,
+        "label": "The job"
+      },
+      {
+        "at": 16.67,
+        "label": "The two markers"
+      },
+      {
+        "at": 42.57,
+        "label": "lo meets hi"
+      },
+      {
+        "at": 47.33,
+        "label": "Why it's correct"
+      },
+      {
+        "at": 52.3,
+        "label": "Complexity"
+      },
+      {
+        "at": 57.7,
+        "label": "Two templates, never mixed"
+      },
+      {
+        "at": 83.07,
+        "label": "One template, many answers"
+      },
+      {
+        "at": 89.5,
+        "label": "Shape B: conditions"
+      },
+      {
+        "at": 101.1,
+        "label": "Shape C: search the answer"
+      },
+      {
+        "at": 117.57,
+        "label": "What breaks it"
+      },
+      {
+        "at": 123.4,
+        "label": "Recall"
+      }
+    ]
+  },
+  "dp": {
+    "title": "Dynamic Programming",
+    "summary": "Name the state, write the transition, fill in dependency order.",
+    "duration": 131.4,
+    "beats": 16,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 6.47,
+        "label": "The recurrence"
+      },
+      {
+        "at": 16.33,
+        "label": "The exponential tree"
+      },
+      {
+        "at": 23.67,
+        "label": "The memo"
+      },
+      {
+        "at": 31.6,
+        "label": "The table"
+      },
+      {
+        "at": 39.17,
+        "label": "Say the state"
+      },
+      {
+        "at": 46.87,
+        "label": "The transition"
+      },
+      {
+        "at": 55.1,
+        "label": "Fill order and space"
+      },
+      {
+        "at": 63.63,
+        "label": "Take it or skip it"
+      },
+      {
+        "at": 72.9,
+        "label": "Why backwards"
+      },
+      {
+        "at": 80.43,
+        "label": "Two sequences"
+      },
+      {
+        "at": 88.83,
+        "label": "Interval DP"
+      },
+      {
+        "at": 97.97,
+        "label": "What goes wrong"
+      },
+      {
+        "at": 114.8,
+        "label": "Complexity"
+      },
+      {
+        "at": 127.0,
+        "label": "Recall"
+      }
+    ]
+  },
+  "fast-slow": {
+    "title": "Fast & Slow Pointers",
+    "summary": "Two pointers at different speeds find cycles and midpoints in O(1) space.",
+    "duration": 134.4,
+    "beats": 22,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 4.77,
+        "label": "The job"
+      },
+      {
+        "at": 10.67,
+        "label": "Two runners"
+      },
+      {
+        "at": 21.33,
+        "label": "Why they must meet"
+      },
+      {
+        "at": 29.13,
+        "label": "The straight track"
+      },
+      {
+        "at": 40.03,
+        "label": "Midpoint, free"
+      },
+      {
+        "at": 46.47,
+        "label": "The guard"
+      },
+      {
+        "at": 52.7,
+        "label": "Complexity"
+      },
+      {
+        "at": 58.5,
+        "label": "Where the cycle starts"
+      },
+      {
+        "at": 70.4,
+        "label": "The proof"
+      },
+      {
+        "at": 76.23,
+        "label": "First or second middle"
+      },
+      {
+        "at": 82.77,
+        "label": "The hidden list"
+      },
+      {
+        "at": 109.33,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 122.6,
+        "label": "What breaks it"
+      },
+      {
+        "at": 129.2,
+        "label": "Recall"
+      }
+    ]
+  },
+  "graphs": {
+    "title": "Graphs",
+    "summary": "BFS and DFS are the same loop; only the frontier container changes.",
+    "duration": 136.1,
+    "beats": 19,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 6.57,
+        "label": "Nodes and edges"
+      },
+      {
+        "at": 12.67,
+        "label": "The loop"
+      },
+      {
+        "at": 20.2,
+        "label": "The container"
+      },
+      {
+        "at": 26.97,
+        "label": "Same graph, two orders"
+      },
+      {
+        "at": 33.93,
+        "label": "BFS: the flood"
+      },
+      {
+        "at": 41.63,
+        "label": "DFS: dive and retreat"
+      },
+      {
+        "at": 49.43,
+        "label": "Why BFS is shortest"
+      },
+      {
+        "at": 55.4,
+        "label": "Counting components"
+      },
+      {
+        "at": 61.47,
+        "label": "Topological sort"
+      },
+      {
+        "at": 68.97,
+        "label": "Weighted edges"
+      },
+      {
+        "at": 76.97,
+        "label": "Dijkstra's variants"
+      },
+      {
+        "at": 85.17,
+        "label": "What goes wrong"
+      },
+      {
+        "at": 109.17,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 124.03,
+        "label": "Complexity"
+      },
+      {
+        "at": 130.43,
+        "label": "Recall"
+      }
+    ]
+  },
+  "hash-maps": {
+    "title": "Hash Maps",
+    "summary": "When the question is how many of each thing, count once and interrogate the counts.",
+    "duration": 129.5,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 3.1,
+        "label": "The job"
+      },
+      {
+        "at": 7.37,
+        "label": "The slow way"
+      },
+      {
+        "at": 12.13,
+        "label": "Count once"
+      },
+      {
+        "at": 17.17,
+        "label": "Key and value"
+      },
+      {
+        "at": 22.13,
+        "label": "The counting pass"
+      },
+      {
+        "at": 30.2,
+        "label": "The questions move"
+      },
+      {
+        "at": 33.87,
+        "label": "The budget"
+      },
+      {
+        "at": 41.73,
+        "label": "The bottleneck"
+      },
+      {
+        "at": 52.6,
+        "label": "Complexity"
+      },
+      {
+        "at": 64.3,
+        "label": "Order can matter"
+      },
+      {
+        "at": 69.7,
+        "label": "The walk"
+      },
+      {
+        "at": 80.07,
+        "label": "Pairs and one centre"
+      },
+      {
+        "at": 96.5,
+        "label": "Containment"
+      },
+      {
+        "at": 102.97,
+        "label": "What goes wrong"
+      },
+      {
+        "at": 114.17,
+        "label": "The anti-signals"
+      },
+      {
+        "at": 125.7,
+        "label": "Recall"
+      }
+    ]
+  },
+  "heap": {
+    "title": "Heap",
+    "summary": "A loose ordering that keeps the extreme at the top, in O(log n) per change.",
+    "duration": 126.9,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 9.97,
+        "label": "The waiting room"
+      },
+      {
+        "at": 14.5,
+        "label": "The one promise"
+      },
+      {
+        "at": 23.33,
+        "label": "Tree is an array"
+      },
+      {
+        "at": 27.97,
+        "label": "Index arithmetic"
+      },
+      {
+        "at": 35.03,
+        "label": "Sift up"
+      },
+      {
+        "at": 47.33,
+        "label": "Sift down"
+      },
+      {
+        "at": 56.73,
+        "label": "Peek"
+      },
+      {
+        "at": 60.37,
+        "label": "Complexity"
+      },
+      {
+        "at": 67.13,
+        "label": "Shape A: top k"
+      },
+      {
+        "at": 83.83,
+        "label": "Shape C: k-way merge"
+      },
+      {
+        "at": 91.03,
+        "label": "Shape D: greedy"
+      },
+      {
+        "at": 102.5,
+        "label": "Shape E: two heaps"
+      },
+      {
+        "at": 117.97,
+        "label": "What breaks it"
+      },
+      {
+        "at": 123.77,
+        "label": "Recall"
+      }
+    ]
+  },
+  "kadane": {
+    "title": "Kadane's Algorithm",
+    "summary": "Extend the run or start fresh: best contiguous subarray in one O(n) pass.",
+    "duration": 139.4,
+    "beats": 23,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 6.4,
+        "label": "The job"
+      },
+      {
+        "at": 11.93,
+        "label": "Brute force"
+      },
+      {
+        "at": 17.3,
+        "label": "The one question"
+      },
+      {
+        "at": 29.97,
+        "label": "The two lines"
+      },
+      {
+        "at": 39.2,
+        "label": "The walk"
+      },
+      {
+        "at": 78.23,
+        "label": "Current versus best"
+      },
+      {
+        "at": 85.53,
+        "label": "Why it is correct"
+      },
+      {
+        "at": 93.5,
+        "label": "Complexity"
+      },
+      {
+        "at": 100.67,
+        "label": "The seed trap"
+      },
+      {
+        "at": 114.47,
+        "label": "The variations"
+      },
+      {
+        "at": 131.17,
+        "label": "Kadane versus a window"
+      },
+      {
+        "at": 136.03,
+        "label": "Recall"
+      }
+    ]
+  },
+  "linkedlist-reversal": {
+    "title": "In-place Reversal of a LinkedList",
+    "summary": "Three pointers, four lines in one fixed order: save, flip, step, and return prev.",
+    "duration": 128.4,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 5.07,
+        "label": "The chain"
+      },
+      {
+        "at": 14.0,
+        "label": "The trap"
+      },
+      {
+        "at": 17.93,
+        "label": "The four lines"
+      },
+      {
+        "at": 33.97,
+        "label": "The walk"
+      },
+      {
+        "at": 38.63,
+        "label": "Prev is the new head"
+      },
+      {
+        "at": 56.13,
+        "label": "Complexity"
+      },
+      {
+        "at": 63.47,
+        "label": "The block shape"
+      },
+      {
+        "at": 76.2,
+        "label": "The danger zone"
+      },
+      {
+        "at": 87.73,
+        "label": "The dummy node"
+      },
+      {
+        "at": 94.23,
+        "label": "Every k blocks"
+      },
+      {
+        "at": 100.03,
+        "label": "The cycle bug"
+      },
+      {
+        "at": 105.93,
+        "label": "Rotation"
+      },
+      {
+        "at": 113.0,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 125.03,
+        "label": "Recall"
+      }
+    ]
+  },
+  "merge-intervals": {
+    "title": "Merge Intervals",
+    "summary": "Sort by start time and every interval only ever has to meet the one you're holding.",
+    "duration": 133.7,
+    "beats": 23,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 2.83,
+        "label": "The job"
+      },
+      {
+        "at": 7.53,
+        "label": "Six ways to sit"
+      },
+      {
+        "at": 14.3,
+        "label": "Sort is the algorithm"
+      },
+      {
+        "at": 20.67,
+        "label": "One question left"
+      },
+      {
+        "at": 30.43,
+        "label": "Hold one interval"
+      },
+      {
+        "at": 38.43,
+        "label": "Max, never the new end"
+      },
+      {
+        "at": 44.63,
+        "label": "Gaps flush blocks"
+      },
+      {
+        "at": 55.7,
+        "label": "Six in, three out"
+      },
+      {
+        "at": 61.87,
+        "label": "Why it's correct"
+      },
+      {
+        "at": 68.6,
+        "label": "Closed or half-open"
+      },
+      {
+        "at": 82.2,
+        "label": "Complexity"
+      },
+      {
+        "at": 96.97,
+        "label": "The three shapes"
+      },
+      {
+        "at": 104.07,
+        "label": "Counting, not merging"
+      },
+      {
+        "at": 118.1,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 129.1,
+        "label": "Recall"
+      }
+    ]
+  },
+  "prefix-sum": {
+    "title": "Prefix Sum",
+    "summary": "Every range sum is two running totals subtracted, so a map answers pair questions in O(1).",
+    "duration": 130.7,
+    "beats": 23,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 3.67,
+        "label": "The job"
+      },
+      {
+        "at": 7.53,
+        "label": "Brute force"
+      },
+      {
+        "at": 11.2,
+        "label": "The running total"
+      },
+      {
+        "at": 17.1,
+        "label": "The empty prefix"
+      },
+      {
+        "at": 22.17,
+        "label": "The slice identity"
+      },
+      {
+        "at": 26.83,
+        "label": "The question changes"
+      },
+      {
+        "at": 33.13,
+        "label": "The map"
+      },
+      {
+        "at": 38.83,
+        "label": "Seed the zero"
+      },
+      {
+        "at": 51.5,
+        "label": "The walk"
+      },
+      {
+        "at": 58.93,
+        "label": "Complexity"
+      },
+      {
+        "at": 69.83,
+        "label": "Why it's correct"
+      },
+      {
+        "at": 76.1,
+        "label": "The three variations"
+      },
+      {
+        "at": 101.17,
+        "label": "The honest boundary"
+      },
+      {
+        "at": 113.63,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 128.1,
+        "label": "Recall"
+      }
+    ]
+  },
+  "recursion-backtracking": {
+    "title": "Recursion and Backtracking",
+    "summary": "A function that trusts a smaller call of itself, and a search that undoes every choice.",
+    "duration": 134.1,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 3.8,
+        "label": "The one-sentence version"
+      },
+      {
+        "at": 14.5,
+        "label": "The maze"
+      },
+      {
+        "at": 29.47,
+        "label": "Plain recursion"
+      },
+      {
+        "at": 35.33,
+        "label": "Base case and leap of faith"
+      },
+      {
+        "at": 47.7,
+        "label": "The call stack"
+      },
+      {
+        "at": 53.83,
+        "label": "Why Fibonacci explodes"
+      },
+      {
+        "at": 60.87,
+        "label": "The template"
+      },
+      {
+        "at": 71.37,
+        "label": "Pruning the tree"
+      },
+      {
+        "at": 88.8,
+        "label": "Prune before you descend"
+      },
+      {
+        "at": 94.07,
+        "label": "The four flavours"
+      },
+      {
+        "at": 106.67,
+        "label": "What goes wrong"
+      },
+      {
+        "at": 116.53,
+        "label": "Complexity"
+      },
+      {
+        "at": 122.87,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 130.13,
+        "label": "Recall"
+      }
+    ]
+  },
+  "sliding-window": {
+    "title": "Sliding Window",
+    "summary": "A contiguous run slides instead of rebuilding: O(n^2) becomes O(n).",
+    "duration": 136.3,
+    "beats": 22,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 5.37,
+        "label": "The job"
+      },
+      {
+        "at": 9.53,
+        "label": "Brute force"
+      },
+      {
+        "at": 16.23,
+        "label": "The cardboard tube"
+      },
+      {
+        "at": 29.97,
+        "label": "When do I shuffle?"
+      },
+      {
+        "at": 35.27,
+        "label": "Shape A: fixed size"
+      },
+      {
+        "at": 41.57,
+        "label": "Complexity"
+      },
+      {
+        "at": 46.33,
+        "label": "Shape B: longest"
+      },
+      {
+        "at": 57.97,
+        "label": "Shape B on screen"
+      },
+      {
+        "at": 64.77,
+        "label": "Shape C: shortest"
+      },
+      {
+        "at": 80.7,
+        "label": "Why it is still O(n)"
+      },
+      {
+        "at": 93.1,
+        "label": "The toolkit"
+      },
+      {
+        "at": 106.03,
+        "label": "What breaks it"
+      },
+      {
+        "at": 111.87,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 131.67,
+        "label": "Recall"
+      }
+    ]
+  },
+  "stack": {
+    "title": "Stack",
+    "summary": "Hold what is still unresolved, most recent on top: O(n), even with a loop inside a loop.",
+    "duration": 125.9,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 4.33,
+        "label": "The one-sentence version"
+      },
+      {
+        "at": 8.5,
+        "label": "Plates"
+      },
+      {
+        "at": 18.2,
+        "label": "Cancelling: brackets"
+      },
+      {
+        "at": 33.6,
+        "label": "The two ways to be invalid"
+      },
+      {
+        "at": 43.07,
+        "label": "Monotonic: next greater"
+      },
+      {
+        "at": 60.17,
+        "label": "The pop writes the answer"
+      },
+      {
+        "at": 75.43,
+        "label": "The four decisions"
+      },
+      {
+        "at": 88.97,
+        "label": "Why it is still O(n)"
+      },
+      {
+        "at": 102.57,
+        "label": "What breaks it"
+      },
+      {
+        "at": 117.93,
+        "label": "The counter-tell"
+      },
+      {
+        "at": 123.03,
+        "label": "Recall"
+      }
+    ]
+  },
+  "tree": {
+    "title": "Tree",
+    "summary": "Every tree problem is one recursive function: ask left, ask right, combine.",
+    "duration": 139.0,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 5.43,
+        "label": "The one design question"
+      },
+      {
+        "at": 10.77,
+        "label": "A tree is a family"
+      },
+      {
+        "at": 26.6,
+        "label": "The three lines"
+      },
+      {
+        "at": 32.67,
+        "label": "DFS or BFS"
+      },
+      {
+        "at": 49.77,
+        "label": "The three orders"
+      },
+      {
+        "at": 64.87,
+        "label": "The BST tell"
+      },
+      {
+        "at": 78.63,
+        "label": "Iterative inorder"
+      },
+      {
+        "at": 85.43,
+        "label": "Level order"
+      },
+      {
+        "at": 91.3,
+        "label": "Bottom-up"
+      },
+      {
+        "at": 101.87,
+        "label": "The sentinel"
+      },
+      {
+        "at": 108.3,
+        "label": "Validate a BST"
+      },
+      {
+        "at": 114.63,
+        "label": "What goes wrong"
+      },
+      {
+        "at": 120.27,
+        "label": "Complexity"
+      },
+      {
+        "at": 126.17,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 133.37,
+        "label": "Recall"
+      }
+    ]
+  },
+  "two-pointers": {
+    "title": "Two Pointers",
+    "summary": "Sorted order turns an O(n^2) pair search into one O(n) pass.",
+    "duration": 133.5,
+    "beats": 24,
+    "chapters": [
+      {
+        "at": 0.0,
+        "label": "The hook"
+      },
+      {
+        "at": 4.37,
+        "label": "The job"
+      },
+      {
+        "at": 9.17,
+        "label": "Brute force"
+      },
+      {
+        "at": 13.87,
+        "label": "The insight"
+      },
+      {
+        "at": 18.97,
+        "label": "Two fingers"
+      },
+      {
+        "at": 60.6,
+        "label": "Found it"
+      },
+      {
+        "at": 65.83,
+        "label": "Why it's correct"
+      },
+      {
+        "at": 79.7,
+        "label": "Complexity"
+      },
+      {
+        "at": 85.9,
+        "label": "The three shapes"
+      },
+      {
+        "at": 106.03,
+        "label": "Duplicates and traps"
+      },
+      {
+        "at": 118.97,
+        "label": "How to recognise it"
+      },
+      {
+        "at": 130.37,
+        "label": "Recall"
+      }
+    ]
+  }
+}

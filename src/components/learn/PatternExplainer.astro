@@ -1,0 +1,163 @@
+---
+/**
+ * The animated explainer section for a pattern page.
+ *
+ * Renders a captioned 16:9 Manim film plus a chapter rail that seeks the player. The video
+ * element is fully functional without JS (native controls + a WebVTT caption track); the
+ * chapter rail is progressive enhancement.
+ */
+import { formatRuntime, type Explainer } from '../../lib/explainers';
+
+type Props = {
+  explainer: Explainer;
+  patternNo: number;
+};
+
+const { explainer, patternNo } = Astro.props;
+const { title, summary, duration, beats, chapters, video, poster, captions, slug } = explainer;
+const runtime = formatRuntime(duration);
+const label = `Pattern ${String(patternNo).padStart(2, '0')} explainer`;
+---
+
+<section class="mt-14" data-explainer={slug} aria-labelledby="explainer-heading">
+  <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+    <h2 id="explainer-heading" class="text-2xl">
+      <span class="font-mono text-sm text-[var(--color-muted)]">{String(patternNo).padStart(2, '0')}</span>
+      <span class="ml-3">Explainer</span>
+    </h2>
+    <p class="font-mono text-sm text-[var(--color-muted)]">{runtime} · {beats} beats · narrated</p>
+  </div>
+
+  <p class="mt-3 max-w-2xl text-[var(--color-muted)]">{summary}</p>
+
+  <figure class="explainer mt-5">
+    <video class="explainer-video" controls playsinline crossorigin="anonymous" preload="metadata" poster={poster} width="1920" height="1080" aria-label={label}>
+      <source src={video} type="video/mp4" />
+      <track kind="captions" src={captions} srclang="en" label="English" default />
+      Your browser cannot play this video. <a href={video}>Download the {title} explainer</a>.
+    </video>
+  </figure>
+
+  {
+    chapters.length > 1 && (
+      <nav class="mt-4" aria-label="Explainer chapters">
+        <ol class="chapter-list">
+          {chapters.map((chapter) => (
+            <li>
+              <button type="button" class="chapter" data-at={chapter.at}>
+                <span class="chapter-time font-mono">{formatRuntime(chapter.at)}</span>
+                <span>{chapter.label}</span>
+              </button>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    )
+  }
+</section>
+
+<style>
+  .explainer {
+    margin-inline: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    overflow: hidden;
+    background: #0e1116;
+    box-shadow:
+      0 1px 2px -1px color-mix(in srgb, var(--color-ink) 12%, transparent),
+      0 14px 40px -26px color-mix(in srgb, var(--color-ink) 40%, transparent);
+  }
+
+  .explainer-video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    background: #0e1116;
+  }
+
+  .chapter-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .chapter {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding: 0.3rem 0.65rem;
+    font-size: var(--text-xs);
+    font-family: var(--font-sans);
+    color: var(--color-muted);
+    background: color-mix(in srgb, var(--color-ink) 4%, var(--color-surface));
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    cursor: pointer;
+    transition:
+      color 160ms ease,
+      border-color 160ms ease,
+      background-color 160ms ease;
+  }
+
+  .chapter:hover,
+  .chapter:focus-visible {
+    color: var(--color-ink);
+    border-color: color-mix(in srgb, var(--color-accent) 45%, var(--color-border));
+  }
+
+  .chapter[aria-current='true'] {
+    color: var(--color-ink);
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
+  }
+
+  .chapter-time {
+    opacity: 0.75;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .chapter {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  // Chapter seeking + active-chapter tracking. Purely additive: without JS the native
+  // player and the WebVTT captions still work.
+  const sections = document.querySelectorAll('[data-explainer]');
+  sections.forEach((section) => {
+    const video = section.querySelector('.explainer-video');
+    if (!video) return;
+    const buttons = Array.from(section.querySelectorAll('.chapter'));
+    if (!buttons.length) return;
+
+    const starts = buttons
+      .map((button) => ({ button, at: Number(button.dataset.at || 0) }))
+      .sort((a, b) => a.at - b.at);
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        video.currentTime = Number(button.dataset.at || 0);
+        const played = video.play();
+        if (played && typeof played.catch === 'function') played.catch(() => {});
+      });
+    });
+
+    video.addEventListener('timeupdate', () => {
+      const now = video.currentTime;
+      let active = starts[0];
+      for (const entry of starts) {
+        if (now >= entry.at - 0.25) active = entry;
+      }
+      for (const entry of starts) {
+        if (entry === active) entry.button.setAttribute('aria-current', 'true');
+        else entry.button.removeAttribute('aria-current');
+      }
+    });
+  });
+</script>

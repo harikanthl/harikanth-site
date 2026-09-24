@@ -37,6 +37,27 @@ An episode's prep sheet and solution are published only once `recorded=Y` in
 `curriculum/progress.csv`; before that the episode shows as "Coming".
 Cloudflare Pages clones public submodules automatically.
 
+### Pattern explainers (animated video)
+
+Each pattern page carries a ~2-minute narrated Manim explainer above the pattern card.
+The films are rendered by the studio at `studio/pattern-explainers` — see
+[its README](studio/pattern-explainers/README.md) for the pipeline, the style contract, and
+the authoring loop.
+
+Two things are worth knowing at the site level:
+
+- **Only metadata is committed.** The videos, posters and caption tracks live at
+  `public/media/pattern-explainers/` and are gitignored; `src/data/pattern-explainers.json`
+  holds one row per rendered pattern. Upload the assets somewhere public and set
+  `hostedBaseUrl` in `src/data/pattern-explainers.config.json` — no re-render needed.
+  `studio/pattern-explainers/publish.sh` does the upload for GitHub Releases or R2.
+- **The section renders only where a film exists.** `src/lib/explainers.ts` resolves the
+  asset URLs, so a pattern with no manifest row simply has no explainer section.
+
+```bash
+./studio/pattern-explainers/publish.sh github <owner/repo>   # or: r2 <bucket>
+```
+
 ## Adding a blog post
 
 1. Create `src/content/blog/your-slug.mdx`

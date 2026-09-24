@@ -3,6 +3,7 @@ import { getCollection, getEntry, render } from 'astro:content';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ProgressWall from '../../../components/learn/ProgressWall.astro';
 import { byEpisode, countStatuses, doneCount, patternHref, STATUS_LABEL } from '../../../lib/learn';
+import { allExplainers, formatRuntime } from '../../../lib/explainers';
 
 const track = await getEntry('tracks', 'leetcode-patterns');
 if (!track) throw new Error('src/content/tracks/leetcode-patterns.md is missing');
@@ -12,6 +13,7 @@ const episodes = (await getCollection('dsaEpisodes')).sort(byEpisode);
 const patterns = (await getCollection('dsaPatterns')).sort((a, b) => a.data.no - b.data.no);
 const counts = countStatuses(episodes);
 const done = doneCount(counts);
+const explainers = allExplainers();
 ---
 
 <BaseLayout title={track.data.title} description={track.data.description}>
@@ -59,11 +61,20 @@ const done = doneCount(counts);
                     {pDone}/{p.data.episodeCount} · EP {p.data.epStart}–{p.data.epEnd}
                   </span>
                 </a>
-                <p class="mt-1 pl-10 text-xs text-[var(--color-muted)]">
-                  {(['uploaded', 'recorded', 'solved', 'prep'] as const)
-                    .filter((s) => c[s] > 0)
-                    .map((s) => `${c[s]} ${STATUS_LABEL[s].toLowerCase()}`)
-                    .join(' · ') || 'not started'}
+                <p class="mt-1 flex flex-wrap items-center gap-x-3 pl-10 text-xs text-[var(--color-muted)]">
+                  <span>
+                    {(['uploaded', 'recorded', 'solved', 'prep'] as const)
+                      .filter((s) => c[s] > 0)
+                      .map((s) => `${c[s]} ${STATUS_LABEL[s].toLowerCase()}`)
+                      .join(' · ') || 'not started'}
+                  </span>
+                  {
+                    explainers[p.id] && (
+                      <span class="text-[var(--color-accent)]">
+                        ▶ explainer {formatRuntime(explainers[p.id].duration)}
+                      </span>
+                    )
+                  }
                 </p>
               </li>
             );
