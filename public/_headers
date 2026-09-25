@@ -14,3 +14,16 @@
 
 /images/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Chapter 11 explorer (harikanth.site/eeg). The hashed bundle, the BodyParts3D
+# geometry and the deck's assets never change under the same name, so they are
+# immutable. index.html and /eeg/deck/index.html stay out of this on purpose so a
+# redeploy is picked up immediately.
+/eeg/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/eeg/models/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/eeg/deck/assets/*
+  Cache-Control: public, max-age=31536000, immutable
