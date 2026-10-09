@@ -1,0 +1,62 @@
+---
+title: utubmp3
+date: 2026-10-08
+description: Safari and Chrome extension for macOS that saves a YouTube video's audio as a tagged MP3 in one click, with a built-in tag editor. Free, local, and open source.
+tags:
+  - macOS
+  - Safari
+  - Chrome
+  - Audio
+featured: true
+github: https://github.com/harikanthl/utubmp3
+tech:
+  - Swift
+  - Safari Web Extensions
+  - Chrome MV3
+  - yt-dlp
+  - FFmpeg
+  - QuickJS
+image: /images/projects/utubmp3.png
+imageFit: contain
+---
+
+utubmp3 adds a **⬇ MP3** button next to Like and Share on YouTube. Click it, and a few seconds later the song is in your Downloads folder as a properly tagged MP3 with its cover art. Install the app, open it once, turn on the extension, and that's the whole setup. No Terminal, Homebrew, or Python.
+
+<a href="https://github.com/harikanthl/utubmp3/releases/latest/download/utubmp3.dmg" class="btn-primary rounded-full px-6 py-3 text-base font-medium no-underline inline-block">Download for macOS</a>
+<a href="https://github.com/harikanthl/utubmp3/releases/latest/download/utubmp3-chrome.zip" class="rounded-full border border-[var(--color-border)] px-6 py-3 text-base font-medium no-underline inline-block ml-3">Chrome extension</a>
+
+<span style="display:block;margin-top:0.6rem;color:var(--color-muted);font-size:0.9rem">Free · open source (MIT) · macOS 13+ · Apple Silicon &amp; Intel · notarized by Apple</span>
+
+## What it does
+
+- **One-click MP3**: a button sits right in YouTube's action bar (it floats in the corner on Shorts). It turns into ⏳ while converting and ✅ **Saved** when done; click it to show the file in Finder.
+- **Tags that are actually right**: every download is tagged with the title, singers, album or movie, composer, lyricist, and label, parsed from the video description. Hashtags, social links, and the pasted-in description are stripped out, and the file is renamed to `Title - Album.mp3`.
+- **A tag editor in the toolbar**: the popup lists your recent MP3s with **Clean** and **Edit** buttons. Edit any tag, or clear a field to remove it. Audio and cover art are never re-encoded.
+- **Keeps working when YouTube changes**: the downloader updates itself daily, and if a download fails it updates and retries once on the spot.
+- **Runs on your Mac**: nothing leaves your machine except the download from YouTube. No account, no analytics, no servers.
+
+## Install
+
+1. Download the DMG, drag **utubmp3** to Applications, and open it once.
+2. Click **Quit and Open Safari Settings…** and turn on the extension. Allow it on youtube.com when Safari asks.
+3. Open any YouTube video and click **⬇ MP3**.
+
+**Using Chrome?** Install and open the Mac app first (it runs the downloads), then download the Chrome extension, unzip it, open `chrome://extensions`, turn on **Developer mode**, and click **Load unpacked**. Google's Web Store doesn't allow YouTube downloaders, so this is the only way to install it in Chrome.
+
+## How it works
+
+Browser extensions aren't allowed to run programs, so the app ships a small background helper: the same executable, started at login by `launchd`. The extension talks to it over a local connection, and the helper does the heavy lifting with `yt-dlp` and `ffmpeg`.
+
+```text
+YouTube page → Safari / Chrome extension → helper (127.0.0.1) → yt-dlp + ffmpeg → ~/Downloads
+```
+
+- The helper only listens on `127.0.0.1`, refuses requests from web pages (and DNS-rebinding tricks), only accepts YouTube video links, and only touches `.mp3` files directly in Downloads.
+- `ffmpeg` and the QuickJS runtime are bundled and signed; `yt-dlp` is downloaded on first run so it can update itself, since YouTube regularly breaks old versions.
+- The app is signed with a Developer ID and notarized by Apple, and runs outside the App Store because a sandboxed app can't start the helper.
+
+## Why I built it
+
+Online converter sites are full of pop-ups and hand back files with junk names and no tags. utubmp3 does the same job from a button on the video itself, runs entirely on the Mac, and hands back a file that's named and tagged the way a music app expects.
+
+Only download content you have the rights to, such as your own uploads or openly licensed videos. Downloading from YouTube may be against its Terms of Service.
